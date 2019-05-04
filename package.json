@@ -1,0 +1,20 @@
+{
+  "name": "bbmb",
+  "version": "1.0.0",
+  "description": "Beach Boys Message Board",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joehink/bbmb.git"
+  },
+  "author": "Joe Hinkley",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joehink/bbmb/issues"
+  },
+  "homepage": "https://github.com/joehink/bbmb#readme"
+}
