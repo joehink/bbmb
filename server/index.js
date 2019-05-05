@@ -4,7 +4,9 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 
-const userRoutes = require('./routes/api/user');
+const userRoutes = require('./routes/api/users');
+const sessionRoutes = require('./routes/api/sessions');
+require('./services/passport');
 
 // Config
 const PORT = process.env.PORT;
@@ -19,7 +21,8 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use('/api/user/', userRoutes);
+app.use('/api/users/', userRoutes);
+app.use('/api/sessions/', sessionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
