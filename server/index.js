@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/api/users');
 const sessionRoutes = require('./routes/api/sessions');
 require('./services/passport');
+require('./services/cache');
 
 // Config
 const PORT = process.env.PORT;

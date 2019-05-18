@@ -4,10 +4,13 @@ const jwt = require('jwt-simple');
 const router = express.Router();
 const User = require('../../models/users.js');
 
+
 // Create User
 router.post('/', async (req, res) => {
   // query to see if the username is already in use
-  let foundUser = await User.findOne({ username: req.body.username });
+  let foundUser = await User
+    .findOne({ username: req.body.username })
+    .cache({ key: req.body.username });
 
   // if the username is not in use
   if (!foundUser) {
