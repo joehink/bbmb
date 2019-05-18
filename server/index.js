@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/api/users');
 const sessionRoutes = require('./routes/api/sessions');
+const postRoutes = require('./routes/api/posts');
 require('./services/passport');
 require('./services/cache');
 
@@ -24,6 +25,7 @@ app.use(cors());
 // Routes
 app.use('/api/users/', userRoutes);
 app.use('/api/sessions/', sessionRoutes);
+app.use('/api/posts/', postRoutes);
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);

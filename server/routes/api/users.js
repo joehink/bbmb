@@ -10,7 +10,6 @@ router.post('/', async (req, res) => {
   // query to see if the username is already in use
   let foundUser = await User
     .findOne({ username: req.body.username })
-    .cache({ key: req.body.username });
 
   // if the username is not in use
   if (!foundUser) {
@@ -30,7 +29,7 @@ router.post('/', async (req, res) => {
 
   } else {
     // there is a user with that username
-    res.status(409).json({ error: "Username is already in use" })
+    res.status(409).json({ message: "Username is already in use" })
   }
 });
 
