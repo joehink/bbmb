@@ -3,12 +3,13 @@ const passport = require('passport');
 const router = express.Router();
 
 const Post = require('../../models/posts.js');
+const Comment = require('../../models/comments.js');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 // Create Post
 router.post('/', requireAuth, async (req, res) => {
     // append logged in user's id to req.body
-    req.body.createdBy = req.user._id;
+    req.body.author = req.user._id;
 
     try {
         // Create new post
@@ -26,7 +27,7 @@ router.get('/category/:category', async (req, res) => {
     try {
         const posts = await Post
             .find({ category: req.params.category })
-            .populate({ path: 'createdBy', select: 'username _id'});
+            .populate({ path: 'author', select: 'username _id'});
 
         // Send back posts    
         res.status(200).json(posts);
@@ -43,12 +44,50 @@ router.get('/category/:category/recent', async (req, res) => {
         const recentPosts = await Post
             .find({ category: req.params.category })
             .limit(5)
-            .populate({ path: 'createdBy', select: 'username _id'});
+            .populate({ path: 'author', select: 'username _id'});
 
         // Send back recent posts    
         res.status(200).json(recentPosts);
     } catch (err) {
         // Something went wrong while fetching recent posts
+        res.status(500).json(err);
+    }
+});
+
+// GET single post
+router.get('/:postId', async (req, res) => {
+    try {
+        const post = await Post
+            .findById(req.params.postId)
+            .populate({ path: 'author', select: 'username _id'});
+
+        res.status(200).json(post);
+    } catch (err) {
+        // Something went wrong while getting post
+        res.status(500).json(err);
+    }
+});
+
+// Edit post title and body
+router.patch('/:postId', requireAuth, async (req, res) => {
+    try {
+        const updatedPost = await Post
+            .findByIdAndUpdate(req.params.postId, req.body, { new: true })
+            .populate({ path: 'author', select: 'username _id'});
+
+        res.status(200).json(updatedPost);
+    } catch (err) {
+        // Something went wrong while updating post title and body
+        res.status(500).json(err);
+    }
+});
+
+// DELETE a post
+router.delete('/:postId', requireAuth, async (req, res) => {
+    try {
+        await Post.findByIdAndRemove(req.params.postId);
+        res.status(200).json({ deleted: true });
+    } catch (err) {
         res.status(500).json(err);
     }
 });
@@ -78,42 +117,147 @@ router.patch('/:postId/like', requireAuth, async (req, res) => {
     }
 });
 
-// GET single post
-router.get('/:postId', async (req, res) => {
-    try {
-        const post = await Post
-            .findById(req.params.postId)
-            .populate({ path: 'createdBy', select: 'username _id'});
 
-        res.status(200).json(post);
+// Create comment on post
+router.post('/:postId/comments', requireAuth, async (req, res) => {
+    try {
+        // append logged in user's id to req.body
+        req.body.author = req.user._id;
+        // append postId to req.body
+        req.body.postId = req.params.postId;
+
+        // create new comment
+        let comment = await Comment.create(req.body)
+        // populate author field on new comment
+        comment = await comment.populate({ path: 'author', select: 'username _id' }).execPopulate()
+
+        res.status(200).json(comment);
     } catch (err) {
-        // Something went wrong while getting post
-        res.status(500).json(err);
+        res.status(400).json(err)
     }
 });
 
-// Edit post title and body
-router.patch('/:postId', requireAuth, async (req, res) => {
+// edit comment
+router.patch('/:postId/comments/:commentId', requireAuth, async (req, res) => {
     try {
-        const updatedPost = await Post
-            .findByIdAndUpdate(req.params.postId, req.body, { new: true })
-            .populate({ path: 'createdBy', select: 'username _id'});
+        const comment = await Comment
+            .findByIdAndUpdate(req.params.commentId, req.body, { new: true })
+            .populate([
+                { path: 'author', select: 'username _id' }, 
+                { path: 'replies.author', select: 'username _id' }
+            ]);
 
-        res.status(200).json(updatedPost);
+        res.status(200).json(comment);
     } catch (err) {
-        // Something went wrong while updating post title and body
-        res.status(500).json(err);
+        res.status(400).json(err)
     }
 });
 
-// DELETE a post
-router.delete('/:postId', requireAuth, async (req, res) => {
+// delete comment
+router.delete('/:postId/comments/:commentId', requireAuth, async (req, res) => {
     try {
-        await Post.findByIdAndRemove(req.params.postId);
+        const comment = await Comment.findByIdAndRemove(req.params.commentId);
+
         res.status(200).json({ deleted: true });
     } catch (err) {
-        res.status(500).json(err);
+        res.status(400).json(err)
     }
-})
+});
+
+// GET post comments
+router.get('/:postId/comments', async (req, res) => {
+    try {
+        const comments = await Comment
+            .find({ postId: req.params.postId })
+            .populate([
+                { path: 'author', select: 'username _id' }, 
+                { path: 'replies.author', select: 'username _id' }
+            ]);
+
+        res.status(200).json(comments);
+    } catch (err) {
+        res.status(400).json(err)
+    }
+});
+
+// Create reply to comment
+router.post('/:postId/comments/:commentId', requireAuth, async (req, res) => {
+    try {
+        // append logged in user's id to req.body
+        req.body.author = req.user._id;
+
+        const comment = await Comment
+            .findByIdAndUpdate(req.params.commentId, { 
+                $push: { replies: req.body } 
+            }, { new: true })
+            .populate([
+                { path: 'author', select: 'username _id' }, 
+                { path: 'replies.author', select: 'username _id' }
+            ]);
+
+        res.status(200).json(comment);
+    } catch (err) {
+        res.status(400).json(err)
+    }
+});
+
+// Edit reply to comment
+router.patch('/:postId/comments/:commentId/replies/:replyId', requireAuth, async (req, res) => {
+    try {
+        // Find comment with reply
+        const comment = await Comment.findById(req.params.commentId);
+        // Select reply
+        const reply = comment.replies.id(req.params.replyId)
+        // assign new value to reply body
+        reply.body = req.body.body;
+        // save comment
+        comment.save();
+        // send back updated comment
+        res.status(200).json(comment);
+    } catch (err) {
+        res.status(400).json(err)
+    }
+});
+
+// Delete reply to comment
+router.delete('/:postId/comments/:commentId/replies/:replyId', requireAuth, async (req, res) => {
+    try {
+        // Find comment with reply
+        const comment = await Comment.findById(req.params.commentId);
+        // delete reply
+        comment.replies.pull(req.params.replyId)
+        // save comment
+        comment.save();
+
+        res.status(200).json({ deleted: true });
+    } catch (err) {
+        res.status(400).json(err)
+    }
+});
+
+// Like/unlike comment
+router.patch('/:postId/comments/:commentId/like', requireAuth, async (req, res) => {
+    try {
+        // Find post by id
+        const comment = await Comment.findById(req.params.commentId);
+
+        // if post is liked by user
+        if (comment.likes.indexOf(req.user._id) !== -1) {
+            // unlike the post
+            comment.likes.pull(req.user._id);
+        } else {
+            // like the post
+            comment.likes.push(req.user._id);
+        }
+    
+        comment.save();
+
+        // Send back updated post
+        res.status(200).json(comment);
+    } catch (err) {
+        // Something went wrong while liking/unliking post
+        res.status(400).json(err);
+    }
+});
 
 module.exports = router;

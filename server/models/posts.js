@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const postSchema = Schema({
+const postSchema = new Schema({
     title: { type: String, required: true },
     body: { type: String, required: true },
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    likes: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     category: { type: String, required: true, lowercase: true }
 }, { timestamps: true });
 
