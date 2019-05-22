@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const passport = require('passport');
 const router = express.Router();
 
@@ -71,11 +72,28 @@ router.get('/:postId', async (req, res) => {
 // Edit post title and body
 router.patch('/:postId', requireAuth, async (req, res) => {
     try {
-        const updatedPost = await Post
-            .findByIdAndUpdate(req.params.postId, req.body, { new: true })
-            .populate({ path: 'author', select: 'username _id'});
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post not found." });
+        }
 
-        res.status(200).json(updatedPost);
+        let post = await Post.findById(req.params.postId);
+
+        if (!post) {
+            res.status(404).json({ message: "Post not found." });
+        } else if (!req.user._id.equals(post.author)) {
+            res.status(401).json({ message: "Post does not belong to you." });
+        } else if (!req.body.title || !req.body.body) {
+            res.status(400).json({ message: "Must provide title and body of post." });
+        } else {
+            post.title = req.body.title;
+            post.body = req.body.body;
+
+            post.save()
+
+            post = await post.populate({ path: 'author', select: 'username _id' }).execPopulate()
+
+            res.status(200).json(post);
+        }
     } catch (err) {
         // Something went wrong while updating post title and body
         res.status(500).json(err);
@@ -85,8 +103,21 @@ router.patch('/:postId', requireAuth, async (req, res) => {
 // DELETE a post
 router.delete('/:postId', requireAuth, async (req, res) => {
     try {
-        await Post.findByIdAndRemove(req.params.postId);
-        res.status(200).json({ deleted: true });
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post not found." });
+        }
+
+        let post = await Post.findById(req.params.postId);
+        
+        if (!post) {
+            res.status(404).json({ message: "Post not found." });
+        } else if (!req.user._id.equals(post.author)) {
+            res.status(401).json({ message: "Post does not belong to you." });
+        } else {
+            post.remove();
+            
+            res.status(200).json({ deleted: true });
+        }
     } catch (err) {
         res.status(500).json(err);
     }
@@ -140,14 +171,30 @@ router.post('/:postId/comments', requireAuth, async (req, res) => {
 // edit comment
 router.patch('/:postId/comments/:commentId', requireAuth, async (req, res) => {
     try {
-        const comment = await Comment
-            .findByIdAndUpdate(req.params.commentId, req.body, { new: true })
-            .populate([
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
+
+        let comment = await Comment.findById(req.params.commentId);
+
+        if (!comment) {
+            res.status(404).json({ message: "Comment not found." });
+        } else if (!req.user._id.equals(comment.author)) {
+            res.status(401).json({ message: "Comment does not belong to you." });
+        } else if (!req.body.body) {
+            res.status(400).json({ message: "Must provide body of comment." });
+        } else {
+            comment.body = req.body.body;
+
+            comment.save()
+
+            comment = await comment.populate([
                 { path: 'author', select: 'username _id' }, 
                 { path: 'replies.author', select: 'username _id' }
-            ]);
+            ]).execPopulate();
 
-        res.status(200).json(comment);
+            res.status(200).json(comment);
+        }
     } catch (err) {
         res.status(400).json(err)
     }
@@ -156,9 +203,20 @@ router.patch('/:postId/comments/:commentId', requireAuth, async (req, res) => {
 // delete comment
 router.delete('/:postId/comments/:commentId', requireAuth, async (req, res) => {
     try {
-        const comment = await Comment.findByIdAndRemove(req.params.commentId);
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
 
-        res.status(200).json({ deleted: true });
+        const comment = await Comment.findById(req.params.commentId);
+
+        if (!comment) {
+            res.status(404).json({ message: "Comment not found." });
+        } else if (!req.user._id.equals(comment.author)) {
+            res.status(401).json({ message: "Comment does not belong to you." });
+        } else {
+            comment.remove()
+            res.status(200).json({ deleted: true });
+        }
     } catch (err) {
         res.status(400).json(err)
     }
@@ -204,16 +262,33 @@ router.post('/:postId/comments/:commentId', requireAuth, async (req, res) => {
 // Edit reply to comment
 router.patch('/:postId/comments/:commentId/replies/:replyId', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(req.params.replyId)) {
+            return res.status(404).json({ message: "Reply not found." });
+        }
+
         // Find comment with reply
         const comment = await Comment.findById(req.params.commentId);
         // Select reply
         const reply = comment.replies.id(req.params.replyId)
-        // assign new value to reply body
-        reply.body = req.body.body;
-        // save comment
-        comment.save();
-        // send back updated comment
-        res.status(200).json(comment);
+
+        if (!reply) {
+            res.status(404).json({ message: "Reply not found." });
+        } else if (!req.user._id.equals(reply.author)) {
+            res.status(401).json({ message: "Reply does not belong to you." });
+        } else if (!req.body.body) {
+            res.status(400).json({ message: "Must provide body of reply." })
+        } else {
+            // assign new value to reply body
+            reply.body = req.body.body;
+            // save comment
+            comment.save();
+            // send back updated comment
+            res.status(200).json(comment);
+        }
     } catch (err) {
         res.status(400).json(err)
     }
@@ -222,16 +297,35 @@ router.patch('/:postId/comments/:commentId/replies/:replyId', requireAuth, async
 // Delete reply to comment
 router.delete('/:postId/comments/:commentId/replies/:replyId', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
+
+        if (!mongoose.Types.ObjectId.isValid(req.params.replyId)) {
+            return res.status(404).json({ message: "Reply not found." });
+        }
+
         // Find comment with reply
         const comment = await Comment.findById(req.params.commentId);
-        // delete reply
-        comment.replies.pull(req.params.replyId)
-        // save comment
-        comment.save();
+        // Select reply
+        const reply = comment.replies.id(req.params.replyId)
 
-        res.status(200).json({ deleted: true });
+        if (!comment) {
+            res.status(404).json({ message: "Comment not found." });
+        } else if (!reply) {
+            res.status(404).json({ message: "Reply not found." });
+        } else if (!req.user._id.equals(reply.author)) {
+            res.status(401).json({ message: "Reply does not belong to you." });
+        } else {
+            // delete reply
+            comment.replies.pull(req.params.replyId)
+            // save comment
+            comment.save();
+
+            res.status(200).json({ deleted: true });
+        }
     } catch (err) {
-        res.status(400).json(err)
+        res.status(500).json(err)
     }
 });
 
