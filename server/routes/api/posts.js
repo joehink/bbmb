@@ -28,6 +28,7 @@ router.get('/category/:category', async (req, res) => {
     try {
         const posts = await Post
             .find({ category: req.params.category })
+            .sort({ updatedAt: 1 })
             .populate({ path: 'author', select: 'username _id'});
 
         // Send back posts    
@@ -45,6 +46,7 @@ router.get('/category/:category/recent', async (req, res) => {
         const recentPosts = await Post
             .find({ category: req.params.category })
             .limit(5)
+            .sort({ updatedAt: 1 })
             .populate({ path: 'author', select: 'username _id'});
 
         // Send back recent posts    
@@ -110,11 +112,13 @@ router.delete('/:postId', requireAuth, async (req, res) => {
         let post = await Post.findById(req.params.postId);
         
         if (!post) {
-            res.status(404).json({ message: "Post not found." });
+            return res.status(404).json({ message: "Post not found." });
         } else if (!req.user._id.equals(post.author)) {
-            res.status(401).json({ message: "Post does not belong to you." });
+            return res.status(401).json({ message: "Post does not belong to you." });
         } else {
             post.remove();
+
+            await Comment.deleteMany({ postId: req.params.postId });
             
             res.status(200).json({ deleted: true });
         }
@@ -186,7 +190,7 @@ router.patch('/:postId/comments/:commentId', requireAuth, async (req, res) => {
         } else {
             comment.body = req.body.body;
 
-            comment.save()
+            comment.save();
 
             comment = await comment.populate([
                 { path: 'author', select: 'username _id' }, 
@@ -225,8 +229,9 @@ router.delete('/:postId/comments/:commentId', requireAuth, async (req, res) => {
 // GET post comments
 router.get('/:postId/comments', async (req, res) => {
     try {
-        const comments = await Comment
+        let comments = await Comment
             .find({ postId: req.params.postId })
+            .sort({ createdAt: 1 })
             .populate([
                 { path: 'author', select: 'username _id' }, 
                 { path: 'replies.author', select: 'username _id' }
