@@ -26,13 +26,21 @@ router.post('/', requireAuth, async (req, res) => {
 // GET posts for category
 router.get('/category/:category', async (req, res) => {
     try {
+        const { page = 1, sortBy = '-updatedAt' } = req.query;
+        const limit = 50;
+
         const posts = await Post
             .find({ category: req.params.category })
-            .sort({ updatedAt: 1 })
+            .sort(sortBy)
+            .skip((page * limit) - limit)
+            .limit(limit)
             .populate({ path: 'author', select: 'username _id'});
 
         // Send back posts    
-        res.status(200).json(posts);
+        res.status(200).json({
+            nextPage: (posts.length >= limit),
+            posts
+        });
     } catch (err) {
         // Something went wrong while fetching posts
         res.status(500).json(err);
@@ -45,8 +53,8 @@ router.get('/category/:category/recent', async (req, res) => {
         // Find 5 most recent posts
         const recentPosts = await Post
             .find({ category: req.params.category })
+            .sort('-updatedAt')
             .limit(5)
-            .sort({ updatedAt: 1 })
             .populate({ path: 'author', select: 'username _id'});
 
         // Send back recent posts    
@@ -137,9 +145,11 @@ router.patch('/:postId/like', requireAuth, async (req, res) => {
         if (post.likes.indexOf(req.user._id) !== -1) {
             // unlike the post
             post.likes.pull(req.user._id);
+            post.likesCount--;
         } else {
             // like the post
             post.likes.push(req.user._id);
+            post.likesCount++;
         }
     
         post.save();
@@ -165,6 +175,8 @@ router.post('/:postId/comments', requireAuth, async (req, res) => {
         let comment = await Comment.create(req.body)
         // populate author field on new comment
         comment = await comment.populate({ path: 'author', select: 'username _id' }).execPopulate()
+
+        await Post.findByIdAndUpdate(req.params.postId, { updatedAt: new Date() })
 
         res.status(200).json(comment);
     } catch (err) {
@@ -229,15 +241,23 @@ router.delete('/:postId/comments/:commentId', requireAuth, async (req, res) => {
 // GET post comments
 router.get('/:postId/comments', async (req, res) => {
     try {
+        const { page = 1, sortBy = 'createdAt' } = req.query;
+        const limit = 50;
+
         let comments = await Comment
             .find({ postId: req.params.postId })
-            .sort({ createdAt: 1 })
+            .sort(sortBy)
+            .skip((page * limit) - limit)
+            .limit(limit)
             .populate([
                 { path: 'author', select: 'username _id' }, 
                 { path: 'replies.author', select: 'username _id' }
             ]);
 
-        res.status(200).json(comments);
+        res.status(200).json({
+            nextPage: (comments.length >= limit),
+            comments
+        });
     } catch (err) {
         res.status(400).json(err)
     }
@@ -337,24 +357,26 @@ router.delete('/:postId/comments/:commentId/replies/:replyId', requireAuth, asyn
 // Like/unlike comment
 router.patch('/:postId/comments/:commentId/like', requireAuth, async (req, res) => {
     try {
-        // Find post by id
+        // Find comment by id
         const comment = await Comment.findById(req.params.commentId);
 
-        // if post is liked by user
+        // if comment is liked by user
         if (comment.likes.indexOf(req.user._id) !== -1) {
-            // unlike the post
+            // unlike the comment
             comment.likes.pull(req.user._id);
+            comment.likesCount--;
         } else {
-            // like the post
+            // like the comment
             comment.likes.push(req.user._id);
+            comment.likesCount++;
         }
     
         comment.save();
 
-        // Send back updated post
+        // Send back updated comment
         res.status(200).json(comment);
     } catch (err) {
-        // Something went wrong while liking/unliking post
+        // Something went wrong while liking/unliking comment
         res.status(400).json(err);
     }
 });

@@ -6,6 +6,7 @@ const postSchema = new Schema({
     body: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    likesCount: { type: Number, default: 0 },
     category: { type: String, required: true, lowercase: true }
 }, { timestamps: true });
 
