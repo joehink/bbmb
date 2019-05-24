@@ -68,6 +68,10 @@ router.get('/category/:category/recent', async (req, res) => {
 // GET single post
 router.get('/:postId', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post not found." });
+        }
+
         const post = await Post
             .findById(req.params.postId)
             .populate({ path: 'author', select: 'username _id'});
@@ -138,8 +142,15 @@ router.delete('/:postId', requireAuth, async (req, res) => {
 // Like/unlike post
 router.patch('/:postId/like', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post not found." });
+        }
         // Find post by id
         const post = await Post.findById(req.params.postId);
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found." });
+        }
 
         // if post is liked by user
         if (post.likes.indexOf(req.user._id) !== -1) {
@@ -166,6 +177,10 @@ router.patch('/:postId/like', requireAuth, async (req, res) => {
 // Create comment on post
 router.post('/:postId/comments', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post not found." });
+        }
+
         // append logged in user's id to req.body
         req.body.author = req.user._id;
         // append postId to req.body
@@ -241,6 +256,10 @@ router.delete('/:postId/comments/:commentId', requireAuth, async (req, res) => {
 // GET post comments
 router.get('/:postId/comments', async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+            return res.status(404).json({ message: "Post comments not found." });
+        }
+
         const { page = 1, sortBy = 'createdAt' } = req.query;
         const limit = 50;
 
@@ -266,6 +285,10 @@ router.get('/:postId/comments', async (req, res) => {
 // Create reply to comment
 router.post('/:postId/comments/:commentId', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
+
         // append logged in user's id to req.body
         req.body.author = req.user._id;
 
@@ -357,8 +380,16 @@ router.delete('/:postId/comments/:commentId/replies/:replyId', requireAuth, asyn
 // Like/unlike comment
 router.patch('/:postId/comments/:commentId/like', requireAuth, async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.commentId)) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
+
         // Find comment by id
         const comment = await Comment.findById(req.params.commentId);
+
+        if (!comment) {
+            return res.status(404).json({ message: "Comment not found." });
+        }
 
         // if comment is liked by user
         if (comment.likes.indexOf(req.user._id) !== -1) {
