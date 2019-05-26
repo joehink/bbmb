@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-const Post = require('../../models/posts.js');
-const Comment = require('../../models/comments.js');
+const Post = mongoose.model('Post');
+const Comment = mongoose.model('Comment');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 module.exports = app => {

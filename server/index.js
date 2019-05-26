@@ -5,10 +5,12 @@ const express = require('express');
 const Grid = require('gridfs-stream');
 const mongoose = require('mongoose');
 
+// Mongoose Models
 require('./models/users');
 require('./models/posts');
 require('./models/comments');
 
+// Services
 require('./services/passport');
 require('./services/cache');
 
@@ -23,7 +25,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 mongoose.connection.on('connected', () => {
     const gfs = Grid(mongoose.connection.db, mongoose.mongo);
     gfs.collection('photos');
-    
+
     const upload = require('./services/gridfs')(MONGODB_URI);
 
     // Routes
@@ -31,7 +33,6 @@ mongoose.connection.on('connected', () => {
     require('./routes/api/users')(app, upload, gfs);
     require('./routes/api/sessions')(app);
     require('./routes/api/posts')(app);
-    
 })
 
 // Middleware

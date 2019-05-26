@@ -10,6 +10,4 @@ const postSchema = new Schema({
     category: { type: String, required: true, lowercase: true }
 }, { timestamps: true });
 
-const Post = mongoose.model('Post', postSchema);
-
-module.exports = Post;
+mongoose.model('Post', postSchema);

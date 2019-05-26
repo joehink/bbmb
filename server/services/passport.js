@@ -2,8 +2,10 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const User = require('../models/users');
+const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local');
+
+const User = mongoose.model('User');
 
 const localLogin = new LocalStrategy({}, async (username, password, done) => {
   try {
