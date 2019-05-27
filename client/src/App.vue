@@ -1,23 +1,27 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <MainNav />
   </div>
 </template>
 
 <script>
+import 'normalize.css';
+import MainNav from './components/MainNav';
+
 export default {
   name: 'App',
+  components: {
+    MainNav,
+  },
 };
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+:root {
+  --primary-color: #5186EB;
+  --white: #FFF;
+}
+a {
+  text-decoration: none;
 }
 </style>
