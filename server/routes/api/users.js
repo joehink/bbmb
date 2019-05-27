@@ -19,7 +19,7 @@ module.exports = (app, upload, gfs) => {
   app.get('/api/users/:userId', async (req, res) => {
     try {
       // If userId is not a mongoose id
-      if (!mongoose.Types.ObjectId.isValid(req.params.postId)) {
+      if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
         return res.status(404).json({ message: "User not found." });
       }
 
