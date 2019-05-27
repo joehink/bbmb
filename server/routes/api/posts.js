@@ -5,15 +5,26 @@ const Post = mongoose.model('Post');
 const Comment = mongoose.model('Comment');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
+const categories = ['discussion'];
+
 module.exports = app => {
     // Create Post
     app.post('/api/posts/', requireAuth, async (req, res) => {
-        // append logged in user's id to req.body
-        req.body.author = req.user._id;
-
         try {
+            if (!req.body.title || !req.body.body) {
+                return res.status(400).json({ message: "Must provide title and body." });
+            }
+
+            if (!categories.includes(req.body.category)) {
+                return res.status(400).json({ message: "Must provide valid category" });
+            }
+
+            // append logged in user's id to req.body
+            req.body.author = req.user._id;
+
             // Create new post
             const newPost = await Post.create(req.body);
+
             // Send back post JSON
             res.status(200).json(newPost);
         } catch (err) {
@@ -25,6 +36,10 @@ module.exports = app => {
     // GET posts for category
     app.get('/api/posts/category/:category', async (req, res) => {
         try {
+            if (!categories.includes(req.params.category)) {
+                return res.status(400).json({ message: "Must provide valid category" });
+            }
+
             const { page = 1, sortBy = '-updatedAt' } = req.query;
             const limit = 50;
 
@@ -49,6 +64,9 @@ module.exports = app => {
     // GET recent posts for category 
     app.get('/api/posts/category/:category/recent', async (req, res) => {
         try {
+            if (!categories.includes(req.params.category)) {
+                return res.status(400).json({ message: "Must provide valid category" });
+            }
             // Find 5 most recent posts
             const recentPosts = await Post
                 .find({ category: req.params.category })
@@ -74,6 +92,10 @@ module.exports = app => {
             const post = await Post
                 .findById(req.params.postId)
                 .populate({ path: 'author', select: 'username _id'});
+            
+            if (!post) {
+                return res.status(404).json({ message: "Post not found." });
+            }
 
             res.status(200).json(post);
         } catch (err) {
@@ -180,6 +202,16 @@ module.exports = app => {
                 return res.status(404).json({ message: "Post not found." });
             }
 
+            if (!req.body.body) {
+                return res.status(400).json({ message: "Must provide body of comment." });
+            }
+
+            const post = await Post.findById(req.params.postId);
+
+            if (!post) {
+                return res.status(404).json({ message: "Post not found." });
+            }
+
             // append logged in user's id to req.body
             req.body.author = req.user._id;
             // append postId to req.body
@@ -190,7 +222,11 @@ module.exports = app => {
             // populate author field on new comment
             comment = await comment.populate({ path: 'author', select: 'username _id' }).execPopulate()
 
-            await Post.findByIdAndUpdate(req.params.postId, { updatedAt: new Date() })
+            // Set post.updatedAt to current date and time
+            post.updatedAt = new Date();
+
+            // Save post
+            post.save();
 
             res.status(200).json(comment);
         } catch (err) {
@@ -205,7 +241,12 @@ module.exports = app => {
                 return res.status(404).json({ message: "Comment not found." });
             }
 
-            let comment = await Comment.findById(req.params.commentId);
+            let comment = await Comment
+                .findById(req.params.commentId)
+                .populate([
+                    { path: 'author', select: 'username _id' }, 
+                    { path: 'replies.author', select: 'username _id' }
+                ]);
 
             if (!comment) {
                 res.status(404).json({ message: "Comment not found." });
@@ -217,11 +258,6 @@ module.exports = app => {
                 comment.body = req.body.body;
 
                 comment.save();
-
-                comment = await comment.populate([
-                    { path: 'author', select: 'username _id' }, 
-                    { path: 'replies.author', select: 'username _id' }
-                ]).execPopulate();
 
                 res.status(200).json(comment);
             }
