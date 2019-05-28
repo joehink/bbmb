@@ -5,7 +5,7 @@ const requireSignIn = passport.authenticate('local', { session: false });
 
 module.exports = app => {
   // Log In
-  app.post('/', requireSignIn, async (req, res)=> {
+  app.post('/api/sessions', requireSignIn, async (req, res)=> {
     try {
       // send back JSON Web Token
       res.status(200).json({
