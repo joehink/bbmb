@@ -28,10 +28,11 @@ export default {
     background: var(--primary-color);
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     position: sticky;
+    z-index: 1000;
   }
   .nav-container {
     display: flex;
-    max-width: 1024px;
+    max-width: 1200px;
     margin: auto;
     align-items: center;
   }
@@ -48,7 +49,7 @@ export default {
     background: none;
   }
   .nav-item {
-    padding: 5px 10px;
+    padding: 10px 10px;
   }
 </style>
 

@@ -9,12 +9,12 @@ export default new Router({
   routes: [
     {
       path: '/login',
-      name: 'Auth',
+      name: 'LogIn',
       component: Auth,
     },
     {
       path: '/signup',
-      name: 'Auth',
+      name: 'SignUp',
       component: Auth,
     },
   ],

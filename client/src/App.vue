@@ -26,8 +26,8 @@ export default {
 
   font-family: 'Roboto', sans-serif;
 }
-html, body {
-  min-height: 100%;
+html, body, #app {
+  height: 100%;
 }
 
 a {
@@ -38,7 +38,7 @@ button {
   outline: none;
 }
 .container {
-  max-width: 1024px;
+  max-width: 1200px;
   margin: auto;
 }
 </style>
