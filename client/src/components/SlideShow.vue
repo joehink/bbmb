@@ -50,9 +50,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
   .slideshow {
     position: relative;
+    display: none;
   }
   .slide {
     position: absolute;
@@ -94,6 +95,13 @@ export default {
     0% { opacity: 1 }
     50% { opacity: 0 }
     100% { opacity: 0 }
+  }
+
+
+  @media(min-width: 768px) {
+    .slideshow {
+      display: block;
+    }
   }
 </style>
 

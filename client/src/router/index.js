@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Auth from '@/components/Auth';
+import LogInForm from '@/components/LogInForm';
+import SignUpForm from '@/components/SignUpForm';
 
 Vue.use(Router);
 
@@ -9,13 +11,21 @@ export default new Router({
   routes: [
     {
       path: '/login',
-      name: 'LogIn',
+      name: 'Auth',
       component: Auth,
+      children: [{
+        path: '',
+        component: LogInForm,
+      }],
     },
     {
       path: '/signup',
-      name: 'SignUp',
+      name: 'Auth',
       component: Auth,
+      children: [{
+        path: '',
+        component: SignUpForm,
+      }],
     },
   ],
 });

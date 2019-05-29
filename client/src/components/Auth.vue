@@ -1,6 +1,6 @@
 <template>
   <main class="auth full-screen">
-    <div></div>
+    <router-view></router-view>
     <SlideShow />
   </main>
 </template>
