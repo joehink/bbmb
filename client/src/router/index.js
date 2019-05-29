@@ -11,7 +11,6 @@ export default new Router({
   routes: [
     {
       path: '/login',
-      name: 'Auth',
       component: Auth,
       children: [{
         path: '',
@@ -20,7 +19,6 @@ export default new Router({
     },
     {
       path: '/signup',
-      name: 'Auth',
       component: Auth,
       children: [{
         path: '',

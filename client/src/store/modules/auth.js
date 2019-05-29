@@ -1,16 +1,17 @@
 import axios from 'axios';
 
 const actions = {
-  login: async ({ commit }) => {
+  login: async ({ commit }, { username, password }) => {
     const res = await axios({
       method: 'POST',
       url: '/api/sessions',
       data: {
-        username: '',
-        password: '',
+        username,
+        password,
       },
     });
 
+    localStorage.setItem('bbmb-token', res.data.token);
     commit('setToken', res.data.token);
   },
   logout: ({ commit }) => {
@@ -22,7 +23,6 @@ const actions = {
 const mutations = {
   setToken: (state, token) => {
     state.authenticated = token;
-    localStorage.setItem('bbmb-token', token);
   },
 };
 
@@ -31,7 +31,7 @@ const getters = {
 };
 
 const state = {
-  authenticated: null,
+  authenticated: localStorage.getItem('bbmb-token'),
 };
 
 export default {
