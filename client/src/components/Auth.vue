@@ -1,5 +1,5 @@
 <template>
-  <main class="auth">
+  <main class="auth full-screen">
     <div></div>
     <SlideShow />
   </main>

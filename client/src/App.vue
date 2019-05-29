@@ -30,6 +30,13 @@ html, body, #app {
   height: 100%;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+}
+.full-screen {
+  flex: 1;
+}
 a {
   text-decoration: none;
 }
