@@ -3,16 +3,20 @@ import axios from 'axios';
 const actions = {
   login: async ({ commit }, { username, password }) => {
     try {
-      const res = await axios({
-        method: 'POST',
-        url: '/api/sessions',
-        data: {
-          username,
-          password,
-        },
-      });
-      localStorage.setItem('bbmb-token', res.data.token);
-      commit('setToken', res.data.token);
+      if (username && password) {
+        const res = await axios({
+          method: 'POST',
+          url: '/api/sessions',
+          data: {
+            username,
+            password,
+          },
+        });
+        localStorage.setItem('bbmb-token', res.data.token);
+        commit('setToken', res.data.token);
+      } else {
+        commit('setError', 'Must provide username and password.');
+      }
     } catch (err) {
       if (err.response.status === 401) {
         commit('setError', 'Invalid log in credentials.');
