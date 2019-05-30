@@ -1,6 +1,7 @@
 <template>
   <form @submit="onSubmit">
     Log In
+    <p v-if="error">{{ error }}</p>
     <FormInput type="text" v-model="username" />
     <FormInput type="password" v-model="password" />
     <input type="submit" value="Log In">
@@ -8,8 +9,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import FormInput from './FormInput';
+import { mapActions, mapGetters } from 'vuex';
+import FormInput from '../FormInput';
 
 export default {
   name: 'LogInForm',
@@ -21,6 +22,9 @@ export default {
       username: '',
       password: '',
     };
+  },
+  computed: {
+    ...mapGetters(['error']),
   },
   methods: {
     ...mapActions(['login']),

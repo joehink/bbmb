@@ -15,7 +15,7 @@ module.exports = app => {
         }, process.env.SECRET)
       });
     } catch(err) {
-      res.status(500).json(err);
+      res.status(500).json({ message: 'Invalid credentials.'});
     }
   });
 }

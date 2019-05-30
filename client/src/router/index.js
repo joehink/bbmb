@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Auth from '@/components/Auth';
-import LogInForm from '@/components/LogInForm';
-import SignUpForm from '@/components/SignUpForm';
+import Auth from '@/components/auth/Auth';
+import LogInForm from '@/components/auth/LogInForm';
+import SignUpForm from '@/components/auth/SignUpForm';
 
 Vue.use(Router);
 

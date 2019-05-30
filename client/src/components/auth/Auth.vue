@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import SlideShow from './SlideShow';
+import SlideShow from '../SlideShow';
 
 export default {
   name: 'Auth',
