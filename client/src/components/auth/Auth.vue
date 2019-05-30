@@ -1,6 +1,8 @@
 <template>
   <main class="auth full-screen">
-    <router-view></router-view>
+    <div class="auth-form-container">
+      <router-view></router-view>
+    </div>
     <SlideShow />
   </main>
 </template>
@@ -18,13 +20,16 @@ export default {
 
 <style scoped>
   .auth {
-    height: 100%;
     display: flex;
   }
-
+  .auth-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background: var(--gray);
+  }
   .auth > * {
-    width: 50%;
     flex: 1;
-    height: 100%;
   }
 </style>

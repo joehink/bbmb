@@ -1,21 +1,24 @@
 <template>
   <form @submit="onSubmit">
-    Log In
-    <p v-if="error">{{ error }}</p>
-    <FormInput type="text" v-model="username" />
-    <FormInput type="password" v-model="password" />
-    <input type="submit" value="Log In">
+    <h1>Welcome Back!</h1>
+    <h4>Log In</h4>
+    <ErrorMessage />
+    <FormInput type="text" placeholder="Username" v-model="username" />
+    <FormInput type="password" placeholder="Password" v-model="password" />
+    <input class="btn blue" type="submit" value="Log In">
   </form>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
-import FormInput from '../FormInput';
+import { mapActions, mapMutations } from 'vuex';
+import FormInput from '../reusable/forms/FormInput';
+import ErrorMessage from '../reusable/errors/ErrorMessage';
 
 export default {
   name: 'LogInForm',
   components: {
     FormInput,
+    ErrorMessage,
   },
   data() {
     return {
@@ -23,11 +26,12 @@ export default {
       password: '',
     };
   },
-  computed: {
-    ...mapGetters(['error']),
+  beforeDestroy() {
+    this.setError('');
   },
   methods: {
     ...mapActions(['login']),
+    ...mapMutations(['setError']),
     onSubmit(event) {
       event.preventDefault();
       this.login({ username: this.username, password: this.password });
@@ -36,6 +40,21 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
+  form {
+    max-width: 320px;
+    width: 90%;
+  }
+  h1 {
+    text-align: center;
+  }
+  h4 {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .btn {
+    display: block;
+    margin: auto;
+    margin-top: 25px;
+  }
 </style>

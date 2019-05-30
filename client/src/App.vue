@@ -22,10 +22,21 @@ export default {
 
 :root {
   --primary-color: #5186EB;
-  --white: #FFF;
+  --black: #2A2B2A;
+  --white: #F7F4F3;
+  --gray: #F5F5F5;
+  --border-gray: silver;
+  --gray-text: #555;
+  --error-red: #E84855;
 
+  color: var(--black);
   font-family: 'Roboto', sans-serif;
 }
+
+* {
+  box-sizing: border-box;
+}
+
 html, body, #app {
   height: 100%;
   min-height: 100%;
@@ -35,18 +46,55 @@ html, body, #app {
   display: flex;
   flex-direction: column;
 }
+
 .full-screen {
   flex: 1;
 }
+
 a {
   text-decoration: none;
 }
+
 button {
-  cursor: pointer;
   outline: none;
+  cursor: pointer;
 }
+
 .container {
   max-width: 1200px;
   margin: auto;
+}
+
+/* Headings */
+h1 {
+  font-weight: bold;
+  font-size: 2em;
+  margin: 5px 0;
+}
+
+h4 {
+  color: var(--gray-text);
+  font-weight: normal;
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  border-radius: 50px;
+  text-decoration: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+.btn:hover {
+  opacity: .8;
+}
+
+.btn.blue {
+  background: var(--primary-color);
+  color: var(--white);
 }
 </style>
