@@ -2,7 +2,7 @@
   <form @submit="onSubmit">
     <h1>Welcome Back!</h1>
     <h4>Log In</h4>
-    <ErrorMessage />
+    <ErrorMessage class="text-center" />
     <FormInput
       type="text"
       placeholder="Username"

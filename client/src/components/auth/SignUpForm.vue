@@ -2,7 +2,7 @@
   <form @submit="onSubmit">
     <h1>Catch a wave!</h1>
     <h4>Sign Up</h4>
-    <ErrorMessage />
+    <ErrorMessage class="text-center" />
     <FormInput
       type="text"
       placeholder="Username"

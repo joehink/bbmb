@@ -51,6 +51,10 @@ html, body, #app {
   flex: 1;
 }
 
+.text-center {
+  text-align: center;
+}
+
 a {
   text-decoration: none;
 }
