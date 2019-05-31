@@ -39,10 +39,12 @@ module.exports = (app, upload, gfs) => {
   app.post('/api/users/', async (req, res) => {
     try {
       if (!req.body.username || !req.body.password) {
-        return res.status(400).json({ message: "Must provide username and password." })
+        return res.status(400).json({ message: "Must provide username and password." });
+      } else if (req.body.username.length > 25) {
+        return res.status(400).json({ message: "Username must be 25 characters or less." });
       }
       // query to see if the username is already in use
-      let foundUser = await User.findOne({ username: req.body.username })
+      let foundUser = await User.findOne({ username: req.body.username });
 
       // if the username is not in use
       if (!foundUser) {

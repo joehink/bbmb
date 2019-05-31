@@ -26,7 +26,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px;
     background: var(--gray);
   }
   .auth > * {

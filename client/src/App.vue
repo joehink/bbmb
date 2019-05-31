@@ -89,6 +89,10 @@ h4 {
   outline: none;
 }
 
+.btn:disabled {
+  opacity: .8;
+}
+
 .btn:hover {
   opacity: .8;
 }

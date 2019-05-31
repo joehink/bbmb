@@ -3,22 +3,40 @@
     <h1>Welcome Back!</h1>
     <h4>Log In</h4>
     <ErrorMessage />
-    <FormInput type="text" placeholder="Username" v-model="username" />
-    <FormInput type="password" placeholder="Password" v-model="password" />
-    <input class="btn blue" type="submit" value="Log In">
+    <FormInput
+      type="text"
+      placeholder="Username"
+      v-model="username"
+      :disabled="isAuthLoading"
+    />
+    <FormInput
+      type="password"
+      placeholder="Password"
+      v-model="password"
+      :disabled="isAuthLoading"
+    />
+    <button
+      class="btn blue"
+      type="submit"
+      :disabled="isAuthLoading"
+    >
+      <Spinner class="btn-spinner" v-if="isAuthLoading" />Log In
+    </button>
   </form>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions, mapMutations, mapGetters } from 'vuex';
 import FormInput from '../reusable/forms/FormInput';
 import ErrorMessage from '../reusable/errors/ErrorMessage';
+import Spinner from '../Spinner';
 
 export default {
   name: 'LogInForm',
   components: {
     FormInput,
     ErrorMessage,
+    Spinner,
   },
   data() {
     return {
@@ -28,6 +46,9 @@ export default {
   },
   beforeDestroy() {
     this.setError('');
+  },
+  computed: {
+    ...mapGetters(['isAuthLoading']),
   },
   methods: {
     ...mapActions(['login']),
@@ -53,8 +74,9 @@ export default {
     margin-bottom: 25px;
   }
   .btn {
-    display: block;
-    margin: auto;
-    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px auto auto;
   }
 </style>
