@@ -7,12 +7,19 @@
 
 <script>
 import 'normalize.css';
+import { mapActions } from 'vuex';
 import MainNav from '@/components/MainNav';
 
 export default {
   name: 'App',
   components: {
     MainNav,
+  },
+  created() {
+    this.getCurrentUser();
+  },
+  methods: {
+    ...mapActions(['getCurrentUser']),
   },
 };
 </script>

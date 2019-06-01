@@ -2,6 +2,11 @@
   <nav class="nav">
     <div class="nav-container">
       <span class="nav-brand nav-item"><router-link to="/">BBMB</router-link></span>
+      <ProfilePhoto
+        v-if="user"
+        class="nav-item profile-img-sm"
+        :style="{ backgroundImage: `url('/api/photos/${user.photo}')` }"
+      />
       <button v-if="isLoggedIn" v-on:click="logout" class="nav-button nav-item">Log Out</button>
       <router-link v-if="!isLoggedIn" to="/login" class="nav-item">Log In</router-link>
       <router-link v-if="!isLoggedIn" to="/signup" class="nav-item">Sign Up</router-link>
@@ -11,11 +16,15 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import ProfilePhoto from './profile/ProfilePhoto';
 
 export default {
   name: 'MainNav',
+  components: {
+    ProfilePhoto,
+  },
   computed: {
-    ...mapGetters(['isLoggedIn']),
+    ...mapGetters(['isLoggedIn', 'user']),
   },
   methods: {
     ...mapActions(['logout']),

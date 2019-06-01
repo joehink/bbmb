@@ -12,7 +12,12 @@ module.exports = app => {
         token: jwt.encode({
           sub: req.user.id,
           iat: new Date().getTime()
-        }, process.env.SECRET)
+        }, process.env.SECRET),
+        user: {
+          username: req.user.username,
+          _id: req.user._id,
+          photo: req.user.photo || null
+        }
       });
     } catch(err) {
       res.status(500).json(err);

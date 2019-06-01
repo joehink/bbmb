@@ -12,7 +12,13 @@ module.exports = (app, upload, gfs) => {
   // GET logged in user
   app.get('/api/users/', requireAuth, (req, res) => {
     // Return logged in user
-    res.status(200).json(req.user);
+    res.status(200).json({
+      user: {
+        username: req.user.username,
+        _id: req.user._id,
+        photo: req.user.photo || null
+      }
+    });
   })
 
   // GET a specific user
@@ -59,7 +65,12 @@ module.exports = (app, upload, gfs) => {
           token: jwt.encode({
             sub: newUser.id,
             iat: new Date().getTime()
-          }, process.env.SECRET)
+          }, process.env.SECRET),
+          user: {
+            username: req.user.username,
+            _id: req.user._id,
+            photo: req.user.photo || null
+          }
         });
 
       } else {
