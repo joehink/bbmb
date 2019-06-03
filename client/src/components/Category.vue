@@ -6,7 +6,13 @@
     </header>
     <div class="posts">
       <div v-if="posts && posts.length" class="posts-list">
-        <PostListItem v-for="post in posts" :key="post._id" :post="post"/>
+        <PostListItem
+          v-for="(post, index) in posts"
+          :key="post._id"
+          :index="index"
+          :post="post"
+          v-on:like="updateLikes"
+        />
       </div>
       <p v-if="posts && !posts.length" class="center">No posts yet.</p>
       <Spinner v-if="posts === null" class="center" />
@@ -17,6 +23,8 @@
 
 <script>
 import axios from 'axios';
+import Vue from 'vue';
+
 import PostListItem from './posts/PostListItem';
 import Spinner from './Spinner';
 
@@ -49,6 +57,9 @@ export default {
         this.error = `Something went wrong while getting ${this.category} posts`;
       }
     },
+    updateLikes(likedPost, index) {
+      Vue.set(this.posts, index, likedPost);
+    },
   },
 };
 </script>
@@ -64,7 +75,7 @@ export default {
   min-height: 700px;
   max-width: 350px;
   flex: 1 1 350px;
-  margin-bottom: 40px;
+  margin: 0 12.5px 40px;
 }
 header {
   color: white;

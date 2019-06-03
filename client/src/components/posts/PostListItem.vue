@@ -1,7 +1,12 @@
 <template>
   <div class="post">
     <div class="likes">
-      <font-awesome-icon class="sun" icon="sun" />
+      <font-awesome-icon
+        v-on:click="likePost"
+        class="sun"
+        :class="{ spin: liking }"
+        icon="sun"
+      />
       <span class="like-count">{{ post.likesCount }}</span>
     </div>
     <div class="post-info">
@@ -12,14 +17,42 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { mapGetters } from 'vuex';
 import moment from 'moment';
 
 export default {
   name: 'PostListItem',
-  props: ['post'],
+  props: ['post', 'index'],
+  data() {
+    return {
+      liking: false,
+    };
+  },
   computed: {
+    ...mapGetters(['token', 'isLoggedIn']),
     date() {
       return moment(this.post.createdAt).format('MMMM D, YYYY');
+    },
+  },
+  methods: {
+    async likePost() {
+      try {
+        if (!this.liking && this.isLoggedIn) {
+          this.liking = true;
+          const res = await axios({
+            method: 'PATCH',
+            url: `/api/posts/${this.post._id}/like`,
+            headers: {
+              authorization: this.token,
+            },
+          });
+          this.$emit('like', res.data, this.index);
+          this.liking = false;
+        }
+      } catch (err) {
+        this.liking = false;
+      }
     },
   },
 };

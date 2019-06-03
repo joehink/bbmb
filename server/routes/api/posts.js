@@ -167,7 +167,12 @@ module.exports = app => {
                 return res.status(404).json({ message: "Post not found." });
             }
             // Find post by id
-            const post = await Post.findById(req.params.postId);
+            const post = await Post
+              .findById(req.params.postId)
+              .populate({
+                path: 'author', 
+                select: 'username _id' 
+              });
 
             if (!post) {
                 return res.status(404).json({ message: "Post not found." });

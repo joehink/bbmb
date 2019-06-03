@@ -101,6 +101,7 @@ const getters = {
   isLoggedIn: state => !!state.authenticated,
   user: state => state.user,
   isAuthLoading: state => state.isLoading,
+  token: state => state.authenticated,
 };
 
 const state = {
