@@ -1,5 +1,5 @@
 <template>
-  <form @submit="onSubmit">
+  <form v-on:submit.prevent="onSubmit">
     <h1>Welcome Back!</h1>
     <h4>Log In</h4>
     <ErrorMessage class="text-center" />
@@ -53,8 +53,7 @@ export default {
   methods: {
     ...mapActions(['login']),
     ...mapMutations(['setError']),
-    onSubmit(event) {
-      event.preventDefault();
+    onSubmit() {
       this.login({ username: this.username, password: this.password });
     },
   },

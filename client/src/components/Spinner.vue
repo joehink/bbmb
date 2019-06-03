@@ -49,10 +49,13 @@ export default {
     margin: 0 auto;
     width: 15%;
     height: 15%;
-    background-color: var(--white);
+    background-color: var(--primary-color);
     border-radius: 100%;
     -webkit-animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
             animation: sk-circleFadeDelay 1.2s infinite ease-in-out both;
+  }
+  .sk-fading-circle.btn-spinner .sk-circle:before {
+    background-color: var(--white);
   }
   .sk-fading-circle .sk-circle2 {
     -webkit-transform: rotate(30deg);

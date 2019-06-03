@@ -1,5 +1,5 @@
 <template>
-  <form @submit="onSubmit">
+  <form v-on:submit.prevent="onSubmit">
     <h1>Catch a wave!</h1>
     <h4>Sign Up</h4>
     <ErrorMessage class="text-center" />
@@ -62,8 +62,7 @@ export default {
   methods: {
     ...mapActions(['signup']),
     ...mapMutations(['setError']),
-    onSubmit(event) {
-      event.preventDefault();
+    onSubmit() {
       this.signup({
         username: this.username,
         password: this.password,

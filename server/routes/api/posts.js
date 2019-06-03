@@ -5,7 +5,7 @@ const Post = mongoose.model('Post');
 const Comment = mongoose.model('Comment');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
-const categories = ['discussion'];
+const categories = ['discussion', 'media', 'events', 'tour'];
 
 module.exports = app => {
     // Create Post

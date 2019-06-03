@@ -13,6 +13,7 @@ export default {
     border-radius: 100%;
     background-size: cover;
     background-position: center;
+    background: var(--white);
   }
   .profile-img-sm {
     width: 40px;

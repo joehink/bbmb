@@ -30,7 +30,7 @@ export default {
 :root {
   --primary-color: #5186EB;
   --black: #2A2B2A;
-  --white: #F7F4F3;
+  --white: #FFF;
   --gray: #F5F5F5;
   --border-gray: silver;
   --gray-text: #555;
@@ -47,6 +47,7 @@ export default {
 html, body, #app {
   height: 100%;
   min-height: 100%;
+  background: var(--gray);
 }
 
 #app {
@@ -73,7 +74,9 @@ button {
 
 .container {
   max-width: 1200px;
-  margin: auto;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 40px;
 }
 
 /* Headings */
@@ -81,6 +84,11 @@ h1 {
   font-weight: bold;
   font-size: 2em;
   margin: 5px 0;
+}
+
+h3 {
+  font-size: 1.2em;
+  margin: 0;
 }
 
 h4 {
