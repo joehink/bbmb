@@ -22,6 +22,12 @@ export default {
   .categories {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
+  }
+
+  @media (min-width: 1200px) {
+    .categories {
+      justify-content: space-around;
+    }
   }
 </style>

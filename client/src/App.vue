@@ -28,6 +28,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
 
 :root {
+  /* Colors */
   --primary-color: #5186EB;
   --black: #2A2B2A;
   --white: #FFF;
@@ -35,6 +36,11 @@ export default {
   --border-gray: silver;
   --gray-text: #555;
   --error-red: #E84855;
+
+  /* Breakpoints */
+  --small: 768px;
+  --medium: 992px;
+  --large: 1200px;
 
   color: var(--black);
   font-family: 'Roboto', sans-serif;
