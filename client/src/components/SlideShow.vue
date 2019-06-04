@@ -17,6 +17,7 @@
 export default {
   name: 'SlideShow',
   data() {
+    // Aray of slide show images
     const images = [
       '/static/images/auth/beachBoys1964.jpg',
       '/static/images/auth/beachBoysRehearsal.jpg',
@@ -26,23 +27,30 @@ export default {
     ];
     return {
       images,
+      // start image index at random number
       imageIndex: Math.floor(Math.random() * images.length),
     };
   },
-  mounted() {
+  created() {
+    // Start slideshow when component is created
     this.startRotation();
   },
   beforeDestroy() {
+    // Remove javascript timer when component is destroyed
     clearInterval(this.timer);
   },
   methods: {
     startRotation() {
+      // Initialize a javascript timer that changes slides every 8 seconds
       this.timer = setInterval(this.next, 8000);
     },
     next() {
+      // If slide show reaches last slide
       if (this.imageIndex >= this.images.length - 1) {
+        // Go back to first slide
         this.imageIndex = 0;
       } else {
+        // Go to next slide
         this.imageIndex += 1;
       }
     },

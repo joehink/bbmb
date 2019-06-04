@@ -10,9 +10,11 @@ import App from './App';
 import router from './router';
 import store from './store';
 
+// configure font awesome component
 library.add(faSun);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
+// configure lazy loader for profile picture
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: '/static/images/auth/error.png',

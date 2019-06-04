@@ -20,6 +20,7 @@
       type="submit"
       :disabled="isAuthLoading"
     >
+      <!-- Spinner is shown when log in request is being made -->
       <Spinner class="btn-spinner" v-if="isAuthLoading" />Log In
     </button>
   </form>
@@ -45,6 +46,7 @@ export default {
     };
   },
   beforeDestroy() {
+    // Remove error message when user navigates away from form
     this.setError('');
   },
   computed: {
@@ -54,6 +56,7 @@ export default {
     ...mapActions(['login']),
     ...mapMutations(['setError']),
     onSubmit() {
+      // Try to log in the user when the form is submitted
       this.login({ username: this.username, password: this.password });
     },
   },

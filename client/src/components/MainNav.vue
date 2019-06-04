@@ -8,7 +8,7 @@
         v-lazy:background-image="user.photo ? `/api/photos/${user.photo}` : null"
         :style="{
           backgroundImage: !user.photo && `url('/static/images/auth/error.png')`,
-          backgroundSize: 'cover'
+          backgroundSize: 'cover',
         }"
       />
       <button v-if="isLoggedIn" v-on:click="logout" class="nav-button nav-item">Log Out</button>

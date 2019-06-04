@@ -16,6 +16,7 @@ export default {
     MainNav,
   },
   created() {
+    // Fetch the logged in user when app is created
     this.getCurrentUser();
   },
   methods: {

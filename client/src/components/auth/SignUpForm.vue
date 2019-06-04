@@ -28,6 +28,7 @@
       type="submit"
       :disabled="isAuthLoading"
     >
+      <!-- Spinner is shown when sign up request is being made -->
       <Spinner class="btn-spinner" v-if="isAuthLoading" />Sign Up
     </button>
   </form>
@@ -54,6 +55,7 @@ export default {
     };
   },
   beforeDestroy() {
+    // Remove error message when user navigates away from form
     this.setError('');
   },
   computed: {
@@ -63,6 +65,7 @@ export default {
     ...mapActions(['signup']),
     ...mapMutations(['setError']),
     onSubmit() {
+      // Try to sign the user up when the form is submitted
       this.signup({
         username: this.username,
         password: this.password,

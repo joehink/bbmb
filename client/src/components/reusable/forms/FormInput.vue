@@ -11,7 +11,9 @@ export default {
   methods: {
     ...mapMutations(['setError']),
     handleInput(event) {
+      // emit 'input' so v-model can be used in parent component
       this.$emit('input', event.target.value);
+      // Clear error message whenever user types
       this.setError('');
     },
   },

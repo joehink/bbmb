@@ -5,11 +5,14 @@ const actions = {
   login: async ({ commit }, { username, password }) => {
     try {
       if (!username || !password) {
+        // if no username or password provided
         commit('setError', 'Must provide username and password.');
       } else if (username.length > 25) {
+        // if username is longer than 25 characters
         commit('setError', 'Username must be 25 characters or less.');
       } else {
         commit('setAuthLoading', true);
+        // try to log the user in
         const res = await axios({
           method: 'POST',
           url: '/api/sessions',
@@ -18,36 +21,49 @@ const actions = {
             password,
           },
         });
+        // save auth token in local storage
         localStorage.setItem('bbmb-token', res.data.token);
+        // store auth token in vuex state
         commit('setToken', res.data.token);
+        // store logged in user in vuex state
         commit('setUser', res.data.user);
         commit('setAuthLoading', false);
+        // navigate to home page
         router.push('/');
       }
     } catch (err) {
       if (err.response.status === 401) {
+        // if auth error is returned
         commit('setError', 'Invalid log in credentials.');
       } else {
+        // if some other error is returned
         commit('setError', 'Something went wrong while logging in.');
       }
       commit('setAuthLoading', false);
     }
   },
   logout: ({ commit }) => {
+    // remove auth token from local storage
     localStorage.removeItem('bbmb-token');
+    // remove auth token from vuex state
     commit('setToken', null);
+    // remove user object from vuex state
     commit('setUser', null);
   },
   signup: async ({ commit }, { username, password, confirmPassword }) => {
     try {
       if (!username || !password) {
+        // if no username or password provided
         commit('setError', 'Must provide username and password.');
       } else if (username.length > 25) {
+        // if username is longer than 25 characters
         commit('setError', 'Username must be 25 characters or less.');
       } else if (password !== confirmPassword) {
+        // if password does not match password confirmation
         commit('setError', 'Password does not match confirmation.');
       } else {
         commit('setAuthLoading', true);
+        // try to create a new user account
         const res = await axios({
           method: 'POST',
           url: '/api/users',
@@ -56,10 +72,14 @@ const actions = {
             password,
           },
         });
+        // save auth token in local storage
         localStorage.setItem('bbmb-token', res.data.token);
+        // store auth token in vuex state
         commit('setToken', res.data.token);
+        // store logged in user in vuex state
         commit('setUser', res.data.user);
         commit('setAuthLoading', false);
+        // navigate to home page
         router.push('/');
       }
     } catch (err) {
@@ -69,7 +89,9 @@ const actions = {
   },
   getCurrentUser: async ({ commit, state }) => {
     try {
+      // if user is logged in
       if (state.authenticated) {
+        // fetch logged in user object
         const res = await axios({
           method: 'GET',
           url: '/api/users',
@@ -77,6 +99,7 @@ const actions = {
             authorization: state.authenticated,
           },
         });
+        // store user in vuex state
         commit('setUser', res.data.user);
       }
     } catch (err) {

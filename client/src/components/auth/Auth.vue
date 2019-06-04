@@ -1,3 +1,5 @@
+// Auth is a full screen component with a slideshow on the right
+// and a Log In or Sign Up form on the left.
 <template>
   <main class="auth full-screen">
     <div class="auth-form-container">

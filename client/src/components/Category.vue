@@ -14,7 +14,9 @@
           v-on:like="updateLikes"
         />
       </div>
+      <!-- Message is shown when there are no posts yet in the category -->
       <p v-if="posts && !posts.length" class="center">No posts yet.</p>
+      <!-- Spinner is shown while posts are being fetched -->
       <Spinner v-if="posts === null" class="center" />
     </div>
     <router-link to='/posts/category' class="see-more">See More</router-link>
@@ -35,6 +37,7 @@ export default {
     Spinner,
   },
   created() {
+    // Get recent category posts when component is created
     this.getPosts();
   },
   data() {
@@ -47,6 +50,7 @@ export default {
   methods: {
     async getPosts() {
       try {
+        // Get 5 most recent posts for category
         const res = await axios({
           method: 'GET',
           url: `/api/posts/category/${this.category}/recent`,
@@ -58,6 +62,7 @@ export default {
       }
     },
     updateLikes(likedPost, index) {
+      // update posts array at index with updated post
       Vue.set(this.posts, index, likedPost);
     },
   },

@@ -32,14 +32,17 @@ export default {
   computed: {
     ...mapGetters(['token', 'isLoggedIn']),
     date() {
+      // format date posted using moment
       return moment(this.post.createdAt).format('MMMM D, YYYY');
     },
   },
   methods: {
     async likePost() {
       try {
+        // if like request is not being made and user is logged in
         if (!this.liking && this.isLoggedIn) {
           this.liking = true;
+          // Make request to like or unlike post
           const res = await axios({
             method: 'PATCH',
             url: `/api/posts/${this.post._id}/like`,
@@ -47,7 +50,9 @@ export default {
               authorization: this.token,
             },
           });
-          this.$emit('like', res.data, this.index);
+          const updatedPost = res.data;
+          // Emit custom 'like' event
+          this.$emit('like', updatedPost, this.index);
           this.liking = false;
         }
       } catch (err) {
