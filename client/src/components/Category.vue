@@ -12,6 +12,7 @@
           :index="index"
           :post="post"
           v-on:like="updateLikes"
+          class="recent"
         />
       </div>
       <!-- Message is shown when there are no posts yet in the category -->

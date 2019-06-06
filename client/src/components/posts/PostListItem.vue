@@ -68,8 +68,16 @@ export default {
     display: flex;
     align-items: center;
     padding: 10px 25px;
-    border-top: 1px solid #ddd;
     background: var(--white);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+  .post.recent {
+    border-top: 1px solid #ddd;
+    border-radius: 0;
+    margin: 0;
+    box-shadow: none;
   }
   .likes {
     display: flex;
