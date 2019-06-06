@@ -1,5 +1,14 @@
 <template>
   <div class="container">
+    <nav class="secondary-nav">
+      <span class="brand">{{ $route.params.category }}</span>
+      <router-link
+        :to="`/posts/category/${$route.params.category}/create`"
+        class="btn border blue sm"
+      >
+        Create New Post
+      </router-link>
+    </nav>
     <PostListItem
       v-for="(post, index) in posts"
       :key="post._id"

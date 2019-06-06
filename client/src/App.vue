@@ -115,6 +115,16 @@ h4 {
   outline: none;
 }
 
+.btn.border.blue {
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  background: var(--white);
+}
+
+.btn.sm {
+  padding: 5px 10px;
+}
+
 .btn:disabled {
   opacity: .8;
 }
@@ -126,6 +136,25 @@ h4 {
 .btn.blue {
   background: var(--primary-color);
   color: var(--white);
+}
+
+/* Secondary Nav */
+.secondary-nav {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  border-radius: 10px;
+  margin-bottom: 25px;
+  padding: 10px 25px;
+  background: var(--white);
+  border: 1px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+}
+
+.secondary-nav .brand {
+  text-transform: capitalize;
+  font-weight: bold;
+  margin-right: auto;
+  font-size: 1.1em;
 }
 
 /* Transitions */
