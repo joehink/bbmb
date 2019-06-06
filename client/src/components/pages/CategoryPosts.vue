@@ -31,26 +31,36 @@ export default {
   },
   data() {
     return {
-      posts: null,
-      nextPage: false,
+      posts: [],
+      page: 0,
+      nextPage: true,
       loading: false,
     };
   },
   created() {
     this.getPosts();
   },
+  mounted() {
+    this.scroll();
+  },
   methods: {
     async getPosts() {
       try {
-        this.loading = true;
-        const res = await axios({
-          method: 'GET',
-          url: `/api/posts/category/${this.$route.params.category}`,
-        });
+        if (!this.loading && this.nextPage) {
+          this.loading = true;
+          const res = await axios({
+            method: 'GET',
+            url: `/api/posts/category/${this.$route.params.category}`,
+            params: {
+              page: this.page + 1,
+            },
+          });
 
-        this.posts = res.data.posts;
-        this.nextPage = res.data.nextPage;
-        this.loading = false;
+          this.posts = [...this.posts, ...res.data.posts];
+          this.nextPage = res.data.nextPage;
+          this.page += 1;
+          this.loading = false;
+        }
       } catch (err) {
         this.loading = false;
       }
@@ -58,6 +68,17 @@ export default {
     updateLikes(likedPost, index) {
       // update posts array at index with updated post
       Vue.set(this.posts, index, likedPost);
+    },
+    scroll() {
+      window.onscroll = (event) => {
+        const { innerHeight } = window;
+        const { scrollTop, scrollHeight } = event.target.scrollingElement;
+        const bottomOfWindow = (innerHeight * 1.25) + scrollTop >= scrollHeight;
+
+        if (bottomOfWindow) {
+          this.getPosts();
+        }
+      };
     },
   },
 };

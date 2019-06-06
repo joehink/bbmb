@@ -41,7 +41,7 @@ module.exports = app => {
             }
 
             const { page = 1, sortBy = '-updatedAt' } = req.query;
-            const limit = 50;
+            const limit = 25;
 
             const posts = await Post
                 .find({ category: req.params.category })
