@@ -19,7 +19,7 @@
       <!-- Spinner is shown while posts are being fetched -->
       <Spinner v-if="posts === null" class="center" />
     </div>
-    <router-link to='/posts/category' class="see-more">See More</router-link>
+    <router-link :to="`/posts/category/${category}`" class="see-more">See More</router-link>
   </div>
 </template>
 
