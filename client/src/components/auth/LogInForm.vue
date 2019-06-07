@@ -65,8 +65,12 @@ export default {
 
 <style scoped>
   form {
-    max-width: 320px;
+    max-width: 350px;
     width: 90%;
+    background: var(--white);
+    padding: 50px 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   }
   h1 {
     text-align: center;

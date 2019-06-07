@@ -2,7 +2,13 @@
 // and a Log In or Sign Up form on the left.
 <template>
   <main class="auth full-screen">
-    <div class="auth-form-container">
+    <div 
+      class="auth-form-container" 
+      :class="{ 
+        beach: randomNumer === 0,  
+        city: randomNumer === 1,  
+        farm: randomNumer === 2,  
+      }">
       <router-view></router-view>
     </div>
     <SlideShow />
@@ -17,6 +23,11 @@ export default {
   components: {
     SlideShow,
   },
+  data() {
+    return {
+      randomNumer: Math.floor(Math.random() * 3),
+    }
+  },
 };
 </script>
 
@@ -28,7 +39,24 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--gray);
+  }
+  .beach {
+    background: url('/static/images/auth/beach.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center bottom;
+  }
+  .city {
+    background: url('/static/images/auth/city.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center bottom;
+  }
+  .farm {
+    background: url('/static/images/auth/farm.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center bottom;
   }
   .auth > * {
     flex: 1;
