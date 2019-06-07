@@ -5,6 +5,7 @@ import Auth from '../components/auth/Auth';
 import LogInForm from '../components/auth/LogInForm';
 import SignUpForm from '../components/auth/SignUpForm';
 import CategoryPosts from '../components/pages/CategoryPosts';
+import Post from '../components/posts/Post';
 
 Vue.use(Router);
 
@@ -34,6 +35,10 @@ export default new Router({
     {
       path: '/posts/category/:category',
       component: CategoryPosts,
+    },
+    {
+      path: '/posts/:postId',
+      component: Post,
     },
   ],
 });

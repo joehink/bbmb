@@ -2,12 +2,12 @@
 // and a Log In or Sign Up form on the left.
 <template>
   <main class="auth full-screen">
-    <div 
-      class="auth-form-container" 
-      :class="{ 
-        beach: randomNumer === 0,  
-        city: randomNumer === 1,  
-        farm: randomNumer === 2,  
+    <div
+      class="auth-form-container"
+      :class="{
+        beach: randomNumer === 0,
+        city: randomNumer === 1,
+        farm: randomNumer === 2,
       }">
       <router-view></router-view>
     </div>
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       randomNumer: Math.floor(Math.random() * 3),
-    }
+    };
   },
 };
 </script>

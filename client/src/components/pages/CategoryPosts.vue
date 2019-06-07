@@ -35,19 +35,33 @@ export default {
       page: 0,
       nextPage: true,
       loading: false,
+      category: this.$route.params.category,
     };
   },
-  created() {
+  mounted() {
+    // Initialize infinite scroll function
+    this.scroll();
+    // Get first page of posts for category
     this.getPosts();
   },
-  mounted() {
-    this.scroll();
+  activated() {
+    // If selected category is different than previously selected category
+    if (this.category !== this.$route.params.category) {
+      // reset data
+      this.posts = [];
+      this.page = 0;
+      this.nextPage = true;
+      this.category = this.$route.params.category;
+      this.getPosts();
+    }
   },
   methods: {
     async getPosts() {
       try {
+        // If request is not currently being made and if there is a next page
         if (!this.loading && this.nextPage) {
           this.loading = true;
+          // fetch next page of posts
           const res = await axios({
             method: 'GET',
             url: `/api/posts/category/${this.$route.params.category}`,
@@ -55,7 +69,7 @@ export default {
               page: this.page + 1,
             },
           });
-
+          // add posts array onto existing array of posts
           this.posts = [...this.posts, ...res.data.posts];
           this.nextPage = res.data.nextPage;
           this.page += 1;
@@ -75,7 +89,9 @@ export default {
         const { scrollTop, scrollHeight } = event.target.scrollingElement;
         const bottomOfWindow = (innerHeight * 1.25) + scrollTop >= scrollHeight;
 
+        // if user is a quarter of the screen's height away from the bottom of the page
         if (bottomOfWindow) {
+          // get next page of posts
           this.getPosts();
         }
       };
@@ -84,4 +100,4 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped></style>

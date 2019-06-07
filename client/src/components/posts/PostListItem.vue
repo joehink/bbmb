@@ -10,7 +10,9 @@
       <span class="like-count">{{ post.likesCount }}</span>
     </div>
     <div class="post-info">
-      <h3>{{ post.title }}</h3>
+      <router-link :to="`/posts/${post._id}`">
+        <h3>{{ post.title }}</h3>
+      </router-link>
       <span class="post-data">{{ date }} by {{ post.author.username }}</span>
     </div>
   </div>
