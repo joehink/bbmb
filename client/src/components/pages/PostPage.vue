@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Post :post="post" v-on:likePost="updateLikes"/>
+    <Post :post="post" v-on:likePost="updateLikes" v-if="post"/>
     <PostComments :comments="comments" />
   </div>
 </template>
