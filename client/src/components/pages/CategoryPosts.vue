@@ -39,8 +39,6 @@ export default {
     };
   },
   mounted() {
-    // Initialize infinite scroll function
-    this.scroll();
     // Get first page of posts for category
     this.getPosts();
   },
@@ -54,6 +52,12 @@ export default {
       this.category = this.$route.params.category;
       this.getPosts();
     }
+    // Initialize infinite scroll function
+    this.scroll();
+  },
+  deactivated() {
+    // remove infinite scroll function when component is not shown
+    window.onscroll = null;
   },
   methods: {
     async getPosts() {
@@ -84,7 +88,7 @@ export default {
       Vue.set(this.posts, index, likedPost);
     },
     scroll() {
-      window.onscroll = (event) => {
+      window.onscroll = () => {
         const { innerHeight } = window;
         const { scrollTop, scrollHeight } = event.target.scrollingElement;
         const bottomOfWindow = (innerHeight * 1.25) + scrollTop >= scrollHeight;
