@@ -18,7 +18,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: '/static/images/auth/error.png',
-  loading: '/static/images/auth/loading.jpg',
+  loading: '/static/images/auth/loading.gif',
   attempt: 1,
 });
 

@@ -10,7 +10,7 @@
       <span class="like-count">{{ post.likesCount }}</span>
     </div>
     <div class="post-info">
-      <router-link :to="`/posts/${post._id}`">
+      <router-link :to="`/posts/${post._id}`" class="post-link">
         <h3>{{ post.title }}</h3>
       </router-link>
       <span class="post-data">{{ date }} by {{ post.author.username }}</span>
@@ -80,6 +80,9 @@ export default {
     border-radius: 0;
     margin: 0;
     box-shadow: none;
+  }
+  .post-link {
+    color: var(--black);
   }
   .likes {
     display: flex;
