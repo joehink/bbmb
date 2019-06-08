@@ -5,7 +5,7 @@ import Auth from '../components/auth/Auth';
 import LogInForm from '../components/auth/LogInForm';
 import SignUpForm from '../components/auth/SignUpForm';
 import CategoryPosts from '../components/pages/CategoryPosts';
-import Post from '../components/posts/Post';
+import PostPage from '../components/pages/PostPage';
 
 Vue.use(Router);
 
@@ -38,7 +38,7 @@ export default new Router({
     },
     {
       path: '/posts/:postId',
-      component: Post,
+      component: PostPage,
     },
   ],
 });
