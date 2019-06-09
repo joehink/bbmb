@@ -1,6 +1,6 @@
 <template>
   <div class="post">
-    <div class="post-header" v-if="post">
+    <div class="post-header" v-if="post" :class="{'border-bottom': !editable}">
       <div class="likes">
         <font-awesome-icon
           v-on:click="likePost"
@@ -14,10 +14,26 @@
           <h3>{{ post.title }}</h3>
         <span class="post-data">{{ date }} by {{ post.author.username }}</span>
       </div>
+      <button
+        class="btn border blue sm"
+        v-if="user && user._id === post.author._id"
+        v-on:click="toggleEdit"
+      >
+        Edit
+      </button>
+      <button
+        v-if="user && user._id === post.author._id && editable"
+        v-on:click="updatePost"
+      >
+        Save
+      </button>
     </div>
-    <div class="post-body">
-      <p>{{ post.body }}</p>
-    </div>
+    <editor
+      :content="content"
+      :editable="editable"
+      :displayMenu="displayEditorMenu"
+      v-model="content"
+    />
   </div>
 </template>
 
@@ -25,20 +41,31 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
+import Editor from '../reusable/Editor';
 
 export default {
   name: 'Post',
+  components: {
+    Editor,
+  },
   props: ['post'],
   data() {
     return {
       liking: false,
+      editable: false,
+      content: this.post.body,
+      updating: false,
     };
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'token']),
+    ...mapGetters(['isLoggedIn', 'token', 'user']),
     date() {
       // format date posted using moment
       return moment(this.post.createdAt).format('MMMM D, YYYY');
+    },
+    displayEditorMenu() {
+      // determine whether or not the editor menubar should be displayed
+      return this.user && this.post.author._id === this.user._id && this.editable;
     },
   },
   methods: {
@@ -63,6 +90,32 @@ export default {
         this.liking = false;
       }
     },
+    async updatePost() {
+      try {
+        this.updating = true;
+        // update post with new title and body
+        const res = await axios({
+          method: 'PATCH',
+          url: `/api/posts/${this.post._id}`,
+          headers: {
+            authorization: this.token,
+          },
+          data: {
+            title: this.post.title,
+            body: this.content,
+          },
+        });
+
+        // emit event to update post in PostPage Component
+        this.$emit('postUpdate', res.data);
+        this.updating = false;
+      } catch (err) {
+        this.updating = false;
+      }
+    },
+    toggleEdit() {
+      this.editable = !this.editable;
+    },
   },
 };
 </script>
@@ -74,13 +127,14 @@ export default {
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border: 1px solid var(--primary-color);
     padding: 30px 40px;
-    min-height: 300px;
   }
   .post-header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #DDD;
     padding-bottom: 10px;
+  }
+  .post-header.border-bottom {
+    border-bottom: 1px solid #ddd;
   }
   .likes {
     display: flex;
@@ -100,10 +154,5 @@ export default {
     color: var(--gray-text);
     font-size: .8em;
     margin-top: 10px;
-  }
-  .post-body {
-    padding: 0;
-    white-space: pre-wrap;
-    line-height: 1.5;
   }
 </style>

@@ -124,7 +124,7 @@ h4 {
 }
 
 .btn.sm {
-  padding: 5px 10px;
+  padding: 5px 20px;
 }
 
 .btn:disabled {

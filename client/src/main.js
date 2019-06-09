@@ -1,7 +1,20 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSun } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSun,
+  faBold,
+  faItalic,
+  faStrikethrough,
+  faUnderline,
+  faParagraph,
+  faListUl,
+  faListOl,
+  faQuoteRight,
+  faGripHorizontal,
+  faUndo,
+  faRedo,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
 
@@ -11,7 +24,20 @@ import router from './router';
 import store from './store';
 
 // configure font awesome component
-library.add(faSun);
+library.add(
+  faSun,
+  faBold,
+  faItalic,
+  faStrikethrough,
+  faUnderline,
+  faParagraph,
+  faListUl,
+  faListOl,
+  faQuoteRight,
+  faGripHorizontal,
+  faUndo,
+  faRedo,
+);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 // configure lazy loader for profile picture
