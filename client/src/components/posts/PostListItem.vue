@@ -1,5 +1,5 @@
 <template>
-  <div class="post">
+  <div class="post-list-item">
     <div class="likes">
       <font-awesome-icon
         v-on:click="likePost"
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style scoped>
-  .post {
+  .post-list-item {
     display: flex;
     align-items: center;
     padding: 10px 25px;
@@ -75,7 +75,7 @@ export default {
     margin-bottom: 10px;
     border-radius: 10px;
   }
-  .post.recent {
+  .post-list-item.recent {
     border-top: 1px solid #ddd;
     border-radius: 0;
     margin: 0;

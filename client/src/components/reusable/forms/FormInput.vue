@@ -37,7 +37,7 @@ export default {
   }
 
   input:focus {
-    box-shadow: 0 0 0 2px var(--primary-color);
+    box-shadow: 0 0 2px 2px var(--primary-color);
     border-color: var(--primary-color);
   }
 </style>

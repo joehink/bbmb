@@ -30,7 +30,7 @@ export default {
   padding: 15px 25px;
   background: var(--white);
   box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   border-radius: 10px;
 }
 .comment header {

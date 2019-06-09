@@ -1,6 +1,6 @@
 <template>
   <div class="post">
-    <div class="post-header" v-if="post">
+    <div class="post-header" v-if="post" :class="{'border-bottom': !editor.view.editable}">
       <div class="likes">
         <font-awesome-icon
           v-on:click="likePost"
@@ -15,14 +15,18 @@
         <span class="post-data">{{ date }} by {{ post.author.username }}</span>
       </div>
     </div>
-    <div class="post-body" v-if="!edit">
+    <!-- <div class="post-body" v-if="!edit">
       <p>{{ post.body }}</p>
-    </div>
-    <div class="editor" v-else>
-      <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    </div> -->
+    <div class="editor">
+      <editor-menu-bar
+        :editor="editor"
+        v-slot="{ commands, isActive }"
+        v-if="user && post.author._id === user._id && editor.view.editable"
+      >
         <div class="menubar">
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.bold() }"
             @click="commands.bold"
           >
@@ -30,7 +34,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.italic() }"
             @click="commands.italic"
           >
@@ -38,7 +42,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.strike() }"
             @click="commands.strike"
           >
@@ -46,7 +50,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.underline() }"
             @click="commands.underline"
           >
@@ -54,7 +58,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.code() }"
             @click="commands.code"
           >
@@ -62,7 +66,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.paragraph() }"
             @click="commands.paragraph"
           >
@@ -70,7 +74,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.heading({ level: 1 }) }"
             @click="commands.heading({ level: 1 })"
           >
@@ -78,7 +82,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.heading({ level: 2 }) }"
             @click="commands.heading({ level: 2 })"
           >
@@ -86,7 +90,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.heading({ level: 3 }) }"
             @click="commands.heading({ level: 3 })"
           >
@@ -94,7 +98,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.bullet_list() }"
             @click="commands.bullet_list"
           >
@@ -102,7 +106,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.ordered_list() }"
             @click="commands.ordered_list"
           >
@@ -110,7 +114,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.blockquote() }"
             @click="commands.blockquote"
           >
@@ -118,7 +122,7 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             :class="{ 'is-active': isActive.code_block() }"
             @click="commands.code_block"
           >
@@ -126,28 +130,32 @@
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             @click="commands.horizontal_rule"
           >
             <font-awesome-icon icon="grip-horizontal" />
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             @click="commands.undo"
           >
             <font-awesome-icon icon="undo" />
           </button>
 
           <button
-            class="menubar__button"
+            class="menubar-button"
             @click="commands.redo"
           >
             <font-awesome-icon icon="redo" />
           </button>
         </div>
       </editor-menu-bar>
-      <editor-content :editor="editor" />
+      <editor-content
+        :editor="editor"
+        class="editor-content"
+        :class="{focus: editor.view.focused && editor.view.editable}"
+      />
     </div>
   </div>
 </template>
@@ -207,8 +215,8 @@ export default {
           new History(),
         ],
         content: this.post.body,
+        editable: false,
       }),
-      edit: true,
       liking: false,
     };
   },
@@ -216,7 +224,7 @@ export default {
     this.editor.destroy();
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'token']),
+    ...mapGetters(['isLoggedIn', 'token', 'user']),
     date() {
       // format date posted using moment
       return moment(this.post.createdAt).format('MMMM D, YYYY');
@@ -248,20 +256,21 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
   .post {
     background: var(--white);
     border-radius: 15px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border: 1px solid var(--primary-color);
     padding: 30px 40px;
-    min-height: 300px;
   }
   .post-header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #DDD;
     padding-bottom: 10px;
+  }
+  .post-header.border-bottom {
+    border-bottom: 1px solid #ddd;
   }
   .likes {
     display: flex;
@@ -282,9 +291,31 @@ export default {
     font-size: .8em;
     margin-top: 10px;
   }
-  .post-body {
-    padding: 0;
-    white-space: pre-wrap;
-    line-height: 1.5;
+  .menubar {
+    padding: 10px 5px;
+    border-bottom: 1px solid #ddd;
+  }
+  .menubar-button {
+    background: none;
+    border: none;
+    padding: 0 10px;
+  }
+  .editor-content > div {
+    padding: 12.5px 15px;
+    min-height: 200px;
+  }
+  .editor-content.focus > div {
+    box-shadow: 0 0 2px 2px var(--primary-color);
+    border-radius: 5px;
+  }
+  .editor-content > div:focus {
+    outline: none;
+  }
+  .editor-content * {
+    margin: 0;
+    line-height: 1.25;
+  }
+  .editor-content hr {
+    margin: 10px 0;
   }
 </style>
