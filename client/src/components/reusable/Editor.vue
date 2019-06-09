@@ -190,6 +190,7 @@ export default {
       this.editor.setOptions({
         editable: this.editable,
       });
+      // make editor focus automatically after becoming editable
       this.editor.focus('end');
     },
   },
