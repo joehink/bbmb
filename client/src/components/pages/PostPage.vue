@@ -37,6 +37,7 @@ export default {
     async getPost() {
       try {
         this.loading = true;
+        // Fetch post
         const res = await axios({
           method: 'GET',
           url: `/api/posts/${this.$route.params.postId}`,
@@ -51,11 +52,13 @@ export default {
     async getPostComments() {
       try {
         this.commentsLoading = true;
+        // fetch post comments
         const res = await axios({
           method: 'GET',
           url: `/api/posts/${this.$route.params.postId}/comments`,
         });
 
+        // add new comments to existing comments array
         this.comments = [...this.comments, ...res.data.comments];
         this.commentsLoading = false;
       } catch (err) {

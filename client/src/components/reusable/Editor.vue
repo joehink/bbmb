@@ -186,6 +186,7 @@ export default {
   },
   watch: {
     editable() {
+      // toggle editor editablity (is that a word?)
       this.editor.setOptions({
         editable: this.editable,
       });

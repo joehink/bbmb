@@ -64,6 +64,7 @@ export default {
       return moment(this.post.createdAt).format('MMMM D, YYYY');
     },
     displayEditorMenu() {
+      // determine whether or not the editor menubar should be displayed
       return this.user && this.post.author._id === this.user._id && this.editable;
     },
   },
@@ -92,6 +93,7 @@ export default {
     async updatePost() {
       try {
         this.updating = true;
+        // update post with new title and body
         const res = await axios({
           method: 'PATCH',
           url: `/api/posts/${this.post._id}`,
@@ -104,6 +106,7 @@ export default {
           },
         });
 
+        // emit event to update post in PostPage Component
         this.$emit('postUpdate', res.data);
         this.updating = false;
       } catch (err) {
