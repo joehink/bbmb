@@ -16,7 +16,7 @@
       </div>
       <button
         class="btn border blue sm"
-        v-if="user._id === post.author._id"
+        v-if="user && user._id === post.author._id"
         v-on:click="toggleEdit"
       >
         Edit

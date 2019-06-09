@@ -41,19 +41,19 @@ export default {
     align-items: center;
   }
   .beach {
-    background: url('/static/images/auth/beach-2.png');
+    background: url('/static/images/auth/beach.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center bottom;
   }
   .city {
-    background: url('/static/images/auth/city-2.png');
+    background: url('/static/images/auth/city.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center bottom;
   }
   .farm {
-    background: url('/static/images/auth/farm-2.png');
+    background: url('/static/images/auth/farm.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center bottom;
