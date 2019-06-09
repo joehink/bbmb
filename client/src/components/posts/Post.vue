@@ -14,6 +14,13 @@
           <h3>{{ post.title }}</h3>
         <span class="post-data">{{ date }} by {{ post.author.username }}</span>
       </div>
+      <button
+        class="btn border blue sm"
+        v-if="user._id === post.author._id"
+        v-on:click="toggleEdit"
+      >
+        Edit
+      </button>
     </div>
     <!-- <div class="post-body" v-if="!edit">
       <p>{{ post.body }}</p>
@@ -55,14 +62,6 @@
             @click="commands.underline"
           >
             <font-awesome-icon icon="underline" />
-          </button>
-
-          <button
-            class="menubar-button"
-            :class="{ 'is-active': isActive.code() }"
-            @click="commands.code"
-          >
-            <font-awesome-icon icon="code" />
           </button>
 
           <button
@@ -123,14 +122,6 @@
 
           <button
             class="menubar-button"
-            :class="{ 'is-active': isActive.code_block() }"
-            @click="commands.code_block"
-          >
-            <font-awesome-icon icon="code" />
-          </button>
-
-          <button
-            class="menubar-button"
             @click="commands.horizontal_rule"
           >
             <font-awesome-icon icon="grip-horizontal" />
@@ -165,7 +156,6 @@ import axios from 'axios';
 import { Editor, EditorContent, EditorMenuBar } from 'tiptap';
 import {
   Blockquote,
-  CodeBlock,
   HardBreak,
   Heading,
   HorizontalRule,
@@ -175,7 +165,6 @@ import {
   TodoItem,
   TodoList,
   Bold,
-  Code,
   Italic,
   Link,
   Strike,
@@ -198,7 +187,6 @@ export default {
         extensions: [
           new Blockquote(),
           new BulletList(),
-          new CodeBlock(),
           new HardBreak(),
           new Heading({ levels: [1, 2, 3] }),
           new HorizontalRule(),
@@ -208,7 +196,6 @@ export default {
           new TodoList(),
           new Link(),
           new Bold(),
-          new Code(),
           new Italic(),
           new Strike(),
           new Underline(),
@@ -251,6 +238,11 @@ export default {
       } catch (err) {
         this.liking = false;
       }
+    },
+    toggleEdit() {
+      this.editor.setOptions({
+        editable: !this.editor.view.editable,
+      });
     },
   },
 };
