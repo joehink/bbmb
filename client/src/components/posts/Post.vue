@@ -243,7 +243,7 @@ export default {
       this.editor.setOptions({
         editable: !this.editor.view.editable,
       });
-      this.editor.view.focused = true;
+      this.editor.focus('end');
     },
   },
 };
