@@ -173,6 +173,11 @@ export default {
         ],
         content: this.content,
         editable: this.editable,
+        onUpdate: (event) => {
+          const html = event.getHTML();
+          // emit 'input' so v-model can be used in parent component
+          this.$emit('input', html);
+        },
       }),
     };
   },

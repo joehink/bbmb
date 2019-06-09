@@ -31,11 +31,9 @@ export default {
     padding: 10px 20px;
     outline: none;
   }
-
   input:disabled {
     opacity: .8;
   }
-
   input:focus {
     box-shadow: 0 0 2px 2px var(--primary-color);
     border-color: var(--primary-color);

@@ -21,11 +21,18 @@
       >
         Edit
       </button>
+      <button
+        v-if="user && user._id === post.author._id && editable"
+        v-on:click="updatePost"
+      >
+        Save
+      </button>
     </div>
     <editor
-      :content="post.body"
+      :content="content"
       :editable="editable"
       :displayMenu="displayEditorMenu"
+      v-model="content"
     />
   </div>
 </template>
@@ -46,6 +53,8 @@ export default {
     return {
       liking: false,
       editable: false,
+      content: this.post.body,
+      updating: false,
     };
   },
   computed: {
@@ -78,6 +87,27 @@ export default {
         }
       } catch (err) {
         this.liking = false;
+      }
+    },
+    async updatePost() {
+      try {
+        this.updating = true;
+        const res = await axios({
+          method: 'PATCH',
+          url: `/api/posts/${this.post._id}`,
+          headers: {
+            authorization: this.token,
+          },
+          data: {
+            title: this.post.title,
+            body: this.content,
+          },
+        });
+
+        this.$emit('postUpdate', res.data);
+        this.updating = false;
+      } catch (err) {
+        this.updating = false;
       }
     },
     toggleEdit() {

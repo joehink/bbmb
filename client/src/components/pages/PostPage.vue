@@ -1,6 +1,11 @@
 <template>
   <div class="container">
-    <Post :post="post" v-on:likePost="updateLikes" v-if="post"/>
+    <Post
+      :post="post"
+      @likePost="updatePost"
+      v-if="post"
+      @postUpdate="updatePost"
+    />
     <PostComments :comments="comments" />
   </div>
 </template>
@@ -57,7 +62,7 @@ export default {
         this.commentsLoading = false;
       }
     },
-    updateLikes(updatedPost) {
+    updatePost(updatedPost) {
       this.post = updatedPost;
     },
   },
