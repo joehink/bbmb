@@ -83,6 +83,7 @@ export default {
       this.saved = false;
     },
     editable(newVal) {
+      this.contentChanged = false;
       if (!newVal) {
         this.content = this.post.body;
       }
