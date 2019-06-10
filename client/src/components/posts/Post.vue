@@ -14,19 +14,30 @@
           <h3>{{ post.title }}</h3>
         <span class="post-data">{{ date }} by {{ post.author.username }}</span>
       </div>
-      <button
-        class="btn border blue sm"
-        v-if="user && user._id === post.author._id"
-        v-on:click="toggleEdit"
-      >
-        Edit
-      </button>
-      <button
-        v-if="user && user._id === post.author._id && editable"
-        v-on:click="updatePost"
-      >
-        Save
-      </button>
+      <div class="post-controls">
+        <button
+          class="btn border red sm"
+          v-if="user && user._id === post.author._id && !editable"
+        >
+          Delete
+        </button>
+        <button
+          class="btn border blue sm"
+          v-if="user && user._id === post.author._id && !updating"
+          v-on:click="toggleEdit"
+        >
+          {{ editable ? 'Cancel' : 'Edit' }}
+        </button>
+        <button
+          v-if="user && user._id === post.author._id && editable"
+          v-on:click="updatePost"
+          class="btn border green sm"
+          :disabled="!contentChanged"
+        >
+          <Spinner class="btn-spinner green" v-if="updating" />
+          Save
+        </button>
+      </div>
     </div>
     <editor
       :content="content"
@@ -42,11 +53,13 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
 import Editor from '../reusable/Editor';
+import Spinner from '../Spinner';
 
 export default {
   name: 'Post',
   components: {
     Editor,
+    Spinner,
   },
   props: ['post'],
   data() {
@@ -54,8 +67,14 @@ export default {
       liking: false,
       editable: false,
       content: this.post.body,
+      contentChanged: false,
       updating: false,
     };
+  },
+  watch: {
+    content() {
+      this.contentChanged = true;
+    },
   },
   computed: {
     ...mapGetters(['isLoggedIn', 'token', 'user']),
@@ -109,6 +128,7 @@ export default {
         // emit event to update post in PostPage Component
         this.$emit('postUpdate', res.data);
         this.updating = false;
+        this.editable = false;
       } catch (err) {
         this.updating = false;
       }
@@ -135,6 +155,9 @@ export default {
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     padding: 12.5px 25px;
+  }
+  .post-controls {
+    margin-left: auto;
   }
   .likes {
     display: flex;

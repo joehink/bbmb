@@ -115,6 +115,7 @@ h4 {
   padding: 10px 20px;
   cursor: pointer;
   outline: none;
+  display: inline-flex;
 }
 
 .btn.border.blue {
@@ -122,13 +123,28 @@ h4 {
   color: var(--primary-color);
   background: var(--white);
 }
+.btn.border.green {
+  border: 2px solid green;
+  color: green;
+  background: var(--white);
+}
+.btn.border.red {
+  border: 2px solid var(--error-red);
+  color: var(--error-red);
+  background: var(--white);
+}
 
 .btn.sm {
   padding: 5px 20px;
 }
 
-.btn:disabled {
-  opacity: .8;
+.btn.border.blue:disabled,
+.btn.border.red:disabled,
+.btn.border.green:disabled {
+  border-color: #ddd;
+  color: #aaa;
+  opacity: 0.8;
+  cursor: default;
 }
 
 .btn:hover {
@@ -137,6 +153,11 @@ h4 {
 
 .btn.blue {
   background: var(--primary-color);
+  color: var(--white);
+}
+
+.btn.green {
+  background: green;
   color: var(--white);
 }
 

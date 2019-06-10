@@ -57,6 +57,9 @@ export default {
   .sk-fading-circle.btn-spinner .sk-circle:before {
     background-color: var(--white);
   }
+  .sk-fading-circle.btn-spinner.green .sk-circle:before {
+    background-color: green;
+  }
   .sk-fading-circle .sk-circle2 {
     -webkit-transform: rotate(30deg);
         -ms-transform: rotate(30deg);
