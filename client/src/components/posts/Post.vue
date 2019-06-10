@@ -1,50 +1,53 @@
 <template>
-  <div class="post">
-    <div class="post-header" v-if="post">
-      <div class="likes">
-        <font-awesome-icon
-          v-on:click="likePost"
-          class="sun"
-          :class="{ spin: liking }"
-          icon="sun"
-        />
-        <span class="like-count">{{ post.likesCount }}</span>
+  <div>
+    <Notification message="Post changes were successfully saved." v-if="saved" />
+    <div class="post">
+      <div class="post-header" v-if="post">
+        <div class="likes">
+          <font-awesome-icon
+            v-on:click="likePost"
+            class="sun"
+            :class="{ spin: liking }"
+            icon="sun"
+          />
+          <span class="like-count">{{ post.likesCount }}</span>
+        </div>
+        <div class="post-info">
+            <h3>{{ post.title }}</h3>
+          <span class="post-data">{{ date }} by {{ post.author.username }}</span>
+        </div>
+        <div class="post-controls">
+          <button
+            class="btn border red sm"
+            v-if="user && user._id === post.author._id && !editable"
+          >
+            Delete
+          </button>
+          <button
+            class="btn border blue sm"
+            v-if="user && user._id === post.author._id && !updating"
+            v-on:click="toggleEdit"
+          >
+            {{ editable ? 'Cancel' : 'Edit' }}
+          </button>
+          <button
+            v-if="user && user._id === post.author._id && editable"
+            v-on:click="updatePost"
+            class="btn border green sm"
+            :disabled="!contentChanged"
+          >
+            <Spinner class="btn-spinner green" v-if="updating" />
+            Save
+          </button>
+        </div>
       </div>
-      <div class="post-info">
-          <h3>{{ post.title }}</h3>
-        <span class="post-data">{{ date }} by {{ post.author.username }}</span>
-      </div>
-      <div class="post-controls">
-        <button
-          class="btn border red sm"
-          v-if="user && user._id === post.author._id && !editable"
-        >
-          Delete
-        </button>
-        <button
-          class="btn border blue sm"
-          v-if="user && user._id === post.author._id && !updating"
-          v-on:click="toggleEdit"
-        >
-          {{ editable ? 'Cancel' : 'Edit' }}
-        </button>
-        <button
-          v-if="user && user._id === post.author._id && editable"
-          v-on:click="updatePost"
-          class="btn border green sm"
-          :disabled="!contentChanged"
-        >
-          <Spinner class="btn-spinner green" v-if="updating" />
-          Save
-        </button>
-      </div>
+      <editor
+        :content="content"
+        :editable="editable"
+        :displayMenu="displayEditorMenu"
+        v-model="content"
+      />
     </div>
-    <editor
-      :content="content"
-      :editable="editable"
-      :displayMenu="displayEditorMenu"
-      v-model="content"
-    />
   </div>
 </template>
 
@@ -53,12 +56,14 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
 import Editor from '../reusable/Editor';
+import Notification from '../reusable/Notification';
 import Spinner from '../Spinner';
 
 export default {
   name: 'Post',
   components: {
     Editor,
+    Notification,
     Spinner,
   },
   props: ['post'],
@@ -69,11 +74,18 @@ export default {
       content: this.post.body,
       contentChanged: false,
       updating: false,
+      saved: false,
     };
   },
   watch: {
     content() {
       this.contentChanged = true;
+      this.saved = false;
+    },
+    editable(newVal) {
+      if (!newVal) {
+        this.content = this.post.body;
+      }
     },
   },
   computed: {
@@ -129,6 +141,7 @@ export default {
         this.$emit('postUpdate', res.data);
         this.updating = false;
         this.editable = false;
+        this.saved = true;
       } catch (err) {
         this.updating = false;
       }

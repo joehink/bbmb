@@ -190,6 +190,8 @@ export default {
       this.editor.setOptions({
         editable: this.editable,
       });
+      // sets content back to what it was if cancelled
+      this.editor.setContent(this.content);
       // make editor focus automatically after becoming editable
       this.editor.focus('end');
     },

@@ -6,7 +6,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'LogInForm',
+  name: 'ErrorMessage',
   computed: {
     ...mapGetters(['error']),
   },
