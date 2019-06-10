@@ -227,6 +227,10 @@ export default {
     margin: 0;
     line-height: 1.25;
   }
+  .editor-content h1,
+  .editor-content h2 {
+    margin-bottom: 2.5px;
+  }
   .editor-content hr {
     margin: 10px 0;
   }
