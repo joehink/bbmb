@@ -1,6 +1,6 @@
 <template>
   <div class="post">
-    <div class="post-header" v-if="post" :class="{'border-bottom': !editable}">
+    <div class="post-header" v-if="post">
       <div class="likes">
         <font-awesome-icon
           v-on:click="likePost"
@@ -126,15 +126,15 @@ export default {
     border-radius: 15px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border: 1px solid var(--primary-color);
-    padding: 30px 40px;
   }
   .post-header {
     display: flex;
     align-items: center;
     padding-bottom: 10px;
-  }
-  .post-header.border-bottom {
-    border-bottom: 1px solid #ddd;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    padding: 12.5px 25px;
   }
   .likes {
     display: flex;

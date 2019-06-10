@@ -198,6 +198,9 @@ export default {
 </script>
 
 <style>
+  .editor {
+    padding: 5px 15px 15px;
+  }
   .menubar {
     padding: 10px 5px;
     border-bottom: 1px solid #ddd;
