@@ -205,7 +205,6 @@ export default {
   }
   .menubar {
     padding: 10px 5px;
-    border-bottom: 1px solid #ddd;
   }
   .menubar-button {
     background: none;
@@ -215,10 +214,11 @@ export default {
   .editor-content > div {
     padding: 12.5px 15px;
     min-height: 200px;
+    border: 1px solid var(--border-gray);
+    border-radius: 5px;
   }
   .editor-content.focus > div {
     box-shadow: 0 0 2px 2px var(--primary-color);
-    border-radius: 5px;
   }
   .editor-content > div:focus {
     outline: none;
