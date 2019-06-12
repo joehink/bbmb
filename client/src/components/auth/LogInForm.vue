@@ -72,6 +72,9 @@ export default {
     border-radius: 15px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   }
+  form input {
+    width: 100%;
+  }
   h1 {
     text-align: center;
   }

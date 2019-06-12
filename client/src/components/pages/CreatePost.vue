@@ -1,27 +1,29 @@
 <template>
   <div class="container">
-    <div class="create-form">
+    <div class="create-form-container">
       <header>
         <nav class="secondary-nav">
           <span class="brand">Create Post</span>
           <button class="btn border green sm">Create</button>
         </nav>
       </header>
-      <div class="form-row">
-        <label for="title">Title:</label>
-        <form-input id="title" v-model="title" />
-      </div>
+      <form class="create-form">
+        <div class="form-row">
+          <label for="title">Title:</label>
+          <form-input id="title" v-model="title" />
+        </div>
 
-      <div class="form-row">
-        <label for="body">Body:</label>
-        <editor
-          :content="content"
-          :editable="true"
-          :displayMenu="true"
-          v-model="content"
-          id="body"
-        />
-      </div>
+        <div class="form-row">
+          <label for="body">Body:</label>
+          <editor
+            :content="content"
+            :editable="true"
+            :displayMenu="true"
+            v-model="content"
+            id="body"
+          />
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -46,7 +48,7 @@ export default {
 </script>
 
 <style scoped>
-  .create-form {
+  .create-form-container {
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border-radius: 15px;
     border: 1px solid var(--primary-color);
@@ -59,14 +61,11 @@ export default {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  .form-row {
-    padding: 15px;
+  .create-form {
+    padding: 0 25px 25px;
   }
-  .form-row input {
-    width: unset;
-  }
-  .editor {
-    padding: 0;
+  .form-row:first-of-type {
+    margin-bottom: 25px;
   }
 </style>
 

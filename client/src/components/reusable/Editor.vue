@@ -119,7 +119,7 @@
     <editor-content
       :editor="editor"
       class="editor-content"
-      :class="{focus: editor.view.focused && editable}"
+      :class="{focus: editor.view.focused && editable, border: editable}"
     />
   </div>
 </template>
@@ -200,9 +200,6 @@ export default {
 </script>
 
 <style>
-  .editor {
-    padding: 5px 15px 15px;
-  }
   .menubar {
     padding: 10px 5px;
   }
@@ -214,11 +211,13 @@ export default {
   .editor-content > div {
     padding: 12.5px 15px;
     min-height: 200px;
-    border: 1px solid var(--border-gray);
     border-radius: 5px;
   }
   .editor-content.focus > div {
     box-shadow: 0 0 2px 2px var(--primary-color);
+  }
+  .editor-content.border > div {
+    border: 1px solid var(--border-gray);
   }
   .editor-content > div:focus {
     outline: none;

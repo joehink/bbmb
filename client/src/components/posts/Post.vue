@@ -41,12 +41,21 @@
           </button>
         </div>
       </div>
-      <editor
-        :content="content"
-        :editable="editable"
-        :displayMenu="displayEditorMenu"
-        v-model="content"
-      />
+      <form class="edit-form">
+        <div class="form-row" v-if="editable">
+          <label for="title">Title:</label>
+          <form-input id="title" v-model="title" />
+        </div>
+        <div class="form-row">
+          <label for="body" v-if="editable">Body:</label>
+          <editor
+            :content="content"
+            :editable="editable"
+            :displayMenu="displayEditorMenu"
+            v-model="content"
+          />
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -56,6 +65,7 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
 import Editor from '../reusable/Editor';
+import FormInput from '../reusable/forms/FormInput';
 import Notification from '../reusable/Notification';
 import Spinner from '../Spinner';
 
@@ -63,6 +73,7 @@ export default {
   name: 'Post',
   components: {
     Editor,
+    FormInput,
     Notification,
     Spinner,
   },
@@ -73,12 +84,17 @@ export default {
       editable: false,
       content: this.post.body,
       contentChanged: false,
+      title: this.post.title,
       updating: false,
       saved: false,
     };
   },
   watch: {
     content() {
+      this.contentChanged = true;
+      this.saved = false;
+    },
+    title() {
       this.contentChanged = true;
       this.saved = false;
     },
@@ -133,7 +149,7 @@ export default {
             authorization: this.token,
           },
           data: {
-            title: this.post.title,
+            title: this.title,
             body: this.content,
           },
         });
@@ -191,5 +207,11 @@ export default {
     color: var(--gray-text);
     font-size: .8em;
     margin-top: 10px;
+  }
+  .edit-form {
+    padding: 25px;
+  }
+  .form-row:first-of-type {
+    margin-bottom: 25px;
   }
 </style>

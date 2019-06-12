@@ -107,6 +107,15 @@ h4 {
   margin: 5px 0;
 }
 
+/* Forms */
+label {
+  margin-bottom: 10px;
+  display: inline-block;
+  font-style: italic;
+  border-bottom: 2px solid var(--black);
+  font-size: 1.1em;
+}
+
 /* Buttons */
 .btn {
   border: none;
