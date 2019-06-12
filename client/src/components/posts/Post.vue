@@ -1,6 +1,7 @@
 <template>
   <div>
     <Notification message="Post changes were successfully saved." v-if="saved" />
+    <error-message />
     <div class="post">
       <div class="post-header" v-if="post">
         <div class="likes">
@@ -41,7 +42,7 @@
           </button>
         </div>
       </div>
-      <form class="edit-form">
+      <div class="edit-form">
         <div class="form-row" v-if="editable">
           <label for="title">Title:</label>
           <form-input id="title" v-model="title" />
@@ -55,16 +56,17 @@
             v-model="content"
           />
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import Editor from '../reusable/Editor';
+import ErrorMessage from '../reusable/errors/ErrorMessage';
 import FormInput from '../reusable/forms/FormInput';
 import Notification from '../reusable/Notification';
 import Spinner from '../Spinner';
@@ -73,6 +75,7 @@ export default {
   name: 'Post',
   components: {
     Editor,
+    ErrorMessage,
     FormInput,
     Notification,
     Spinner,
@@ -89,19 +92,26 @@ export default {
       saved: false,
     };
   },
+  beforeDestroy() {
+    // Remove error message when user navigates away from form
+    this.setError('');
+  },
   watch: {
     content() {
       this.contentChanged = true;
       this.saved = false;
+      this.setError('');
     },
     title() {
       this.contentChanged = true;
       this.saved = false;
+      this.setError('');
     },
     editable(newVal) {
       this.contentChanged = false;
       if (!newVal) {
         this.content = this.post.body;
+        this.title = this.post.title;
       }
     },
   },
@@ -117,6 +127,7 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['setError']),
     async likePost() {
       try {
         // if like request is not being made and user is logged in
@@ -140,26 +151,31 @@ export default {
     },
     async updatePost() {
       try {
-        this.updating = true;
-        // update post with new title and body
-        const res = await axios({
-          method: 'PATCH',
-          url: `/api/posts/${this.post._id}`,
-          headers: {
-            authorization: this.token,
-          },
-          data: {
-            title: this.title,
-            body: this.content,
-          },
-        });
+        if (!this.content || !this.title) {
+          this.setError('Must provide a title and a body.');
+        } else {
+          this.updating = true;
+          // update post with new title and body
+          const res = await axios({
+            method: 'PATCH',
+            url: `/api/posts/${this.post._id}`,
+            headers: {
+              authorization: this.token,
+            },
+            data: {
+              title: this.title,
+              body: this.content,
+            },
+          });
 
-        // emit event to update post in PostPage Component
-        this.$emit('postUpdate', res.data);
-        this.updating = false;
-        this.editable = false;
-        this.saved = true;
+          // emit event to update post in PostPage Component
+          this.$emit('postUpdate', res.data);
+          this.saved = true;
+          this.editable = false;
+          this.updating = false;
+        }
       } catch (err) {
+        this.setError(err.response.data.message);
         this.updating = false;
       }
     },

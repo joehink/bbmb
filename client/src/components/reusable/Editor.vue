@@ -206,7 +206,10 @@ export default {
   .menubar-button {
     background: none;
     border: none;
-    padding: 0 10px;
+    margin: 0 5px;
+  }
+  .menubar-button.is-active {
+    border-bottom: 2px solid var(--black);
   }
   .editor-content > div {
     padding: 12.5px 15px;

@@ -1,13 +1,16 @@
 <template>
   <div class="container">
+    <error-message />
     <div class="create-form-container">
       <header>
         <nav class="secondary-nav">
           <span class="brand">Create Post</span>
-          <button class="btn border green sm">Create</button>
+          <button class="btn border green sm" v-on:click="createPost">
+            <spinner v-if="saving" class="btn-spinner green" /> Create
+          </button>
         </nav>
       </header>
-      <form class="create-form">
+      <div class="create-form">
         <div class="form-row">
           <label for="title">Title:</label>
           <form-input id="title" v-model="title" />
@@ -23,26 +26,78 @@
             id="body"
           />
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { mapGetters, mapMutations } from 'vuex';
+import router from '../../router';
 import Editor from '../reusable/Editor';
+import ErrorMessage from '../reusable/errors/ErrorMessage';
 import FormInput from '../reusable/forms/FormInput';
+import Spinner from '../Spinner';
 
 export default {
   name: 'CreatePost',
   components: {
     Editor,
+    ErrorMessage,
     FormInput,
+    Spinner,
   },
   data() {
     return {
       title: '',
       content: '',
+      saving: false,
     };
+  },
+  beforeDestroy() {
+    // Remove error message when user navigates away from form
+    this.setError('');
+  },
+  watch: {
+    title() {
+      this.setError('');
+    },
+    content() {
+      this.setError('');
+    },
+  },
+  computed: {
+    ...mapGetters(['token']),
+  },
+  methods: {
+    ...mapMutations(['setError']),
+    async createPost() {
+      try {
+        if (!this.content || !this.title) {
+          this.setError('Must provide a title and a body.');
+        } else {
+          this.saving = true;
+          const res = await axios({
+            method: 'POST',
+            url: '/api/posts',
+            headers: {
+              authorization: this.token,
+            },
+            data: {
+              title: this.title,
+              body: this.content,
+              category: this.$route.params.category,
+            },
+          });
+          router.push(`/posts/${res.data._id}`);
+        }
+        this.saving = false;
+      } catch (err) {
+        this.setError(err.response.data.message);
+        this.saving = false;
+      }
+    },
   },
 };
 </script>
