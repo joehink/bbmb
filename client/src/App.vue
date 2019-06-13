@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+/* @import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap'); */
 
 :root {
   /* Colors */
