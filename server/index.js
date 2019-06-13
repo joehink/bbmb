@@ -33,17 +33,17 @@ mongoose.connection.on('connected', () => {
     require('./routes/api/users')(app, upload, gfs);
     require('./routes/api/sessions')(app);
     require('./routes/api/posts')(app);
+
+    if (process.env.NODE_ENV === 'production') {
+      app.use(express.static(__dirname + '/public/'));
+    
+      app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+    }
 })
 
 // Middleware
 app.use(express.json());
 app.use(cors());
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(__dirname + '/public/'));
-
-  app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
-}
 
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
