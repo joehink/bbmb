@@ -57,19 +57,19 @@ module.exports = (app, upload, gfs) => {
         // encrypt password
         req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
 
+
         // create a new user
         const newUser = await User.create(req.body);
 
         // send back JSON Web Token
         res.status(200).json({
           token: jwt.encode({
-            sub: newUser.id,
+            sub: newUser._id,
             iat: new Date().getTime()
           }, process.env.SECRET),
           user: {
-            username: req.user.username,
-            _id: req.user._id,
-            photo: req.user.photo || null
+            username: newUser.username,
+            _id: newUser._id
           }
         });
 
@@ -78,6 +78,7 @@ module.exports = (app, upload, gfs) => {
         res.status(409).json({ message: "Username is already in use" })
       }
     } catch(err) {
+      console.log(err);
       res.status(500).json(err);
     }
     
