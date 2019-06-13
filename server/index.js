@@ -12,7 +12,7 @@ require('./models/comments');
 
 // Services
 require('./services/passport');
-require('./services/cache');
+// require('./services/cache');
 
 // Config
 const PORT = process.env.PORT;
