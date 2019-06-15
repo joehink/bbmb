@@ -54,7 +54,7 @@ export default {
           });
           const updatedPost = res.data;
           // Emit custom 'like' event
-          this.$emit('like', updatedPost, this.index);
+          this.$emit('like', { index: this.index, updatedPost });
           this.liking = false;
         }
       } catch (err) {

@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <nav class="secondary-nav">
-      <span class="brand">{{ $route.params.category }}</span>
+      <span class="brand">{{category}}</span>
       <router-link
-        :to="`/posts/category/${$route.params.category}/create`"
+        :to="`/posts/category/${category}/create`"
         class="btn border blue sm"
       >
         Create New Post
@@ -14,14 +14,13 @@
       :key="post._id"
       :post="post"
       :index="index"
-      v-on:like="updateLikes"
+      v-on:like="updatePostAtIndex"
     />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import Vue from 'vue';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PostListItem from '../posts/PostListItem';
 
 export default {
@@ -31,62 +30,15 @@ export default {
   },
   data() {
     return {
-      posts: [],
-      page: 0,
-      nextPage: true,
-      loading: false,
       category: this.$route.params.category,
     };
   },
-  mounted() {
-    // Get first page of posts for category
-    this.getPosts();
-  },
-  activated() {
-    // If selected category is different than previously selected category
-    if (this.category !== this.$route.params.category) {
-      // reset data
-      this.posts = [];
-      this.page = 0;
-      this.nextPage = true;
-      this.category = this.$route.params.category;
-      this.getPosts();
-    }
-    // Initialize infinite scroll function
-    this.scroll();
-  },
-  deactivated() {
-    // remove infinite scroll function when component is not shown
-    window.onscroll = null;
+  computed: {
+    ...mapGetters(['posts']),
   },
   methods: {
-    async getPosts() {
-      try {
-        // If request is not currently being made and if there is a next page
-        if (!this.loading && this.nextPage) {
-          this.loading = true;
-          // fetch next page of posts
-          const res = await axios({
-            method: 'GET',
-            url: `/api/posts/category/${this.$route.params.category}`,
-            params: {
-              page: this.page + 1,
-            },
-          });
-          // add posts array onto existing array of posts
-          this.posts = [...this.posts, ...res.data.posts];
-          this.nextPage = res.data.nextPage;
-          this.page += 1;
-          this.loading = false;
-        }
-      } catch (err) {
-        this.loading = false;
-      }
-    },
-    updateLikes(likedPost, index) {
-      // update posts array at index with updated post
-      Vue.set(this.posts, index, likedPost);
-    },
+    ...mapActions(['getPosts', 'resetPostsData']),
+    ...mapMutations(['updatePostAtIndex']),
     scroll() {
       window.onscroll = () => {
         const { innerHeight } = window;
@@ -96,12 +48,29 @@ export default {
         // if user is a quarter of the screen's height away from the bottom of the page
         if (bottomOfWindow) {
           // get next page of posts
-          this.getPosts();
+          this.getPosts(this.category);
         }
       };
     },
   },
+  mounted() {
+    // Get first page of posts for category
+    this.getPosts(this.category);
+  },
+  activated() {
+    // If selected category is different than previously selected category
+    if (this.category !== this.$route.params.category) {
+      // reset data
+      this.resetPostsData();
+      this.category = this.$route.params.category;
+      this.getPosts(this.category);
+    }
+    // Initialize infinite scroll function
+    this.scroll();
+  },
+  deactivated() {
+    // remove infinite scroll function when component is not shown
+    window.onscroll = null;
+  },
 };
 </script>
-
-<style scoped></style>
