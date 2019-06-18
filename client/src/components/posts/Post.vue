@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Notification message="Post changes were successfully saved." v-if="saved" />
+    <Notification message="Post changes were successfully saved." v-if="isPostSaved" />
     <error-message />
-    <div class="post">
+    <div class="post" v-if="post">
       <div class="post-header" v-if="post">
         <div class="likes">
           <font-awesome-icon
             v-on:click="likePost"
             class="sun"
-            :class="{ spin: liking }"
+            :class="{ spin: isLikingPost }"
             icon="sun"
           />
           <span class="like-count">{{ post.likesCount }}</span>
@@ -20,40 +20,40 @@
         <div class="post-controls">
           <button
             class="btn border red sm"
-            v-if="user && user._id === post.author._id && !editable"
+            v-if="user && user._id === post.author._id && !isPostEditable"
           >
             Delete
           </button>
           <button
             class="btn border blue sm"
-            v-if="user && user._id === post.author._id && !updating"
+            v-if="user && user._id === post.author._id && !isSavingPost"
             v-on:click="toggleEdit"
           >
-            {{ editable ? 'Cancel' : 'Edit' }}
+            {{ isPostEditable ? 'Cancel' : 'Edit' }}
           </button>
           <button
-            v-if="user && user._id === post.author._id && editable"
+            v-if="user && user._id === post.author._id && isPostEditable"
             v-on:click="updatePost"
             class="btn border green sm"
-            :disabled="!contentChanged"
+            :disabled="!isPostContentChanged"
           >
-            <Spinner class="btn-spinner green" v-if="updating" />
+            <Spinner class="btn-spinner green" v-if="isSavingPost" />
             Save
           </button>
         </div>
       </div>
       <div class="edit-form">
-        <div class="form-row" v-if="editable">
+        <div class="form-row" v-if="isPostEditable">
           <label for="title">Title:</label>
-          <form-input id="title" v-model="title" />
+          <form-input id="title" :value="postFormTitle" v-on:input="setPostFormTitle" />
         </div>
         <div class="form-row">
-          <label for="body" v-if="editable">Body:</label>
+          <label for="body" v-if="isPostEditable">Body:</label>
           <editor
-            :content="content"
-            :editable="editable"
+            :content="postFormBody"
+            :editable="isPostEditable"
             :displayMenu="displayEditorMenu"
-            v-model="content"
+            v-on:input="setPostFormBody"
           />
         </div>
       </div>
@@ -62,8 +62,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
 import Editor from '../reusable/Editor';
 import ErrorMessage from '../reusable/errors/ErrorMessage';
@@ -80,107 +79,67 @@ export default {
     Notification,
     Spinner,
   },
-  props: ['post'],
-  data() {
-    return {
-      liking: false,
-      editable: false,
-      content: this.post.body,
-      contentChanged: false,
-      title: this.post.title,
-      updating: false,
-      saved: false,
-    };
+  mounted() {
+    this.getPost(this.$route.params.postId);
   },
   beforeDestroy() {
     // Remove error message when user navigates away from form
     this.setError('');
   },
   watch: {
-    content() {
-      this.contentChanged = true;
-      this.saved = false;
+    postFormBody() {
+      this.setPostContentChanged(true);
+      this.setPostSaved(false);
       this.setError('');
     },
-    title() {
-      this.contentChanged = true;
-      this.saved = false;
+    postFormTitle() {
+      this.setPostContentChanged(true);
+      this.setPostSaved(false);
       this.setError('');
     },
-    editable(newVal) {
-      this.contentChanged = false;
+    isPostEditable(newVal) {
+      this.setPostContentChanged(false);
       if (!newVal) {
-        this.content = this.post.body;
-        this.title = this.post.title;
+        this.setPostFormBody(this.post.body);
+        this.setPostFormTitle(this.post.title);
       }
     },
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'token', 'user']),
+    ...mapGetters([
+      'isLoggedIn',
+      'token',
+      'user',
+      'post',
+      'postFormTitle',
+      'postFormBody',
+      'isSavingPost',
+      'isPostSaved',
+      'isPostEditable',
+      'isLikingPost',
+      'isPostContentChanged',
+    ]),
     date() {
       // format date posted using moment
       return moment(this.post.createdAt).format('MMMM D, YYYY');
     },
     displayEditorMenu() {
       // determine whether or not the editor menubar should be displayed
-      return this.user && this.post.author._id === this.user._id && this.editable;
+      return this.user && this.post.author._id === this.user._id && this.isPostEditable;
     },
   },
   methods: {
-    ...mapMutations(['setError']),
-    async likePost() {
-      try {
-        // if like request is not being made and user is logged in
-        if (!this.liking && this.isLoggedIn) {
-          this.liking = true;
-          // Make request to like or unlike post
-          const res = await axios({
-            method: 'PATCH',
-            url: `/api/posts/${this.post._id}/like`,
-            headers: {
-              authorization: this.token,
-            },
-          });
-          const updatedPost = res.data;
-          this.$emit('likePost', updatedPost);
-          this.liking = false;
-        }
-      } catch (err) {
-        this.liking = false;
-      }
-    },
-    async updatePost() {
-      try {
-        if (!this.content || !this.title) {
-          this.setError('Must provide a title and a body.');
-        } else {
-          this.updating = true;
-          // update post with new title and body
-          const res = await axios({
-            method: 'PATCH',
-            url: `/api/posts/${this.post._id}`,
-            headers: {
-              authorization: this.token,
-            },
-            data: {
-              title: this.title,
-              body: this.content,
-            },
-          });
-
-          // emit event to update post in PostPage Component
-          this.$emit('postUpdate', res.data);
-          this.saved = true;
-          this.editable = false;
-          this.updating = false;
-        }
-      } catch (err) {
-        this.setError(err.response.data.message);
-        this.updating = false;
-      }
-    },
+    ...mapActions(['getPost', 'likePost', 'updatePost']),
+    ...mapMutations([
+      'setError',
+      'setPostEditable',
+      'setPostSaved',
+      'setPostContentChanged',
+      'setPostFormTitle',
+      'setPostFormBody',
+    ]),
     toggleEdit() {
-      this.editable = !this.editable;
+      this.setPostEditable(!this.isPostEditable);
     },
   },
 };
