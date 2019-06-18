@@ -1,18 +1,12 @@
 <template>
   <div class="container">
-    <Post
-      :post="post"
-      @likePost="updatePost"
-      v-if="post"
-      @postUpdate="updatePost"
-    />
-    <PostComments :comments="comments" />
+    <Post />
+    <PostComments />
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-
+import { mapActions } from 'vuex';
 import PostComments from '../posts/PostComments';
 import Post from '../posts/Post';
 
@@ -22,55 +16,11 @@ export default {
     Post,
     PostComments,
   },
-  data() {
-    return {
-      post: false,
-      comments: [],
-      commentsLoading: true,
-    };
-  },
-  mounted() {
-    this.getPost();
-    this.getPostComments();
+  beforeDestroy() {
+    this.resetPost();
   },
   methods: {
-    async getPost() {
-      try {
-        this.loading = true;
-        // Fetch post
-        const res = await axios({
-          method: 'GET',
-          url: `/api/posts/${this.$route.params.postId}`,
-        });
-
-        this.post = res.data;
-        this.loading = false;
-      } catch (err) {
-        this.loading = false;
-      }
-    },
-    async getPostComments() {
-      try {
-        this.commentsLoading = true;
-        // fetch post comments
-        const res = await axios({
-          method: 'GET',
-          url: `/api/posts/${this.$route.params.postId}/comments`,
-        });
-
-        // add new comments to existing comments array
-        this.comments = [...this.comments, ...res.data.comments];
-        this.commentsLoading = false;
-      } catch (err) {
-        this.commentsLoading = false;
-      }
-    },
-    updatePost(updatedPost) {
-      this.post = updatedPost;
-    },
+    ...mapActions(['resetPost']),
   },
 };
 </script>
-
-<style>
-</style>

@@ -5,24 +5,24 @@
       <header>
         <nav class="secondary-nav">
           <span class="brand">Create Post</span>
-          <button class="btn border green sm" v-on:click="createPost">
-            <spinner v-if="saving" class="btn-spinner green" /> Create
+          <button class="btn border green sm" v-on:click="createPost($route.params.category)">
+            <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
           </button>
         </nav>
       </header>
       <div class="create-form">
         <div class="form-row">
           <label for="title">Title:</label>
-          <form-input id="title" v-model="title" />
+          <form-input id="title" :value="postFormTitle" v-on:input="setPostFormTitle"/>
         </div>
 
         <div class="form-row">
           <label for="body">Body:</label>
           <editor
-            :content="content"
+            :content="postFormBody"
             :editable="true"
             :displayMenu="true"
-            v-model="content"
+            v-on:input="setPostFormBody"
             id="body"
           />
         </div>
@@ -32,9 +32,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapGetters, mapMutations } from 'vuex';
-import router from '../../router';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 import Editor from '../reusable/Editor';
 import ErrorMessage from '../reusable/errors/ErrorMessage';
 import FormInput from '../reusable/forms/FormInput';
@@ -48,16 +46,10 @@ export default {
     FormInput,
     Spinner,
   },
-  data() {
-    return {
-      title: '',
-      content: '',
-      saving: false,
-    };
-  },
   beforeDestroy() {
     // Remove error message when user navigates away from form
     this.setError('');
+    this.resetPost('');
   },
   watch: {
     title() {
@@ -68,36 +60,16 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['token']),
+    ...mapGetters([
+      'token',
+      'isSavingPost',
+      'postFormTitle',
+      'postFormBody',
+    ]),
   },
   methods: {
-    ...mapMutations(['setError']),
-    async createPost() {
-      try {
-        if (!this.content || !this.title) {
-          this.setError('Must provide a title and a body.');
-        } else {
-          this.saving = true;
-          const res = await axios({
-            method: 'POST',
-            url: '/api/posts',
-            headers: {
-              authorization: this.token,
-            },
-            data: {
-              title: this.title,
-              body: this.content,
-              category: this.$route.params.category,
-            },
-          });
-          router.push(`/posts/${res.data._id}`);
-        }
-        this.saving = false;
-      } catch (err) {
-        this.setError(err.response.data.message);
-        this.saving = false;
-      }
-    },
+    ...mapActions(['createPost', 'resetPost']),
+    ...mapMutations(['setError', 'setPostFormTitle', 'setPostFormBody']),
   },
 };
 </script>
@@ -123,4 +95,3 @@ export default {
     margin-bottom: 25px;
   }
 </style>
-

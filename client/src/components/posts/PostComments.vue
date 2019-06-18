@@ -1,5 +1,5 @@
 <template>
-  <div class="comments">
+  <div class="comments" v-if="comments">
     <Comment
       v-for="comment in comments"
       :key="comment._id"
@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Comment from './Comment';
 
 export default {
@@ -16,7 +17,15 @@ export default {
   components: {
     Comment,
   },
-  props: ['comments'],
+  mounted() {
+    this.getPostComments(this.$route.params.postId);
+  },
+  computed: {
+    ...mapGetters(['comments']),
+  },
+  methods: {
+    ...mapActions(['getPostComments']),
+  },
 };
 </script>
 
