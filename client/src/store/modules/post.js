@@ -127,6 +127,37 @@ const actions = {
     commit('setPostEditable', false);
     commit('setCommentsLoading', false);
     commit('clearCommentsList');
+    commit('setCreatingComment', false);
+    commit('setCommentFormBody', '');
+    commit('setCommentSaved', false);
+    commit('setSavingComment', false);
+  },
+  createComment: async ({ commit, state, rootState }) => {
+    try {
+      if (!state.comments.form.body) {
+        commit('setError', 'Must provide a body.');
+      } else if (rootState.auth.authenticated) {
+        commit('setSavingComment', true);
+        const res = await axios({
+          method: 'POST',
+          url: `/api/posts/${state.data._id}/comments`,
+          data: {
+            body: state.comments.form.body,
+          },
+          headers: {
+            authorization: rootState.auth.authenticated,
+          },
+        });
+        commit('addToCommentsList', [res.data]);
+        commit('setCommentFormBody', '');
+        commit('toggleCreatingComment');
+        commit('setCommentSaved', true);
+        commit('setSavingComment', false);
+      }
+    } catch (err) {
+      commit('setSavingComment', false);
+      commit('setError', err.response.data.message);
+    }
   },
 };
 
@@ -167,6 +198,21 @@ const mutations = {
   clearCommentsList: (state) => {
     state.comments.list = [];
   },
+  toggleCreatingComment: (state) => {
+    state.comments.status.creating = !state.comments.status.creating;
+  },
+  setCreatingComment: (state, isCreating) => {
+    state.comments.status.creating = isCreating;
+  },
+  setCommentFormBody: (state, text) => {
+    state.comments.form.body = text;
+  },
+  setCommentSaved: (state, isSaved) => {
+    state.comments.status.saved = isSaved;
+  },
+  setSavingComment: (state, isSaving) => {
+    state.comments.status.saving = isSaving;
+  },
 };
 
 const getters = {
@@ -179,6 +225,10 @@ const getters = {
   isPostEditable: state => state.status.editable,
   isLikingPost: state => state.status.liking,
   isPostContentChanged: state => state.status.contentChanged,
+  commentFormBody: state => state.comments.form.body,
+  isCreatingComment: state => state.comments.status.creating,
+  isSavingComment: state => state.comments.status.saving,
+  isCommentSaved: state => state.comments.status.saved,
 };
 
 const state = {
@@ -198,6 +248,12 @@ const state = {
     list: [],
     status: {
       loading: false,
+      creating: false,
+      saving: false,
+      saved: false,
+    },
+    form: {
+      body: '',
     },
   },
 };

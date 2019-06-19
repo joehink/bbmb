@@ -14,6 +14,7 @@ import {
   faGripHorizontal,
   faUndo,
   faRedo,
+  faComment,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
@@ -37,6 +38,7 @@ library.add(
   faGripHorizontal,
   faUndo,
   faRedo,
+  faComment,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
