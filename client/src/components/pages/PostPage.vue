@@ -6,21 +6,21 @@
         <span class="brand">Comments</span>
         <button
           class="btn blue border sm"
-          v-if="isCreatingComment"
+          v-if="token && isCreatingComment"
           v-on:click="toggleCreatingComment"
         >
           Cancel
         </button>
         <button
           class="btn green border sm"
-          v-if="!isCreatingComment"
+          v-if="token && !isCreatingComment"
           v-on:click="toggleCreatingComment"
         >
           New Comment
         </button>
         <button
           class="btn green border sm"
-          v-if="isCreatingComment"
+          v-if="token && isCreatingComment"
           v-on:click="createComment"
           :disabled="isSavingComment"
         >
@@ -70,7 +70,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'isCommentSaved']),
+    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'isCommentSaved', 'token']),
   },
   methods: {
     ...mapActions(['resetPost', 'createComment']),
