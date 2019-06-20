@@ -1,15 +1,18 @@
 <template>
   <div class="comments" v-if="comments">
     <Comment
-      v-for="comment in comments"
+      v-for="(comment, index) in comments"
       :key="comment._id"
       :comment="comment"
+      :index="index"
+      :token="token"
+      v-on:likeComment="updateCommentAtIndex"
   />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Comment from './Comment';
 
 export default {
@@ -21,10 +24,11 @@ export default {
     this.getPostComments(this.$route.params.postId);
   },
   computed: {
-    ...mapGetters(['comments']),
+    ...mapGetters(['comments', 'token']),
   },
   methods: {
     ...mapActions(['getPostComments']),
+    ...mapMutations(['updateCommentAtIndex']),
   },
 };
 </script>

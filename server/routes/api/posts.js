@@ -425,7 +425,12 @@ module.exports = app => {
             }
 
             // Find comment by id
-            const comment = await Comment.findById(req.params.commentId);
+            const comment = await Comment
+              .findById(req.params.commentId)
+              .populate([
+                  { path: 'author', select: 'username _id' }, 
+                  { path: 'replies.author', select: 'username _id' }
+              ]);
 
             if (!comment) {
                 return res.status(404).json({ message: "Comment not found." });

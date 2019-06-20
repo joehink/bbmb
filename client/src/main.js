@@ -15,6 +15,9 @@ import {
   faUndo,
   faRedo,
   faComment,
+  faReply,
+  faEdit,
+  faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
@@ -39,6 +42,9 @@ library.add(
   faUndo,
   faRedo,
   faComment,
+  faReply,
+  faEdit,
+  faTrashAlt,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

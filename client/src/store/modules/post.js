@@ -210,8 +210,14 @@ const mutations = {
   setCommentSaved: (state, isSaved) => {
     state.comments.status.saved = isSaved;
   },
+  setCommentLiking: (state, isLiking) => {
+    state.comments.status.liking = isLiking;
+  },
   setSavingComment: (state, isSaving) => {
     state.comments.status.saving = isSaving;
+  },
+  updateCommentAtIndex: (state, { index, updatedComment }) => {
+    state.comments.list.splice(index, 1, updatedComment);
   },
 };
 
@@ -229,6 +235,7 @@ const getters = {
   isCreatingComment: state => state.comments.status.creating,
   isSavingComment: state => state.comments.status.saving,
   isCommentSaved: state => state.comments.status.saved,
+  isLikingComment: state => state.comments.status.liking,
 };
 
 const state = {
@@ -251,6 +258,7 @@ const state = {
       creating: false,
       saving: false,
       saved: false,
+      liking: false,
     },
     form: {
       body: '',
