@@ -7,6 +7,7 @@
       :index="index"
       :token="token"
       v-on:likeComment="updateCommentAtIndex"
+      v-on:updateComment="updateCommentAtIndex"
       :belongsToUser="user && user._id === comment.author._id"
   />
   </div>

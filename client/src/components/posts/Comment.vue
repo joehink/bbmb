@@ -10,21 +10,46 @@
         v-on:click="likeComment"
       />
       <span class="like-count">{{ comment.likesCount }}</span>
-      <font-awesome-icon
-        icon="reply"
-        class="reply"
-      />
-      <font-awesome-icon
-        icon="edit"
-        v-if="belongsToUser"
-      />
-      <font-awesome-icon
-        icon="trash-alt"
-        class="trash"
-        v-if="belongsToUser"
-      />
+
+      <button
+        class="btn border blue sm"
+        v-if="edit"
+        v-on:click="toggleEdit"
+      >
+        Cancel
+      </button>
+      <button
+        v-if="edit"
+        class="btn border green sm"
+        :disabled="saving"
+        v-on:click="updateComment"
+      >
+        <Spinner v-if="saving" class="btn-spinner green" />
+        Save
+      </button>
+      <div v-if="!edit" class="controls">
+        <font-awesome-icon
+          icon="reply"
+          class="reply"
+        />
+        <font-awesome-icon
+          icon="edit"
+          class="edit"
+          v-if="belongsToUser"
+          v-on:click="toggleEdit"
+        />
+        <font-awesome-icon
+          icon="trash-alt"
+          class="trash"
+          v-if="belongsToUser"
+        />
+      </div>
     </header>
-    <div class="body">
+    <text-area
+      v-if="edit"
+      v-model="body"
+    />
+    <div v-else class="body">
       {{ comment.body }}
     </div>
   </div>
@@ -33,13 +58,22 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import Spinner from '../Spinner';
+import TextArea from '../reusable/forms/TextArea';
 
 export default {
   name: 'Comment',
+  components: {
+    TextArea,
+    Spinner,
+  },
   props: ['comment', 'index', 'token', 'belongsToUser'],
   data() {
     return {
       liking: false,
+      body: this.comment.body,
+      edit: false,
+      saving: false,
     };
   },
   computed: {
@@ -67,6 +101,32 @@ export default {
         }
       } catch (err) {
         this.liking = false;
+      }
+    },
+    toggleEdit() {
+      this.edit = !this.edit;
+    },
+    async updateComment() {
+      try {
+        if (this.body && this.belongsToUser && !this.saving) {
+          this.saving = true;
+          const res = await axios({
+            method: 'PATCH',
+            url: `/api/posts/${this.$route.params.postId}/comments/${this.comment._id}`,
+            headers: {
+              authorization: this.token,
+            },
+            data: {
+              body: this.body,
+            },
+          });
+
+          this.$emit('updateComment', { index: this.index, updatedComment: res.data });
+          this.saving = false;
+          this.edit = false;
+        }
+      } catch (err) {
+        this.saving = false;
       }
     },
   },
@@ -105,18 +165,24 @@ export default {
   margin: 0 2.5px 0 10px;
 }
 .reply {
-  margin: 0 10px 0 auto;
+  margin: 0 10px 0 0;
 }
 .like-count {
-  margin: 2px 2.5px 0 0;
+  margin: 2px auto 0 0;
 }
 .trash {
   margin-left: 10px;
   color: var(--error-red);
   cursor: pointer;
 }
+.edit {
+  cursor: pointer;
+}
 .body {
   border-left: 2px solid #aaa;
   padding-left: 10px;
+}
+.btn:last-child {
+  margin-left: 5px;
 }
 </style>

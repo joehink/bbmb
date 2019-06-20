@@ -255,7 +255,7 @@ module.exports = app => {
 
             if (!comment) {
                 res.status(404).json({ message: "Comment not found." });
-            } else if (!req.user._id.equals(comment.author)) {
+            } else if (!req.user._id.equals(comment.author._id)) {
                 res.status(401).json({ message: "Comment does not belong to you." });
             } else if (!req.body.body) {
                 res.status(400).json({ message: "Must provide body of comment." });
