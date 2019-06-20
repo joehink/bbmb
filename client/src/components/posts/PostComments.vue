@@ -7,6 +7,7 @@
       :index="index"
       :token="token"
       v-on:likeComment="updateCommentAtIndex"
+      :belongsToUser="user && user._id === comment.author._id"
   />
   </div>
 </template>
@@ -24,7 +25,7 @@ export default {
     this.getPostComments(this.$route.params.postId);
   },
   computed: {
-    ...mapGetters(['comments', 'token']),
+    ...mapGetters(['comments', 'token', 'user']),
   },
   methods: {
     ...mapActions(['getPostComments']),

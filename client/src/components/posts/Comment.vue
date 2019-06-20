@@ -10,9 +10,19 @@
         v-on:click="likeComment"
       />
       <span class="like-count">{{ comment.likesCount }}</span>
-      <font-awesome-icon icon="reply" class="reply" />
-      <font-awesome-icon icon="edit" />
-      <font-awesome-icon icon="trash-alt" class="trash" />
+      <font-awesome-icon
+        icon="reply"
+        class="reply"
+      />
+      <font-awesome-icon
+        icon="edit"
+        v-if="belongsToUser"
+      />
+      <font-awesome-icon
+        icon="trash-alt"
+        class="trash"
+        v-if="belongsToUser"
+      />
     </header>
     <div class="body">
       {{ comment.body }}
@@ -26,7 +36,7 @@ import moment from 'moment';
 
 export default {
   name: 'Comment',
-  props: ['comment', 'index', 'token'],
+  props: ['comment', 'index', 'token', 'belongsToUser'],
   data() {
     return {
       liking: false,
