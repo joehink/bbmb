@@ -112,6 +112,11 @@ export default {
       replyBody: '',
     };
   },
+  watch: {
+    edit() {
+      this.body = this.comment.body;
+    },
+  },
   computed: {
     date() {
       // format date posted using moment
@@ -186,6 +191,7 @@ export default {
           this.$emit('updateComment', { index: this.index, updatedComment: res.data });
           this.saving = false;
           this.replying = false;
+          this.replyBody = '';
         }
       } catch (err) {
         this.saving = false;
