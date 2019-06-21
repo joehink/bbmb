@@ -9,6 +9,7 @@
       v-on:likeComment="updateCommentAtIndex"
       v-on:updateComment="updateCommentAtIndex"
       :belongsToUser="user && user._id === comment.author._id"
+      :userId="user && user._id"
   />
   </div>
 </template>
