@@ -3,20 +3,6 @@
     <header>
       <span class="username">{{ reply.author.username }}</span>
       <span class="date">{{ date }}</span>
-
-      <div v-if="!edit" class="controls">
-        <font-awesome-icon
-          icon="edit"
-          class="edit"
-          v-if="belongsToUser"
-          v-on:click="toggleEdit"
-        />
-        <font-awesome-icon
-          icon="trash-alt"
-          class="trash"
-          v-if="belongsToUser"
-        />
-      </div>
     </header>
     <main>
       <text-area
@@ -40,6 +26,17 @@
         Save
       </button>
       <div v-else class="body">{{ reply.body }}</div>
+      <div v-if="!edit && belongsToUser" class="controls">
+        <font-awesome-icon
+          icon="edit"
+          class="edit"
+          v-on:click="toggleEdit"
+        />
+        <font-awesome-icon
+          icon="trash-alt"
+          class="delete"
+        />
+      </div>
     </main>
   </div>
 </template>
@@ -108,10 +105,10 @@ export default {
   font-size: .9em;
   margin-left: 10px;
 }
-.trash {
-  margin-left: 7.5px;
+.delete {
   color: var(--error-red);
   cursor: pointer;
+  margin-left: 5px;
 }
 .edit {
   cursor: pointer;
@@ -126,6 +123,12 @@ export default {
   line-height: 1.4;
 }
 .controls {
-  margin-left: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  border-radius: 15px;
+  padding: 5px 10px;
+  display: inline-block;
+  border: 1px solid var(--primary-color);
+  margin: 10px 0 0;
+  font-size: 0.85em;
 }
 </style>

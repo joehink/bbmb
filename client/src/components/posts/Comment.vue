@@ -11,24 +11,12 @@
       />
       <span class="like-count">{{ comment.likesCount }}</span>
 
-      <div v-if="!edit && !replying" class="controls">
-        <font-awesome-icon
-          icon="reply"
-          class="reply"
-          v-on:click="toggleReplying"
-        />
-        <font-awesome-icon
-          icon="edit"
-          class="edit"
-          v-if="belongsToUser"
-          v-on:click="toggleEdit"
-        />
-        <font-awesome-icon
-          icon="trash-alt"
-          class="trash"
-          v-if="belongsToUser"
-        />
-      </div>
+      Reply
+      <font-awesome-icon
+        icon="reply"
+        class="reply-icon"
+        v-on:click="toggleReplying"
+      />
     </header>
     <main>
       <text-area
@@ -53,6 +41,17 @@
         Save
       </button>
       <div v-else class="body">{{ comment.body }}</div>
+      <div v-if="!edit && !replying && belongsToUser" class="controls">
+        <font-awesome-icon
+          icon="edit"
+          class="edit"
+          v-on:click="toggleEdit"
+        />
+        <font-awesome-icon
+          icon="trash-alt"
+          class="delete"
+        />
+      </div>
       <text-area
         class="textarea"
         v-if="replying"
@@ -236,17 +235,20 @@ export default {
   cursor: pointer;
   margin: 0 2.5px 0 10px;
 }
-.reply {
-  margin: 0 7.5px 0 0;
+.reply-icon {
+  margin-left: 5px;
   cursor: pointer;
 }
 .like-count {
   margin: 2px auto 0 0;
 }
-.trash {
-  margin-left: 7.5px;
+.delete {
   color: var(--error-red);
   cursor: pointer;
+  margin-left: 5px;
+}
+.delete:hover {
+  opacity: 0.5;
 }
 .edit {
   cursor: pointer;
@@ -260,7 +262,13 @@ export default {
   white-space: pre-line;
   line-height: 1.4;
 }
-/* .reply:first-of-type {
-  margin-top: 15px;
-} */
+.controls {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  border-radius: 15px;
+  padding: 5px 10px;
+  display: inline-block;
+  border: 1px solid var(--primary-color);
+  margin: 10px 0;
+  font-size: 0.85em;
+}
 </style>
