@@ -10,7 +10,7 @@
         v-on:click="likeComment"
       />
       <span class="like-count">{{ comment.likesCount }}</span>
-
+      <drop-down-menu class="control-menu" />
       Reply
       <font-awesome-icon
         icon="reply"
@@ -89,6 +89,7 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import DropDownMenu from '../reusable/DropDownMenu';
 import Reply from '../posts/Reply';
 import Spinner from '../Spinner';
 import TextArea from '../reusable/forms/TextArea';
@@ -96,6 +97,7 @@ import TextArea from '../reusable/forms/TextArea';
 export default {
   name: 'Comment',
   components: {
+    DropDownMenu,
     TextArea,
     Spinner,
     Reply,
@@ -240,7 +242,7 @@ export default {
   cursor: pointer;
 }
 .like-count {
-  margin: 2px auto 0 0;
+  margin: 2px 10px 0 0;
 }
 .delete {
   color: var(--error-red);
@@ -270,5 +272,8 @@ export default {
   border: 1px solid var(--primary-color);
   margin: 10px 0;
   font-size: 0.85em;
+}
+.control-menu {
+  margin-right: auto;
 }
 </style>

@@ -81,11 +81,12 @@ export default {
 <style scoped>
 .reply {
   /* margin: 15px 0; */
-  padding: 5px 0 25px 15px;
+  padding: 25px 0 5px 15px;
   background: var(--white);
   border-left: 2px solid #aaa;
 }
 .reply.first {
+  padding-top: 5px;
   margin-top: 15px;
 }
 .reply header {
