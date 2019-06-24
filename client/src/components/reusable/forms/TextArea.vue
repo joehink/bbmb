@@ -12,7 +12,7 @@ import { mapMutations } from 'vuex';
 
 export default {
   name: 'FormInput',
-  props: ['type', 'value', 'placeholder'],
+  props: ['type', 'value', 'placeholder', 'onBlur'],
   mounted() {
     this.$refs.textarea.focus();
   },

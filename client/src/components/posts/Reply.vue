@@ -3,6 +3,15 @@
     <header>
       <span class="username">{{ reply.author.username }}</span>
       <span class="date">{{ date }}</span>
+      <drop-down-menu
+        v-if="belongsToUser"
+        class="control-menu"
+        :controls="[{
+          text: 'Edit',
+          action: () => {this.edit = true; this.replying = false},
+          show: belongsToUser,
+        }]"
+      />
     </header>
     <main>
       <text-area
@@ -26,23 +35,13 @@
         Save
       </button>
       <div v-else class="body">{{ reply.body }}</div>
-      <div v-if="!edit && belongsToUser" class="controls">
-        <font-awesome-icon
-          icon="edit"
-          class="edit"
-          v-on:click="toggleEdit"
-        />
-        <font-awesome-icon
-          icon="trash-alt"
-          class="delete"
-        />
-      </div>
     </main>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
+import DropDownMenu from '../reusable/DropDownMenu';
 import Spinner from '../Spinner';
 import TextArea from '../reusable/forms/TextArea';
 
@@ -51,6 +50,7 @@ export default {
   components: {
     TextArea,
     Spinner,
+    DropDownMenu,
   },
   props: ['reply', 'index', 'token', 'belongsToUser'],
   data() {
@@ -80,7 +80,6 @@ export default {
 
 <style scoped>
 .reply {
-  /* margin: 15px 0; */
   padding: 25px 0 5px 15px;
   background: var(--white);
   border-left: 2px solid #aaa;
@@ -106,14 +105,6 @@ export default {
   font-size: .9em;
   margin-left: 10px;
 }
-.delete {
-  color: var(--error-red);
-  cursor: pointer;
-  margin-left: 5px;
-}
-.edit {
-  cursor: pointer;
-}
 .textarea {
   margin: 15px 5px;
   white-space: pre-wrap;
@@ -123,13 +114,7 @@ export default {
   white-space: pre-line;
   line-height: 1.4;
 }
-.controls {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-  border-radius: 15px;
-  padding: 5px 10px;
-  display: inline-block;
-  border: 1px solid var(--primary-color);
-  margin: 10px 0 0;
-  font-size: 0.85em;
+.control-menu {
+  margin-left: 10px;
 }
 </style>

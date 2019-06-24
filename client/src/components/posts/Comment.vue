@@ -10,12 +10,17 @@
         v-on:click="likeComment"
       />
       <span class="like-count">{{ comment.likesCount }}</span>
-      <drop-down-menu class="control-menu" />
-      Reply
-      <font-awesome-icon
-        icon="reply"
-        class="reply-icon"
-        v-on:click="toggleReplying"
+      <drop-down-menu
+        class="control-menu"
+        :controls="[{
+          text: 'Edit',
+          action: () => {this.edit = true; this.replying = false},
+          show: belongsToUser,
+        }, {
+          text: 'Reply',
+          action: () => {this.replying = true; this.edit = false},
+          show: true,
+        }]"
       />
     </header>
     <main>
@@ -27,7 +32,7 @@
       <button
         class="btn border blue sm"
         v-if="edit"
-        v-on:click="toggleEdit"
+        v-on:click="edit = false"
       >
         Cancel
       </button>
@@ -41,32 +46,21 @@
         Save
       </button>
       <div v-else class="body">{{ comment.body }}</div>
-      <div v-if="!edit && !replying && belongsToUser" class="controls">
-        <font-awesome-icon
-          icon="edit"
-          class="edit"
-          v-on:click="toggleEdit"
-        />
-        <font-awesome-icon
-          icon="trash-alt"
-          class="delete"
-        />
-      </div>
       <text-area
         class="textarea"
-        v-if="replying"
+        v-if="replying & !edit"
         v-model="replyBody"
         placeholder="Reply goes here..."
       />
       <button
         class="btn border blue sm"
-        v-if="replying"
-        v-on:click="toggleReplying"
+        v-if="replying & !edit"
+        v-on:click="replying = false;"
       >
         Cancel
       </button>
       <button
-        v-if="replying"
+        v-if="replying & !edit"
         class="btn border green sm"
         :disabled="saving"
         v-on:click="addReply"
@@ -144,12 +138,6 @@ export default {
       } catch (err) {
         this.liking = false;
       }
-    },
-    toggleEdit() {
-      this.edit = !this.edit;
-    },
-    toggleReplying() {
-      this.replying = !this.replying;
     },
     async updateComment() {
       try {
@@ -242,18 +230,7 @@ export default {
   cursor: pointer;
 }
 .like-count {
-  margin: 2px 10px 0 0;
-}
-.delete {
-  color: var(--error-red);
-  cursor: pointer;
-  margin-left: 5px;
-}
-.delete:hover {
-  opacity: 0.5;
-}
-.edit {
-  cursor: pointer;
+  margin: 2px auto 0 0;
 }
 .textarea {
   margin: 15px 5px;
@@ -263,17 +240,5 @@ export default {
 .body {
   white-space: pre-line;
   line-height: 1.4;
-}
-.controls {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-  border-radius: 15px;
-  padding: 5px 10px;
-  display: inline-block;
-  border: 1px solid var(--primary-color);
-  margin: 10px 0;
-  font-size: 0.85em;
-}
-.control-menu {
-  margin-right: auto;
 }
 </style>
