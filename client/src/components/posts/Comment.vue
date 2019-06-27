@@ -11,17 +11,21 @@
       />
       <span class="like-count">{{ comment.likesCount }}</span>
       <drop-down-menu
+        v-if="belongsToUser"
         class="control-menu"
         :controls="[{
           text: 'Edit',
           action: () => {this.edit = true; this.replying = false},
           show: belongsToUser,
         }, {
-          text: 'Reply',
-          action: () => {this.replying = true; this.edit = false},
-          show: true,
+          text: 'Delete',
+          action: () => {this.edit = true; this.replying = false},
+          show: belongsToUser,
         }]"
       />
+      <button class="reply-button" v-on:click="replying = true">
+        <font-awesome-icon icon="reply" /> Reply
+      </button>
     </header>
     <main>
       <text-area
@@ -210,6 +214,7 @@ export default {
 }
 .comment header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   padding-bottom: 15px;
 }
@@ -240,7 +245,7 @@ export default {
   cursor: pointer;
 }
 .like-count {
-  margin: 2px auto 0 0;
+  margin: 2px 0 0 0;
 }
 .textarea {
   margin: 15px 5px;
@@ -250,6 +255,7 @@ export default {
 .body {
   white-space: pre-line;
   line-height: 1.4;
+  overflow-x: auto;
 }
 .toggle-replies {
   margin: 15px auto 0;
@@ -260,5 +266,14 @@ export default {
 }
 .toggle-replies:hover {
   color: var(--primary-color);
+}
+.control-menu {
+  margin: 2.5px 0 0 10px;
+}
+.reply-button {
+  border: none;
+  background: none;
+  font-size: 0.9em;
+  margin-left: auto;
 }
 </style>

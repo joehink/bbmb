@@ -115,6 +115,6 @@ export default {
   line-height: 1.4;
 }
 .control-menu {
-  margin-left: 10px;
+  margin: 2.5px 0 0 10px;
 }
 </style>
