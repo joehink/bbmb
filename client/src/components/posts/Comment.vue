@@ -69,14 +69,23 @@
         Save
       </button>
 
-      <reply
-        v-for="(reply, index) in comment.replies"
-        :key="reply._id"
-        :reply="reply"
-        :index="index"
-        :belongsToUser="reply.author._id === userId"
-      />
+      <div v-if="showReplies">
+        <reply
+          v-for="(reply, index) in comment.replies"
+          :key="reply._id"
+          :reply="reply"
+          :index="index"
+          :belongsToUser="reply.author._id === userId"
+        />
+      </div>
     </main>
+    <button
+      v-if="comment.replies && comment.replies.length"
+      class="toggle-replies"
+      v-on:click="showReplies = !showReplies"
+    >
+      {{ showReplies ? 'Hide Replies' : 'Show Replies' }}
+    </button>
   </div>
 </template>
 
@@ -105,6 +114,7 @@ export default {
       saving: false,
       replying: false,
       replyBody: '',
+      showReplies: false,
     };
   },
   watch: {
@@ -240,5 +250,15 @@ export default {
 .body {
   white-space: pre-line;
   line-height: 1.4;
+}
+.toggle-replies {
+  margin: 15px auto 0;
+  display: block;
+  background: none;
+  border: none;
+  color: #888;
+}
+.toggle-replies:hover {
+  color: var(--primary-color);
 }
 </style>
