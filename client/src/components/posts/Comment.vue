@@ -75,11 +75,15 @@
 
       <div v-if="showReplies">
         <reply
-          v-for="(reply, index) in comment.replies"
+          v-for="(reply, replyIndex) in comment.replies"
           :key="reply._id"
           :reply="reply"
-          :index="index"
+          :index="replyIndex"
+          :commentIndex="index"
+          :token="token"
+          :commentId="comment._id"
           :belongsToUser="reply.author._id === userId"
+          @updateComment="emitUpdateComment"
         />
       </div>
     </main>
@@ -199,6 +203,9 @@ export default {
       } catch (err) {
         this.saving = false;
       }
+    },
+    emitUpdateComment({ index, updatedComment }) {
+      this.$emit('updateComment', { index, updatedComment });
     },
   },
 };

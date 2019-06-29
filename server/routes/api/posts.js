@@ -359,13 +359,18 @@ module.exports = app => {
             }
 
             // Find comment with reply
-            const comment = await Comment.findById(req.params.commentId);
+            const comment = await Comment
+                .findById(req.params.commentId)
+                .populate([
+                    { path: 'author', select: 'username _id' }, 
+                    { path: 'replies.author', select: 'username _id' }
+                ]);
             // Select reply
-            const reply = comment.replies.id(req.params.replyId)
-
+            const reply = comment.replies.id(req.params.replyId);
+            
             if (!reply) {
                 res.status(404).json({ message: "Reply not found." });
-            } else if (!req.user._id.equals(reply.author)) {
+            } else if (!req.user._id.equals(reply.author._id)) {
                 res.status(401).json({ message: "Reply does not belong to you." });
             } else if (!req.body.body) {
                 res.status(400).json({ message: "Must provide body of reply." })

@@ -30,6 +30,7 @@
         v-if="edit"
         class="btn border green sm"
         :disabled="saving"
+        v-on:click="editReply"
       >
         <Spinner v-if="saving" class="btn-spinner green" />
         Save
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import moment from 'moment';
 import DropDownMenu from '../reusable/DropDownMenu';
 import Spinner from '../Spinner';
@@ -52,7 +54,7 @@ export default {
     Spinner,
     DropDownMenu,
   },
-  props: ['reply', 'index', 'token', 'belongsToUser'],
+  props: ['reply', 'index', 'commentIndex', 'token', 'belongsToUser', 'commentId'],
   data() {
     return {
       liking: false,
@@ -68,6 +70,28 @@ export default {
     },
   },
   methods: {
+    async editReply() {
+      try {
+        if (this.body && this.belongsToUser && !this.saving) {
+          this.saving = true;
+          const res = await axios({
+            method: 'PATCH',
+            url: `/api/posts/${this.$route.params.postId}/comments/${this.commentId}/replies/${this.reply._id}`,
+            headers: {
+              authorization: this.token,
+            },
+            data: {
+              body: this.body,
+            },
+          });
+          this.$emit('updateComment', { index: this.commentIndex, updatedComment: res.data });
+          this.saving = false;
+          this.edit = false;
+        }
+      } catch (err) {
+        this.saving = false;
+      }
+    },
     toggleEdit() {
       this.edit = !this.edit;
     },
