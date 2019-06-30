@@ -53,6 +53,10 @@ const mutations = {
   updatePostAtIndex: (state, { index, updatedPost }) => {
     state.posts.splice(index, 1, updatedPost);
   },
+  removePostAtIndex: (state, id) => {
+    const index = state.posts.findIndex(post => post._id === id);
+    state.posts.splice(index, 1);
+  },
 };
 
 const getters = {

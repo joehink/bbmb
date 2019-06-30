@@ -10,6 +10,16 @@
           text: 'Edit',
           action: () => {this.edit = true; this.replying = false},
           show: belongsToUser,
+        }, {
+          text: 'Delete',
+          action: () => {
+            this.displayModal({
+              message: 'Are you sure you want to delete this Reply?',
+              btnText: 'Delete',
+              action: deleteReply,
+            });
+          },
+          show: belongsToUser,
         }]"
       />
     </header>
@@ -54,13 +64,14 @@ export default {
     Spinner,
     DropDownMenu,
   },
-  props: ['reply', 'index', 'commentIndex', 'token', 'belongsToUser', 'commentId'],
+  props: ['reply', 'index', 'commentIndex', 'token', 'belongsToUser', 'commentId', 'displayModal'],
   data() {
     return {
       liking: false,
       body: this.reply.body,
       edit: false,
       saving: false,
+      deleting: false,
     };
   },
   computed: {
@@ -90,6 +101,22 @@ export default {
         }
       } catch (err) {
         this.saving = false;
+      }
+    },
+    async deleteReply() {
+      try {
+        this.deleting = true;
+        await axios({
+          method: 'DELETE',
+          url: `/api/posts/${this.$route.params.postId}/comments/${this.commentId}/replies/${this.reply._id}`,
+          headers: {
+            authorization: this.token,
+          },
+        });
+        this.$emit('removeReply', this.index);
+        this.deleting = false;
+      } catch (err) {
+        this.deleting = false;
       }
     },
     toggleEdit() {

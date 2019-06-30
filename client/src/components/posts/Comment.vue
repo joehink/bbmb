@@ -19,7 +19,13 @@
           show: belongsToUser,
         }, {
           text: 'Delete',
-          action: () => {this.edit = true; this.replying = false},
+          action: () => {
+            this.displayModal({
+              message: 'Are you sure you want to delete this comment?',
+              btnText: 'Delete',
+              action: () => this.deleteComment(index),
+            });
+          },
           show: belongsToUser,
         }]"
       />
@@ -84,6 +90,8 @@
           :commentId="comment._id"
           :belongsToUser="reply.author._id === userId"
           @updateComment="emitUpdateComment"
+          :displayModal="displayModal"
+          @removeReply="removeReplyAtIndex"
         />
       </div>
     </main>
@@ -113,7 +121,7 @@ export default {
     Spinner,
     Reply,
   },
-  props: ['comment', 'index', 'token', 'belongsToUser', 'userId'],
+  props: ['comment', 'index', 'token', 'belongsToUser', 'userId', 'displayModal'],
   data() {
     return {
       liking: false,
@@ -123,6 +131,7 @@ export default {
       replying: false,
       replyBody: '',
       showReplies: false,
+      deleting: false,
     };
   },
   watch: {
@@ -204,8 +213,27 @@ export default {
         this.saving = false;
       }
     },
+    async deleteComment(index) {
+      try {
+        this.deleting = true;
+        await axios({
+          method: 'DELETE',
+          url: `/api/posts/${this.$route.params.postId}/comments/${this.comment._id}`,
+          headers: {
+            authorization: this.token,
+          },
+        });
+        this.$emit('removeComment', index);
+        this.deleting = false;
+      } catch (err) {
+        this.deleting = false;
+      }
+    },
     emitUpdateComment({ index, updatedComment }) {
       this.$emit('updateComment', { index, updatedComment });
+    },
+    removeReplyAtIndex(index) {
+      this.comment.replies.splice(index, 1);
     },
   },
 };

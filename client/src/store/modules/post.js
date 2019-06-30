@@ -116,6 +116,23 @@ const actions = {
       commit('setPostLiking', false);
     }
   },
+  async deletePost({ commit, state, rootState }, id) {
+    try {
+      commit('setPostDeleting', true);
+      await axios({
+        method: 'DELETE',
+        url: `/api/posts/${state.data._id}`,
+        headers: {
+          authorization: rootState.auth.authenticated,
+        },
+      });
+      commit('setPostDeleting', false);
+      commit('removePostAtIndex', id);
+      router.push(`/posts/category/${state.data.category}`);
+    } catch (err) {
+      commit('setPostDeleting', false);
+    }
+  },
   resetPost: ({ commit }) => {
     commit('setPostLoading', false);
     commit('setPostFormTitle', '');
@@ -183,6 +200,9 @@ const mutations = {
   setPostLiking: (state, isLiking) => {
     state.status.liking = isLiking;
   },
+  setPostDeleting: (state, isDeleting) => {
+    state.status.deleting = isDeleting;
+  },
   setPostFormTitle: (state, text) => {
     state.form.title = text;
   },
@@ -219,6 +239,9 @@ const mutations = {
   updateCommentAtIndex: (state, { index, updatedComment }) => {
     state.comments.list.splice(index, 1, updatedComment);
   },
+  removeCommentAtIndex: (state, index) => {
+    state.comments.list.splice(index, 1);
+  },
 };
 
 const getters = {
@@ -230,6 +253,7 @@ const getters = {
   isPostSaved: state => state.status.saved,
   isPostEditable: state => state.status.editable,
   isLikingPost: state => state.status.liking,
+  isDeletingPost: state => state.status.deleting,
   isPostContentChanged: state => state.status.contentChanged,
   commentFormBody: state => state.comments.form.body,
   isCreatingComment: state => state.comments.status.creating,
@@ -250,6 +274,7 @@ const state = {
     contentChanged: false,
     liking: false,
     editable: false,
+    deleting: false,
   },
   comments: {
     list: [],

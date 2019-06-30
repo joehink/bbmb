@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <modal />
     <Post />
     <div class="comment-controls">
       <nav :class="{ shadow: isCreatingComment }" class="secondary-nav">
@@ -45,6 +46,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PostComments from '../posts/PostComments';
 import Post from '../posts/Post';
 import FormInput from '../reusable/forms/FormInput';
+import Modal from '../reusable/Modal';
 import TextArea from '../reusable/forms/TextArea';
 import Spinner from '../Spinner';
 
@@ -54,6 +56,7 @@ export default {
     Post,
     PostComments,
     FormInput,
+    Modal,
     TextArea,
     Spinner,
   },
@@ -70,7 +73,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'isCommentSaved', 'token']),
+    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'token']),
   },
   methods: {
     ...mapActions(['resetPost', 'createComment']),

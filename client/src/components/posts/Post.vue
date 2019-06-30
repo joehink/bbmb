@@ -21,6 +21,11 @@
           <button
             class="btn border red sm"
             v-if="user && user._id === post.author._id && !isPostEditable"
+            @click="displayModal({
+              message: 'Are you sure you want to delete this post?',
+              action: () => deletePost(post._id),
+              btnText: 'Delete',
+            })"
           >
             Delete
           </button>
@@ -129,7 +134,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getPost', 'likePost', 'updatePost']),
+    ...mapActions(['getPost', 'likePost', 'updatePost', 'deletePost', 'displayModal']),
     ...mapMutations([
       'setError',
       'setPostEditable',

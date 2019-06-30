@@ -6,10 +6,12 @@
       :comment="comment"
       :index="index"
       :token="token"
-      v-on:likeComment="updateCommentAtIndex"
-      v-on:updateComment="updateCommentAtIndex"
+      @likeComment="updateCommentAtIndex"
+      @updateComment="updateCommentAtIndex"
+      @removeComment="removeCommentAtIndex"
       :belongsToUser="user && user._id === comment.author._id"
       :userId="user && user._id"
+      :displayModal="displayModal"
   />
   </div>
 </template>
@@ -30,8 +32,9 @@ export default {
     ...mapGetters(['comments', 'token', 'user']),
   },
   methods: {
-    ...mapActions(['getPostComments']),
+    ...mapActions(['getPostComments', 'displayModal']),
     ...mapMutations(['updateCommentAtIndex']),
+    ...mapMutations(['removeCommentAtIndex']),
   },
 };
 </script>
