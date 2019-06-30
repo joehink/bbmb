@@ -2,12 +2,14 @@
   <div v-if="modal" @click="hideModal" class="modal-container">
     <div class="modal">
       <p>{{ modalMessage }}</p>
-      <button class="btn blue" @click="hideModal">
-        Cancel
-      </button>
-      <button class="btn green" @click="modalAction">
-        {{ modalBtnText }}
-      </button>
+      <div>
+        <button class="btn blue" @click="hideModal">
+          Cancel
+        </button>
+        <button class="btn green" @click="modalAction">
+          {{ modalBtnText }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -42,5 +44,8 @@ export default {
     background: var(--white);
     padding: 25px;
     border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 </style>

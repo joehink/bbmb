@@ -62,6 +62,7 @@ export default {
   },
   beforeDestroy() {
     this.resetPost();
+    this.hideModal();
   },
   watch: {
     isCreatingComment() {
@@ -77,7 +78,7 @@ export default {
   },
   methods: {
     ...mapActions(['resetPost', 'createComment']),
-    ...mapMutations(['toggleCreatingComment', 'setCommentFormBody', 'setCommentSaved', 'setError']),
+    ...mapMutations(['toggleCreatingComment', 'setCommentFormBody', 'setCommentSaved', 'setError', 'hideModal']),
   },
 };
 </script>
