@@ -76,10 +76,13 @@ export default {
     border-radius: 10px;
   }
   .post-list-item.recent {
-    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     border-radius: 0;
     margin: 0;
     box-shadow: none;
+  }
+  .post-list-item.recent:first-of-type {
+    border-top: 1px solid #ddd;
   }
   .post-link {
     color: var(--black);
