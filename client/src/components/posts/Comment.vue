@@ -23,6 +23,7 @@
             this.displayModal({
               message: 'Are you sure you want to delete this comment?',
               btnText: 'Delete',
+              btnColor: 'red',
               action: () => this.deleteComment(index),
             });
           },

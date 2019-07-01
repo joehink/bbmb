@@ -25,6 +25,7 @@
               message: 'Are you sure you want to delete this post?',
               action: () => deletePost(post._id),
               btnText: 'Delete',
+              btnColor: 'red',
             })"
           >
             Delete

@@ -173,6 +173,10 @@ label {
   background: green;
   color: var(--white);
 }
+.btn.red {
+  background: var(--error-red);
+  color: var(--white);
+}
 
 /* Secondary Nav */
 .secondary-nav {

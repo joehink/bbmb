@@ -6,7 +6,7 @@
         <button class="btn blue" @click="hideModal">
           Cancel
         </button>
-        <button class="btn green" @click="modalAction">
+        <button class="btn" :class="{red: modalBtnColor === 'red'}" @click="modalAction">
           {{ modalBtnText }}
         </button>
       </div>
@@ -20,7 +20,7 @@ import { mapGetters, mapMutations } from 'vuex';
 export default {
   name: 'Modal',
   computed: {
-    ...mapGetters(['modal', 'modalMessage', 'modalAction', 'modalBtnText']),
+    ...mapGetters(['modal', 'modalMessage', 'modalAction', 'modalBtnText', 'modalBtnColor']),
   },
   methods: {
     ...mapMutations(['hideModal']),

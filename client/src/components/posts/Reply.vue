@@ -16,6 +16,7 @@
             this.displayModal({
               message: 'Are you sure you want to delete this Reply?',
               btnText: 'Delete',
+              btnColor: 'red',
               action: deleteReply,
             });
           },
