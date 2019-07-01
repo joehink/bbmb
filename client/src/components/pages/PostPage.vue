@@ -7,27 +7,11 @@
         <nav :class="{ shadow: isCreatingComment }" class="secondary-nav">
           <span class="brand">Comments</span>
           <button
-            class="btn blue border sm"
-            v-if="token && isCreatingComment"
-            v-on:click="toggleCreatingComment"
-          >
-            Cancel
-          </button>
-          <button
             class="btn green border sm"
             v-if="token && !isCreatingComment"
             v-on:click="toggleCreatingComment"
           >
             New Comment
-          </button>
-          <button
-            class="btn green border sm"
-            v-if="token && isCreatingComment"
-            v-on:click="createComment"
-            :disabled="isSavingComment"
-          >
-            <Spinner class="btn-spinner green" v-if="isSavingComment" />
-            Add Comment
           </button>
         </nav>
         <div v-if="isCreatingComment" class="form">
@@ -36,9 +20,27 @@
             v-on:input="setCommentFormBody"
             placeholder="Comment goes here..."
           />
+          <div class="btn-group">
+            <button
+              class="btn blue border sm"
+              v-if="token && isCreatingComment"
+              v-on:click="toggleCreatingComment"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn green border sm"
+              v-if="token && isCreatingComment"
+              v-on:click="createComment"
+              :disabled="isSavingComment"
+            >
+              <Spinner class="btn-spinner green" v-if="isSavingComment" />
+              Add Comment
+            </button>
+          </div>
         </div>
       </div>
-      <PostComments />
+      <PostComments :comments="comments" />
     </div>
   </div>
 </template>
@@ -62,6 +64,10 @@ export default {
     TextArea,
     Spinner,
   },
+  mounted() {
+    this.getPostComments(this.$route.params.postId);
+    this.scroll();
+  },
   beforeDestroy() {
     this.resetPost();
     this.hideModal();
@@ -76,11 +82,24 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'token']),
+    ...mapGetters(['isCreatingComment', 'commentFormBody', 'isSavingComment', 'token', 'comments']),
   },
   methods: {
-    ...mapActions(['resetPost', 'createComment']),
+    ...mapActions(['resetPost', 'createComment', 'getPostComments']),
     ...mapMutations(['toggleCreatingComment', 'setCommentFormBody', 'setCommentSaved', 'setError', 'hideModal']),
+    scroll() {
+      const page = document.getElementById('page');
+      page.onscroll = () => {
+        const { clientHeight, scrollTop, scrollHeight } = page;
+        const bottomOfWindow = (clientHeight * 1.25) + scrollTop >= scrollHeight;
+
+        // if user is a quarter of the screen's height away from the bottom of the page
+        if (bottomOfWindow) {
+          // get next page of posts
+          this.getPostComments(this.$route.params.postId);
+        }
+      };
+    },
   },
 };
 </script>

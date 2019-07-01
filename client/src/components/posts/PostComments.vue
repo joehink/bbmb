@@ -25,14 +25,12 @@ export default {
   components: {
     Comment,
   },
-  mounted() {
-    this.getPostComments(this.$route.params.postId);
-  },
+  props: ['comments'],
   computed: {
-    ...mapGetters(['comments', 'token', 'user']),
+    ...mapGetters(['token', 'user']),
   },
   methods: {
-    ...mapActions(['getPostComments', 'displayModal']),
+    ...mapActions(['displayModal']),
     ...mapMutations(['updateCommentAtIndex']),
     ...mapMutations(['removeCommentAtIndex']),
   },

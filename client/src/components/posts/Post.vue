@@ -18,34 +18,26 @@
           <span class="post-data">{{ date }} by {{ post.author.username }}</span>
         </div>
         <div class="post-controls">
-          <button
-            class="btn border red sm"
-            v-if="user && user._id === post.author._id && !isPostEditable"
-            @click="displayModal({
-              message: 'Are you sure you want to delete this post?',
-              action: () => deletePost(post._id),
-              btnText: 'Delete',
-              btnColor: 'red',
-            })"
-          >
-            Delete
-          </button>
-          <button
-            class="btn border blue sm"
-            v-if="user && user._id === post.author._id && !isSavingPost"
-            v-on:click="toggleEdit"
-          >
-            {{ isPostEditable ? 'Cancel' : 'Edit' }}
-          </button>
-          <button
-            v-if="user && user._id === post.author._id && isPostEditable"
-            v-on:click="updatePost"
-            class="btn border green sm"
-            :disabled="!isPostContentChanged"
-          >
-            <Spinner class="btn-spinner green" v-if="isSavingPost" />
-            Save
-          </button>
+          <drop-down-menu
+            v-if="user && user._id === post.author._id"
+            class="control-menu"
+            :controls="[{
+              text: 'Edit',
+              action: toggleEdit,
+              show: user && user._id === post.author._id && !isSavingPost,
+            }, {
+              text: 'Delete',
+              action: () => {
+                this.displayModal({
+                  message: 'Are you sure you want to delete this post?',
+                  btnText: 'Delete',
+                  btnColor: 'red',
+                  action: () => deletePost(this.post._id),
+                });
+              },
+              show: user && user._id === post.author._id && !isPostEditable,
+            }]"
+          />
         </div>
       </div>
       <div class="edit-form">
@@ -62,6 +54,24 @@
             v-on:input="setPostFormBody"
           />
         </div>
+        <div class="form-row btn-group">
+          <button
+            class="btn border blue sm"
+            v-if="isPostEditable"
+            v-on:click="toggleEdit"
+          >
+            Cancel
+          </button>
+          <button
+            v-if="isPostEditable"
+            v-on:click="updatePost"
+            class="btn border green sm"
+            :disabled="!isPostContentChanged"
+          >
+            <Spinner class="btn-spinner green" v-if="isSavingPost" />
+            Save
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +80,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import moment from 'moment';
+import DropDownMenu from '../reusable/DropDownMenu';
 import Editor from '../reusable/Editor';
 import ErrorMessage from '../reusable/errors/ErrorMessage';
 import FormInput from '../reusable/forms/FormInput';
@@ -79,6 +90,7 @@ import Spinner from '../Spinner';
 export default {
   name: 'Post',
   components: {
+    DropDownMenu,
     Editor,
     ErrorMessage,
     FormInput,

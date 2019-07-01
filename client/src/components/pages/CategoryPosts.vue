@@ -36,11 +36,15 @@ export default {
       scrollTopPosition: 0,
     };
   },
+  mounted() {
+    // Get first page of posts for category
+    this.getPosts(this.category);
+  },
   computed: {
     ...mapGetters(['posts']),
   },
   methods: {
-    ...mapActions(['getPosts', 'resetPostsData']),
+    ...mapActions(['resetPostsData', 'getPosts']),
     ...mapMutations(['updatePostAtIndex']),
     scroll() {
       const page = document.getElementById('page');
@@ -57,10 +61,6 @@ export default {
         }
       };
     },
-  },
-  mounted() {
-    // Get first page of posts for category
-    this.getPosts(this.category);
   },
   activated() {
     // If selected category is different than previously selected category

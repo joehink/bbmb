@@ -19,18 +19,25 @@ const actions = {
       commit('setPostLoading', false);
     }
   },
-  getPostComments: async ({ commit }, postId) => {
+  getPostComments: async ({ commit, state }, postId) => {
     try {
-      commit('setCommentsLoading', true);
-      // fetch post comments
-      const res = await axios({
-        method: 'GET',
-        url: `/api/posts/${postId}/comments`,
-      });
+      if (!state.comments.status.loading && state.comments.nextPage) {
+        commit('setCommentsLoading', true);
+        // fetch post comments
+        const res = await axios({
+          method: 'GET',
+          url: `/api/posts/${postId}/comments`,
+          params: {
+            page: state.comments.page + 1,
+          },
+        });
 
-      // add new comments to existing comments array
-      commit('addToCommentsList', res.data.comments);
-      commit('setCommentsLoading', false);
+        // add new comments to existing comments array
+        commit('setCommentsNextPage', res.data.nextPage);
+        commit('incrementCommentsPage');
+        commit('addToCommentsList', res.data.comments);
+        commit('setCommentsLoading', false);
+      }
     } catch (err) {
       commit('setCommentsLoading', false);
     }
@@ -148,6 +155,8 @@ const actions = {
     commit('setCommentFormBody', '');
     commit('setCommentSaved', false);
     commit('setSavingComment', false);
+    commit('setCommentsPage', 0);
+    commit('setCommentsNextPage', true);
   },
   createComment: async ({ commit, state, rootState }) => {
     try {
@@ -210,7 +219,7 @@ const mutations = {
     state.form.content = text;
   },
   setCommentsLoading: (state, isLoading) => {
-    state.comments.loading = isLoading;
+    state.comments.status.loading = isLoading;
   },
   addToCommentsList: (state, newComments) => {
     state.comments.list = [...state.comments.list, ...newComments];
@@ -241,6 +250,15 @@ const mutations = {
   },
   removeCommentAtIndex: (state, index) => {
     state.comments.list.splice(index, 1);
+  },
+  incrementCommentsPage: (state) => {
+    state.comments.page += 1;
+  },
+  setCommentsPage: (state, page) => {
+    state.comments.page = page;
+  },
+  setCommentsNextPage: (state, nextPageExists) => {
+    state.comments.nextPage = nextPageExists;
   },
 };
 
@@ -278,6 +296,8 @@ const state = {
   },
   comments: {
     list: [],
+    page: 0,
+    nextPage: true,
     status: {
       loading: false,
       creating: false,

@@ -301,7 +301,7 @@ module.exports = app => {
             }
 
             const { page = 1, sortBy = 'createdAt' } = req.query;
-            const limit = 50;
+            const limit = 25;
 
             let comments = await Comment
                 .find({ postId: req.params.postId })

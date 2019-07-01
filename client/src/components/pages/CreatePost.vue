@@ -6,9 +6,6 @@
         <header>
           <nav class="secondary-nav">
             <span class="brand">Create Post</span>
-            <button class="btn border green sm" v-on:click="createPost($route.params.category)">
-              <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
-            </button>
           </nav>
         </header>
         <div class="create-form">
@@ -26,6 +23,11 @@
               v-on:input="setPostFormBody"
               id="body"
             />
+            <div class="btn-group">
+              <button class="btn border green sm" v-on:click="createPost($route.params.category)">
+                <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
+              </button>
+            </div>
           </div>
         </div>
       </div>
