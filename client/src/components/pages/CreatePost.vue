@@ -1,30 +1,32 @@
 <template>
-  <div class="container">
-    <error-message />
-    <div class="create-form-container">
-      <header>
-        <nav class="secondary-nav">
-          <span class="brand">Create Post</span>
-          <button class="btn border green sm" v-on:click="createPost($route.params.category)">
-            <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
-          </button>
-        </nav>
-      </header>
-      <div class="create-form">
-        <div class="form-row">
-          <label for="title">Title:</label>
-          <form-input id="title" :value="postFormTitle" v-on:input="setPostFormTitle"/>
-        </div>
+  <div id="page">
+    <div class="container">
+      <error-message />
+      <div class="create-form-container">
+        <header>
+          <nav class="secondary-nav">
+            <span class="brand">Create Post</span>
+            <button class="btn border green sm" v-on:click="createPost($route.params.category)">
+              <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
+            </button>
+          </nav>
+        </header>
+        <div class="create-form">
+          <div class="form-row">
+            <label for="title">Title:</label>
+            <form-input id="title" :value="postFormTitle" v-on:input="setPostFormTitle"/>
+          </div>
 
-        <div class="form-row">
-          <label for="body">Body:</label>
-          <editor
-            :content="postFormBody"
-            :editable="true"
-            :displayMenu="true"
-            v-on:input="setPostFormBody"
-            id="body"
-          />
+          <div class="form-row">
+            <label for="body">Body:</label>
+            <editor
+              :content="postFormBody"
+              :editable="true"
+              :displayMenu="true"
+              v-on:input="setPostFormBody"
+              id="body"
+            />
+          </div>
         </div>
       </div>
     </div>

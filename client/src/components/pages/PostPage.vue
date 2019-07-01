@@ -1,43 +1,45 @@
 <template>
-  <div class="container">
-    <modal />
-    <Post />
-    <div class="comment-controls">
-      <nav :class="{ shadow: isCreatingComment }" class="secondary-nav">
-        <span class="brand">Comments</span>
-        <button
-          class="btn blue border sm"
-          v-if="token && isCreatingComment"
-          v-on:click="toggleCreatingComment"
-        >
-          Cancel
-        </button>
-        <button
-          class="btn green border sm"
-          v-if="token && !isCreatingComment"
-          v-on:click="toggleCreatingComment"
-        >
-          New Comment
-        </button>
-        <button
-          class="btn green border sm"
-          v-if="token && isCreatingComment"
-          v-on:click="createComment"
-          :disabled="isSavingComment"
-        >
-          <Spinner class="btn-spinner green" v-if="isSavingComment" />
-          Add Comment
-        </button>
-      </nav>
-      <div v-if="isCreatingComment" class="form">
-        <text-area
-          :value="commentFormBody"
-          v-on:input="setCommentFormBody"
-          placeholder="Comment goes here..."
-        />
+  <div id="page">
+    <div class="container">
+      <modal />
+      <Post />
+      <div class="comment-controls">
+        <nav :class="{ shadow: isCreatingComment }" class="secondary-nav">
+          <span class="brand">Comments</span>
+          <button
+            class="btn blue border sm"
+            v-if="token && isCreatingComment"
+            v-on:click="toggleCreatingComment"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn green border sm"
+            v-if="token && !isCreatingComment"
+            v-on:click="toggleCreatingComment"
+          >
+            New Comment
+          </button>
+          <button
+            class="btn green border sm"
+            v-if="token && isCreatingComment"
+            v-on:click="createComment"
+            :disabled="isSavingComment"
+          >
+            <Spinner class="btn-spinner green" v-if="isSavingComment" />
+            Add Comment
+          </button>
+        </nav>
+        <div v-if="isCreatingComment" class="form">
+          <text-area
+            :value="commentFormBody"
+            v-on:input="setCommentFormBody"
+            placeholder="Comment goes here..."
+          />
+        </div>
       </div>
+      <PostComments />
     </div>
-    <PostComments />
   </div>
 </template>
 

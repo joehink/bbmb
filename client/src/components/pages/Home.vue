@@ -1,10 +1,12 @@
 // Home is purely for showing all recent category posts.
 <template>
-  <div class="container categories">
-    <Category category="discussion" src="/static/images/categories/discussion.jpg" />
-    <Category category="media" src="/static/images/categories/media.jpg" />
-    <Category category="events" src="/static/images/categories/events.jpg" />
-    <Category category="tour" src="/static/images/categories/tour.jpg" />
+  <div id="page">
+    <div class="container categories">
+      <Category category="discussion" src="/static/images/categories/discussion.jpg" />
+      <Category category="media" src="/static/images/categories/media.jpg" />
+      <Category category="events" src="/static/images/categories/events.jpg" />
+      <Category category="tour" src="/static/images/categories/tour.jpg" />
+    </div>
   </div>
 </template>
 

@@ -63,9 +63,13 @@ html, body, #app {
   display: flex;
   flex-direction: column;
 }
+#page {
+  flex: 1;
+  overflow: auto;
+}
 
 .full-screen {
-  flex: 1;
+  height: 100%;
 }
 
 .text-center {

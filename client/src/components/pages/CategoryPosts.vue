@@ -1,21 +1,23 @@
 <template>
-  <div class="container">
-    <nav class="secondary-nav">
-      <span class="brand">{{category}}</span>
-      <router-link
-        :to="`/posts/category/${category}/create`"
-        class="btn border blue sm"
-      >
-        Create New Post
-      </router-link>
-    </nav>
-    <PostListItem
-      v-for="(post, index) in posts"
-      :key="post._id"
-      :post="post"
-      :index="index"
-      v-on:like="updatePostAtIndex"
-    />
+  <div id="page">
+    <div class="container">
+      <nav class="secondary-nav">
+        <span class="brand">{{category}}</span>
+        <router-link
+          :to="`/posts/category/${category}/create`"
+          class="btn border blue sm"
+        >
+          Create New Post
+        </router-link>
+      </nav>
+      <PostListItem
+        v-for="(post, index) in posts"
+        :key="post._id"
+        :post="post"
+        :index="index"
+        v-on:like="updatePostAtIndex"
+      />
+    </div>
   </div>
 </template>
 
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       category: this.$route.params.category,
+      scrollTopPosition: 0,
     };
   },
   computed: {
@@ -40,10 +43,12 @@ export default {
     ...mapActions(['getPosts', 'resetPostsData']),
     ...mapMutations(['updatePostAtIndex']),
     scroll() {
-      window.onscroll = () => {
-        const { innerHeight } = window;
-        const { scrollTop, scrollHeight } = event.target.scrollingElement;
-        const bottomOfWindow = (innerHeight * 1.25) + scrollTop >= scrollHeight;
+      const page = document.getElementById('page');
+      page.onscroll = () => {
+        const { clientHeight, scrollTop, scrollHeight } = page;
+        const bottomOfWindow = (clientHeight * 1.25) + scrollTop >= scrollHeight;
+
+        this.scrollTopPosition = scrollTop;
 
         // if user is a quarter of the screen's height away from the bottom of the page
         if (bottomOfWindow) {
@@ -63,7 +68,11 @@ export default {
       // reset data
       this.resetPostsData();
       this.category = this.$route.params.category;
+      this.scrollTopPosition = 0;
       this.getPosts(this.category);
+    } else {
+      const page = document.getElementById('page');
+      page.scrollTop = this.scrollTopPosition;
     }
     // Initialize infinite scroll function
     this.scroll();
