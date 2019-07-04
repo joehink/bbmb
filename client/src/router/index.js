@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '../components/pages/Home';
 import Auth from '../components/auth/Auth';
+import AuthRequired from '../components/pages/AuthRequired';
 import LogInForm from '../components/auth/LogInForm';
 import SignUpForm from '../components/auth/SignUpForm';
 import CategoryPosts from '../components/pages/CategoryPosts';
@@ -32,6 +33,10 @@ export default new Router({
         path: '',
         component: SignUpForm,
       }],
+    },
+    {
+      path: '/auth/required',
+      component: AuthRequired,
     },
     {
       path: '/posts/category/:category',

@@ -22,6 +22,7 @@
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
+import router from '../../router';
 
 export default {
   name: 'PostListItem',
@@ -41,8 +42,11 @@ export default {
   methods: {
     async likePost() {
       try {
-        // if like request is not being made and user is logged in
-        if (!this.liking && this.isLoggedIn) {
+        if (!this.isLoggedIn) {
+          // if user is not logged in
+          router.push('/auth/required');
+        } else if (!this.liking) {
+          // if like request is not being made
           this.liking = true;
           // Make request to like or unlike post
           const res = await axios({

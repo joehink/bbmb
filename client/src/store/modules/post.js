@@ -105,8 +105,10 @@ const actions = {
   likePost: async ({ commit, state, rootState }) => {
     try {
       const { liking } = state.status;
-      // if like request is not being made and user is logged in
-      if (!liking && !!rootState.auth.authenticated) {
+      if (!rootState.auth.authenticated) {
+        router.push('/auth/required');
+      } else if (!liking) {
+        // if like request is not being made
         commit('setPostLiking', true);
         // Make request to like or unlike post
         const res = await axios({
