@@ -2,7 +2,7 @@
   <div class="category">
     <header>
       <h2>{{ category }}</h2>
-      <img :src="src" alt="" width="215px">
+      <img :src="src" alt="" height="150px">
     </header>
     <div class="posts">
       <div v-if="posts && posts.length" class="posts-list">
@@ -62,9 +62,9 @@ export default {
         this.error = `Something went wrong while getting ${this.category} posts`;
       }
     },
-    updateLikes(likedPost, index) {
+    updateLikes({ index, updatedPost }) {
       // update posts array at index with updated post
-      Vue.set(this.posts, index, likedPost);
+      Vue.set(this.posts, index, updatedPost);
     },
   },
 };
@@ -87,7 +87,7 @@ header {
   color: white;
   text-align: center;
   position: relative;
-  padding-bottom: 125px;
+  padding-bottom: 115px;
 }
 h2 {
   text-transform: capitalize;
@@ -98,7 +98,7 @@ img {
   transform: translateX(-50%);
 }
 .posts {
-  padding: 75px 0 0;
+  /* padding: 60px 0 0; */
   background: var(--white);
   display: flex;
   flex-direction: column;
@@ -114,5 +114,8 @@ img {
   text-align: center;
   padding: 15px 0;
   width: 100%;
+}
+.posts .recent:first-of-type {
+  margin-top: 60px;
 }
 </style>
