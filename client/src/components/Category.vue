@@ -98,7 +98,6 @@ img {
   transform: translateX(-50%);
 }
 .posts {
-  /* padding: 60px 0 0; */
   background: var(--white);
   display: flex;
   flex-direction: column;

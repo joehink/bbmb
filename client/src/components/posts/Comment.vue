@@ -89,7 +89,7 @@
           :commentIndex="index"
           :token="token"
           :commentId="comment._id"
-          :belongsToUser="reply.author._id === userId"
+          :belongsToUser="belongsToUser"
           @updateComment="emitUpdateComment"
           :displayModal="displayModal"
           @removeReply="removeReplyAtIndex"

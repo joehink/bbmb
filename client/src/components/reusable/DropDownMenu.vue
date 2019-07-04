@@ -51,7 +51,7 @@ export default {
 
 <style scoped>
   .dropdown-container {
-    display: relative;
+    position: relative;
   }
   .dropdown-button {
     cursor: pointer;
