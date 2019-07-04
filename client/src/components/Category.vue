@@ -2,7 +2,7 @@
   <div class="category">
     <header>
       <h2>{{ category }}</h2>
-      <img :src="src" alt="" width="160px" height="160px">
+      <img :src="src" alt="" width="215px">
     </header>
     <div class="posts">
       <div v-if="posts && posts.length" class="posts-list">
@@ -87,20 +87,18 @@ header {
   color: white;
   text-align: center;
   position: relative;
-  padding-bottom: 80px;
+  padding-bottom: 125px;
 }
 h2 {
   text-transform: capitalize;
 }
 img {
-  border-radius: 100%;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 .posts {
-  padding: 97.5px 0 25px;
+  padding: 75px 0 0;
   background: var(--white);
   display: flex;
   flex-direction: column;

@@ -2,10 +2,10 @@
 <template>
   <div id="page">
     <div class="container categories">
-      <Category category="discussion" src="/static/images/categories/discussion.jpg" />
-      <Category category="media" src="/static/images/categories/media.jpg" />
-      <Category category="events" src="/static/images/categories/events.jpg" />
-      <Category category="tour" src="/static/images/categories/tour.jpg" />
+      <Category category="discussion" src="/static/images/categories/discussion.png" />
+      <Category category="media" src="/static/images/categories/media.png" />
+      <Category category="events" src="/static/images/categories/events.png" />
+      <Category category="tour" src="/static/images/categories/tour.png" />
     </div>
   </div>
 </template>
