@@ -55,6 +55,7 @@
 import axios from 'axios';
 import moment from 'moment';
 import DropDownMenu from '../reusable/DropDownMenu';
+import router from '../../router';
 import Spinner from '../Spinner';
 import TextArea from '../reusable/forms/TextArea';
 
@@ -84,7 +85,10 @@ export default {
   methods: {
     async editReply() {
       try {
-        if (this.body && this.belongsToUser && !this.saving) {
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (this.body && this.belongsToUser && !this.saving) {
           this.saving = true;
           const res = await axios({
             method: 'PATCH',
@@ -106,16 +110,21 @@ export default {
     },
     async deleteReply() {
       try {
-        this.deleting = true;
-        await axios({
-          method: 'DELETE',
-          url: `/api/posts/${this.$route.params.postId}/comments/${this.commentId}/replies/${this.reply._id}`,
-          headers: {
-            authorization: this.token,
-          },
-        });
-        this.$emit('removeReply', this.index);
-        this.deleting = false;
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (this.belongsToUser && !this.deleting) {
+          this.deleting = true;
+          await axios({
+            method: 'DELETE',
+            url: `/api/posts/${this.$route.params.postId}/comments/${this.commentId}/replies/${this.reply._id}`,
+            headers: {
+              authorization: this.token,
+            },
+          });
+          this.$emit('removeReply', this.index);
+          this.deleting = false;
+        }
       } catch (err) {
         this.deleting = false;
       }

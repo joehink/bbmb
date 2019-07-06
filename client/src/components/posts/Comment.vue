@@ -111,6 +111,7 @@ import axios from 'axios';
 import moment from 'moment';
 import DropDownMenu from '../reusable/DropDownMenu';
 import Reply from '../posts/Reply';
+import router from '../../router';
 import Spinner from '../Spinner';
 import TextArea from '../reusable/forms/TextArea';
 
@@ -149,8 +150,11 @@ export default {
   methods: {
     async likeComment() {
       try {
-        // if like request is not being made and user is logged in
-        if (!this.liking && !!this.token) {
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (!this.liking) {
+          // if like request is not being made
           this.liking = true;
           // Make request to like or unlike post
           const res = await axios({
@@ -169,7 +173,10 @@ export default {
     },
     async updateComment() {
       try {
-        if (this.body && this.belongsToUser && !this.saving) {
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (this.body && this.belongsToUser && !this.saving) {
           this.saving = true;
           const res = await axios({
             method: 'PATCH',
@@ -192,7 +199,10 @@ export default {
     },
     async addReply() {
       try {
-        if (this.replyBody && !this.saving) {
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (this.replyBody && !this.saving) {
           this.saving = true;
           const res = await axios({
             method: 'POST',
@@ -216,16 +226,21 @@ export default {
     },
     async deleteComment(index) {
       try {
-        this.deleting = true;
-        await axios({
-          method: 'DELETE',
-          url: `/api/posts/${this.$route.params.postId}/comments/${this.comment._id}`,
-          headers: {
-            authorization: this.token,
-          },
-        });
-        this.$emit('removeComment', index);
-        this.deleting = false;
+        if (!this.token) {
+          // user is not logged in
+          router.push('/auth/required');
+        } else if (this.belongsToUser && !this.deleting) {
+          this.deleting = true;
+          await axios({
+            method: 'DELETE',
+            url: `/api/posts/${this.$route.params.postId}/comments/${this.comment._id}`,
+            headers: {
+              authorization: this.token,
+            },
+          });
+          this.$emit('removeComment', index);
+          this.deleting = false;
+        }
       } catch (err) {
         this.deleting = false;
       }

@@ -9,6 +9,26 @@
         >
           Create New Post
         </router-link>
+        <select @change="handleChange">
+          <option
+            :selected="sort === '-updatedAt'"
+            value="-updatedAt"
+          >
+            Date Updated (Newest - Oldest)
+          </option>
+          <option
+            :selected="sort === '-createdAt'"
+            value="-createdAt"
+          >
+            Date Created (Newest - Oldest)
+          </option>
+          <option
+            :selected="sort === '-likesCount'"
+            value="-likesCount"
+          >
+            Most Liked
+          </option>
+        </select>
       </nav>
       <PostListItem
         v-for="(post, index) in posts"
@@ -34,18 +54,26 @@ export default {
     return {
       category: this.$route.params.category,
       scrollTopPosition: 0,
+      sort: '-updatedAt',
     };
   },
   mounted() {
     // Get first page of posts for category
-    this.getPosts(this.category);
+    this.getPosts({ category: this.category });
   },
   computed: {
     ...mapGetters(['posts']),
   },
   methods: {
     ...mapActions(['resetPostsData', 'getPosts']),
-    ...mapMutations(['updatePostAtIndex']),
+    ...mapMutations(['updatePostAtIndex', 'emptyPosts', 'setPage', 'setNextPage']),
+    handleChange(event) {
+      this.emptyPosts();
+      this.setPage(0);
+      this.setNextPage(true);
+      this.getPosts({ category: this.category, sort: event.target.value });
+      this.sort = event.target.value;
+    },
     scroll() {
       const page = document.getElementById('page');
       page.onscroll = () => {
@@ -57,7 +85,7 @@ export default {
         // if user is a quarter of the screen's height away from the bottom of the page
         if (bottomOfWindow) {
           // get next page of posts
-          this.getPosts(this.category);
+          this.getPosts({ category: this.category, sort: this.sort });
         }
       };
     },

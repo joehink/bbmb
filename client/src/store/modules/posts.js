@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const actions = {
-  getPosts: async ({ commit, state }, category) => {
+  getPosts: async ({ commit, state }, { category, sort }) => {
     try {
       // If request is not currently being made and if there is a next page
       if (!state.loading && state.nextPage) {
@@ -12,6 +12,7 @@ const actions = {
           url: `/api/posts/category/${category}`,
           params: {
             page: state.page + 1,
+            sortBy: sort || null,
           },
         });
         // add posts array onto existing array of posts

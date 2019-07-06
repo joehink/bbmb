@@ -45,7 +45,9 @@ const actions = {
   createPost: async ({ commit, state, rootState }, category) => {
     try {
       const { content, title } = state.form;
-      if (!content || !title) {
+      if (!rootState.auth.authenticated) {
+        router.push('/auth/required');
+      } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
       } else {
         commit('setPostSaving', true);
@@ -74,7 +76,9 @@ const actions = {
   updatePost: async ({ commit, state, rootState }) => {
     try {
       const { content, title } = state.form;
-      if (!content || !title) {
+      if (!rootState.auth.authenticated) {
+        router.push('/auth/required');
+      } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
       } else {
         commit('setPostSaving', true);
@@ -127,17 +131,21 @@ const actions = {
   },
   async deletePost({ commit, state, rootState }, id) {
     try {
-      commit('setPostDeleting', true);
-      await axios({
-        method: 'DELETE',
-        url: `/api/posts/${state.data._id}`,
-        headers: {
-          authorization: rootState.auth.authenticated,
-        },
-      });
-      commit('setPostDeleting', false);
-      commit('removePostAtIndex', id);
-      router.push(`/posts/category/${state.data.category}`);
+      if (!rootState.auth.authenticated) {
+        router.push('/auth/required');
+      } else if (!state.status.deleting) {
+        commit('setPostDeleting', true);
+        await axios({
+          method: 'DELETE',
+          url: `/api/posts/${state.data._id}`,
+          headers: {
+            authorization: rootState.auth.authenticated,
+          },
+        });
+        commit('setPostDeleting', false);
+        commit('removePostAtIndex', id);
+        router.push(`/posts/category/${state.data.category}`);
+      }
     } catch (err) {
       commit('setPostDeleting', false);
     }
@@ -162,9 +170,12 @@ const actions = {
   },
   createComment: async ({ commit, state, rootState }) => {
     try {
-      if (!state.comments.form.body) {
+      if (!rootState.auth.authenticated) {
+        // user is not logged in
+        router.push('/auth/required');
+      } else if (!state.comments.form.body) {
         commit('setError', 'Must provide a body.');
-      } else if (rootState.auth.authenticated) {
+      } else {
         commit('setSavingComment', true);
         const res = await axios({
           method: 'POST',
