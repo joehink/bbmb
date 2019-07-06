@@ -13,6 +13,26 @@
           >
             New Comment
           </button>
+          <select @change="handleChange">
+            <option
+              :selected="sort === '-updatedAt'"
+              value="-updatedAt"
+            >
+              Date Updated (Newest - Oldest)
+            </option>
+            <option
+              :selected="sort === '-createdAt'"
+              value="-createdAt"
+            >
+              Date Created (Newest - Oldest)
+            </option>
+            <option
+              :selected="sort === '-likesCount'"
+              value="-likesCount"
+            >
+              Most Liked
+            </option>
+          </select>
         </nav>
         <div v-if="isCreatingComment" class="form">
           <text-area
@@ -64,8 +84,13 @@ export default {
     TextArea,
     Spinner,
   },
+  data() {
+    return {
+      sort: '-createdAt',
+    };
+  },
   mounted() {
-    this.getPostComments(this.$route.params.postId);
+    this.getPostComments({ postId: this.$route.params.postId });
     this.scroll();
   },
   beforeDestroy() {
@@ -86,7 +111,23 @@ export default {
   },
   methods: {
     ...mapActions(['resetPost', 'createComment', 'getPostComments']),
-    ...mapMutations(['toggleCreatingComment', 'setCommentFormBody', 'setCommentSaved', 'setError', 'hideModal']),
+    ...mapMutations([
+      'toggleCreatingComment',
+      'setCommentFormBody',
+      'setCommentSaved',
+      'setError',
+      'hideModal',
+      'setCommentsNextPage',
+      'setCommentsPage',
+      'clearCommentsList',
+    ]),
+    handleChange(event) {
+      this.clearCommentsList();
+      this.setCommentsPage(0);
+      this.setCommentsNextPage(true);
+      this.getPostComments({ postId: this.$route.params.postId, sort: event.target.value });
+      this.sort = event.target.value;
+    },
     scroll() {
       const page = document.getElementById('page');
       page.onscroll = () => {
@@ -96,7 +137,7 @@ export default {
         // if user is a quarter of the screen's height away from the bottom of the page
         if (bottomOfWindow) {
           // get next page of posts
-          this.getPostComments(this.$route.params.postId);
+          this.getPostComments({ postId: this.$route.params.postId, sort: this.sort });
         }
       };
     },

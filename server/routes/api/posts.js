@@ -300,7 +300,7 @@ module.exports = app => {
                 return res.status(404).json({ message: "Post comments not found." });
             }
 
-            const { page = 1, sortBy = 'createdAt' } = req.query;
+            const { page = 1, sortBy = '-createdAt' } = req.query;
             const limit = 25;
 
             let comments = await Comment

@@ -97,7 +97,8 @@ export default {
       this.resetPostsData();
       this.category = this.$route.params.category;
       this.scrollTopPosition = 0;
-      this.getPosts(this.category);
+      this.getPosts({ category: this.category });
+      this.sort = '-updatedAt';
     } else {
       const page = document.getElementById('page');
       page.scrollTop = this.scrollTopPosition;

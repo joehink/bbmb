@@ -19,7 +19,7 @@ const actions = {
       commit('setPostLoading', false);
     }
   },
-  getPostComments: async ({ commit, state }, postId) => {
+  getPostComments: async ({ commit, state }, { postId, sort }) => {
     try {
       if (!state.comments.status.loading && state.comments.nextPage) {
         commit('setCommentsLoading', true);
@@ -29,6 +29,7 @@ const actions = {
           url: `/api/posts/${postId}/comments`,
           params: {
             page: state.comments.page + 1,
+            sortBy: sort || null,
           },
         });
 
