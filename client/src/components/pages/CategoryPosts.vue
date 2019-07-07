@@ -5,30 +5,11 @@
         <span class="brand">{{category}}</span>
         <router-link
           :to="`/posts/category/${category}/create`"
-          class="btn border blue sm"
+          class="btn border green sm"
         >
           Create New Post
         </router-link>
-        <select @change="handleChange">
-          <option
-            :selected="sort === '-updatedAt'"
-            value="-updatedAt"
-          >
-            Date Updated (Newest - Oldest)
-          </option>
-          <option
-            :selected="sort === '-createdAt'"
-            value="-createdAt"
-          >
-            Date Created (Newest - Oldest)
-          </option>
-          <option
-            :selected="sort === '-likesCount'"
-            value="-likesCount"
-          >
-            Most Liked
-          </option>
-        </select>
+        <select-box class="select-box" :sort="sort" @change="handleChange" />
       </nav>
       <PostListItem
         v-for="(post, index) in posts"
@@ -44,11 +25,13 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import PostListItem from '../posts/PostListItem';
+import SelectBox from '../reusable/SelectBox';
 
 export default {
   name: 'CategoryPosts',
   components: {
     PostListItem,
+    SelectBox,
   },
   data() {
     return {
@@ -112,3 +95,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.select-box {
+  margin-left: 5px;
+}
+</style>

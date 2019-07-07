@@ -19,6 +19,7 @@ import {
   faEdit,
   faTrashAlt,
   faEllipsisV,
+  faSort,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
@@ -47,6 +48,7 @@ library.add(
   faEdit,
   faTrashAlt,
   faEllipsisV,
+  faSort,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

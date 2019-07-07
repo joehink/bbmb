@@ -13,26 +13,7 @@
           >
             New Comment
           </button>
-          <select @change="handleChange">
-            <option
-              :selected="sort === '-updatedAt'"
-              value="-updatedAt"
-            >
-              Date Updated (Newest - Oldest)
-            </option>
-            <option
-              :selected="sort === '-createdAt'"
-              value="-createdAt"
-            >
-              Date Created (Newest - Oldest)
-            </option>
-            <option
-              :selected="sort === '-likesCount'"
-              value="-likesCount"
-            >
-              Most Liked
-            </option>
-          </select>
+          <select-box class="select-box" :sort="sort" @change="handleChange" />
         </nav>
         <div v-if="isCreatingComment" class="form">
           <text-area
@@ -72,6 +53,7 @@ import Post from '../posts/Post';
 import FormInput from '../reusable/forms/FormInput';
 import Modal from '../reusable/Modal';
 import TextArea from '../reusable/forms/TextArea';
+import SelectBox from '../reusable/SelectBox';
 import Spinner from '../Spinner';
 
 export default {
@@ -83,6 +65,7 @@ export default {
     Modal,
     TextArea,
     Spinner,
+    SelectBox,
   },
   data() {
     return {
@@ -170,5 +153,8 @@ export default {
   }
   .form {
     padding: 25px;
+  }
+  .select-box {
+    margin-left: 5px;
   }
 </style>
