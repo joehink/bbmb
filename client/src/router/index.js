@@ -7,6 +7,7 @@ import LogInForm from '../components/auth/LogInForm';
 import SignUpForm from '../components/auth/SignUpForm';
 import CategoryPosts from '../components/pages/CategoryPosts';
 import PostPage from '../components/pages/PostPage';
+import ProfilePage from '../components/pages/ProfilePage';
 import CreatePost from '../components/pages/CreatePost';
 
 Vue.use(Router);
@@ -49,6 +50,10 @@ export default new Router({
     {
       path: '/posts/:postId',
       component: PostPage,
+    },
+    {
+      path: '/users/:userId',
+      component: ProfilePage,
     },
   ],
 });

@@ -20,4 +20,10 @@ export default {
     height: 40px;
     border: 2px solid var(--white);
   }
+  .profile-img-lg {
+    width: 200px;
+    height: 200px;
+    border: 5px solid var(--white);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  }
 </style>

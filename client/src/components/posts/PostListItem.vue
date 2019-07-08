@@ -13,7 +13,12 @@
       <router-link :to="`/posts/${post._id}`" class="post-link">
         <h3>{{ post.title }}</h3>
       </router-link>
-      <span class="post-data">{{ date }} by {{ post.author.username }}</span>
+      <span class="post-data">
+        {{ date }} by
+        <router-link :to="`/users/${post.author._id}`">
+          {{ post.author.username }}
+        </router-link>
+      </span>
     </div>
   </div>
 </template>

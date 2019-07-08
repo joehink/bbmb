@@ -40,9 +40,6 @@ export default {
   border: 2px solid var(--primary-color);
   border-radius: 25px;
   padding: 2.5px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 select {
   outline: none;
