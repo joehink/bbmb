@@ -1,12 +1,16 @@
 <template>
   <div class="post-list-item">
     <div class="likes">
-      <font-awesome-icon
-        v-on:click="likePost"
-        class="sun"
-        :class="{ spin: liking }"
-        icon="sun"
-      />
+      <div v-on:click="likePost">
+        <lottie
+          :options="defaultOptions"
+          :height="40"
+          :width="40"
+          v-on:animCreated="handleAnimation"
+          v-on:handleAnimation="console.log('hey')"
+          class="sun"
+        />
+      </div>
       <span class="like-count">{{ post.likesCount }}</span>
     </div>
     <div class="post-info">
@@ -25,16 +29,26 @@
 
 <script>
 import axios from 'axios';
+import Lottie from 'vue-lottie';
 import { mapGetters } from 'vuex';
 import moment from 'moment';
+import animationData from '../../../static/images/sun.json';
 import router from '../../router';
 
 export default {
   name: 'PostListItem',
+  components: {
+    Lottie,
+  },
   props: ['post', 'index'],
   data() {
     return {
       liking: false,
+      defaultOptions: {
+        animationData,
+        loop: false,
+        autoplay: false,
+      },
     };
   },
   computed: {
@@ -45,6 +59,9 @@ export default {
     },
   },
   methods: {
+    handleAnimation(anim) {
+      this.anim = anim;
+    },
     async likePost() {
       try {
         if (!this.isLoggedIn) {
@@ -53,6 +70,8 @@ export default {
         } else if (!this.liking) {
           // if like request is not being made
           this.liking = true;
+          this.anim.loop = true;
+          this.anim.play();
           // Make request to like or unlike post
           const res = await axios({
             method: 'PATCH',
@@ -65,9 +84,11 @@ export default {
           // Emit custom 'like' event
           this.$emit('like', { index: this.index, updatedPost });
           this.liking = false;
+          this.anim.loop = this.anim.playCount;
         }
       } catch (err) {
         this.liking = false;
+        this.anim.loop = this.anim.playCount;
       }
     },
   },
@@ -78,7 +99,7 @@ export default {
   .post-list-item {
     display: flex;
     align-items: center;
-    padding: 10px 25px;
+    padding: 7.5px 25px 7.5px 20px;
     background: var(--white);
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     margin-bottom: 10px;
@@ -100,15 +121,10 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 5px;
   }
   .sun {
-    font-size: 1.75em;
-    color: goldenrod;
     cursor: pointer;
-  }
-  .like-count {
-    margin-top: 5px;
   }
   .post-data {
     color: var(--gray-text);
