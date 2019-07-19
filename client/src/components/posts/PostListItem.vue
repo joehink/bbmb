@@ -7,7 +7,6 @@
           :height="40"
           :width="40"
           v-on:animCreated="handleAnimation"
-          v-on:handleAnimation="console.log('hey')"
           class="sun"
         />
       </div>

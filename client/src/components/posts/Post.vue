@@ -5,12 +5,15 @@
     <div class="post" v-if="post">
       <div class="post-header" v-if="post">
         <div class="likes">
-          <font-awesome-icon
-            v-on:click="likePost"
-            class="sun"
-            :class="{ spin: isLikingPost }"
-            icon="sun"
-          />
+          <div v-on:click="likePost(anim)">
+            <lottie
+              :options="defaultOptions"
+              :height="40"
+              :width="40"
+              v-on:animCreated="handleAnimation"
+              class="sun"
+            />
+          </div>
           <span class="like-count">{{ post.likesCount }}</span>
         </div>
         <div class="post-info">
@@ -79,7 +82,9 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from 'vuex';
+import Lottie from 'vue-lottie';
 import moment from 'moment';
+import animationData from '../../../static/images/sun.json';
 import DropDownMenu from '../reusable/DropDownMenu';
 import Editor from '../reusable/Editor';
 import ErrorMessage from '../reusable/errors/ErrorMessage';
@@ -96,6 +101,16 @@ export default {
     FormInput,
     Notification,
     Spinner,
+    Lottie,
+  },
+  data() {
+    return {
+      defaultOptions: {
+        animationData,
+        loop: false,
+        autoplay: false,
+      },
+    };
   },
   mounted() {
     this.getPost(this.$route.params.postId);
@@ -156,6 +171,9 @@ export default {
       'setPostFormTitle',
       'setPostFormBody',
     ]),
+    handleAnimation(anim) {
+      this.anim = anim;
+    },
     toggleEdit() {
       this.setPostEditable(!this.isPostEditable);
     },
@@ -189,8 +207,6 @@ export default {
     margin-right: 10px;
   }
   .sun {
-    font-size: 1.75em;
-    color: goldenrod;
     cursor: pointer;
   }
   .like-count {

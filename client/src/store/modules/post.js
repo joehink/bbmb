@@ -107,7 +107,8 @@ const actions = {
       commit('setPostSaving', false);
     }
   },
-  likePost: async ({ commit, state, rootState }) => {
+  likePost: async ({ commit, state, rootState }, animationObj) => {
+    const animation = animationObj;
     try {
       const { liking } = state.status;
       if (!rootState.auth.authenticated) {
@@ -115,6 +116,8 @@ const actions = {
       } else if (!liking) {
         // if like request is not being made
         commit('setPostLiking', true);
+        animation.loop = true;
+        animation.play();
         // Make request to like or unlike post
         const res = await axios({
           method: 'PATCH',
@@ -124,10 +127,12 @@ const actions = {
           },
         });
         commit('setPost', res.data);
+        animation.loop = animation.playCount;
         commit('setPostLiking', false);
       }
     } catch (err) {
       commit('setPostLiking', false);
+      animation.loop = animation.playCount;
     }
   },
   async deletePost({ commit, state, rootState }, id) {
