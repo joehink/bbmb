@@ -3,13 +3,18 @@
     <header>
       <span class="username">{{ comment.author.username }}</span>
       <span class="date">{{ date }}</span>
-      <font-awesome-icon
-        class="sun"
-        icon="sun"
-        :class="{ spin: liking }"
-        v-on:click="likeComment"
-      />
+      <div v-on:click="likeComment">
+        <lottie
+          :options="defaultOptions"
+          :height="25"
+          :width="25"
+          v-on:animCreated="handleAnimation"
+          class="sun"
+        />
+      </div>
       <span class="like-count">{{ comment.likesCount }}</span>
+      
+
       <drop-down-menu
         v-if="belongsToUser"
         class="control-menu"
@@ -31,7 +36,7 @@
         }]"
       />
       <button class="reply-button" v-on:click="replying = true">
-        <font-awesome-icon icon="reply" /> Reply
+        <font-awesome-icon icon="reply" />
       </button>
     </header>
     <main>
@@ -108,7 +113,9 @@
 
 <script>
 import axios from 'axios';
+import Lottie from 'vue-lottie';
 import moment from 'moment';
+import animationData from '../../../static/images/sun.json';
 import DropDownMenu from '../reusable/DropDownMenu';
 import Reply from '../posts/Reply';
 import router from '../../router';
@@ -122,6 +129,7 @@ export default {
     TextArea,
     Spinner,
     Reply,
+    Lottie,
   },
   props: ['comment', 'index', 'token', 'belongsToUser', 'userId', 'displayModal'],
   data() {
@@ -134,6 +142,11 @@ export default {
       replyBody: '',
       showReplies: false,
       deleting: false,
+      defaultOptions: {
+        animationData,
+        loop: false,
+        autoplay: false,
+      },
     };
   },
   watch: {
@@ -156,6 +169,8 @@ export default {
         } else if (!this.liking) {
           // if like request is not being made
           this.liking = true;
+          this.anim.loop = true;
+          this.anim.play();
           // Make request to like or unlike post
           const res = await axios({
             method: 'PATCH',
@@ -166,9 +181,11 @@ export default {
           });
           this.$emit('likeComment', { index: this.index, updatedComment: res.data });
           this.liking = false;
+          this.anim.loop = this.anim.playCount;
         }
       } catch (err) {
         this.liking = false;
+        this.anim.loop = this.anim.playCount;
       }
     },
     async updateComment() {
@@ -251,6 +268,9 @@ export default {
     removeReplyAtIndex(index) {
       this.comment.replies.splice(index, 1);
     },
+    handleAnimation(anim) {
+      this.anim = anim;
+    },
   },
 };
 </script>
@@ -283,20 +303,15 @@ export default {
 .date {
   color: #aaa;
   font-size: .9em;
-  margin-left: 10px;
+  margin: 0 5px 0 7.5px;
 }
 .sun {
-  font-size: 1.25em;
-  color: goldenrod;
   cursor: pointer;
   margin: 0 2.5px 0 10px;
 }
 .reply-icon {
   margin-left: 5px;
   cursor: pointer;
-}
-.like-count {
-  margin: 2px 0 0 0;
 }
 .textarea {
   margin: 15px 5px;
@@ -319,7 +334,7 @@ export default {
   color: var(--primary-color);
 }
 .control-menu {
-  margin: 2.5px 0 0 10px;
+  margin: 0 0 0 10px;
 }
 .reply-button {
   border: none;
