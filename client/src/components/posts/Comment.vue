@@ -13,8 +13,6 @@
         />
       </div>
       <span class="like-count">{{ comment.likesCount }}</span>
-      
-
       <drop-down-menu
         v-if="belongsToUser"
         class="control-menu"
