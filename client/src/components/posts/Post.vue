@@ -209,9 +209,6 @@ export default {
   .sun {
     cursor: pointer;
   }
-  .like-count {
-    margin-top: 5px;
-  }
   .post-data {
     color: var(--gray-text);
     font-size: .8em;

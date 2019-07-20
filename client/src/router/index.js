@@ -9,6 +9,7 @@ import CategoryPosts from '../components/pages/CategoryPosts';
 import PostPage from '../components/pages/PostPage';
 import ProfilePage from '../components/pages/ProfilePage';
 import CreatePost from '../components/pages/CreatePost';
+import UserPosts from '../components/pages/UserPosts';
 
 Vue.use(Router);
 
@@ -46,6 +47,10 @@ export default new Router({
     {
       path: '/posts/category/:category/create',
       component: CreatePost,
+    },
+    {
+      path: '/posts/users/:userId',
+      component: UserPosts,
     },
     {
       path: '/posts/:postId',

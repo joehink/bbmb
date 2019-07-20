@@ -82,6 +82,55 @@ module.exports = app => {
         }
     });
 
+    // GET recent posts by a user 
+    app.get('/api/posts/users/:userId/recent', async (req, res) => {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+                return res.status(404).json({ message: "User not found." });
+            }
+            // Find 5 most recent posts
+            const recentPosts = await Post
+                .find({ author: req.params.userId })
+                .sort('-updatedAt')
+                .limit(5)
+                .populate({ path: 'author', select: 'username _id'});
+
+            // Send back recent posts    
+            res.status(200).json(recentPosts);
+        } catch (err) {
+            // Something went wrong while fetching recent posts
+            res.status(500).json(err);
+        }
+    });
+
+    // GET posts by a user
+    app.get('/api/posts/users/:userId', async (req, res) => {
+        try {
+            if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+                return res.status(404).json({ message: "User not found." });
+            }
+
+            const { page = 1, sortBy = '-updatedAt' } = req.query;
+            const limit = 25;
+
+            const posts = await Post
+                .find({ author: req.params.userId })
+                .sort(sortBy)
+                .skip((page * limit) - limit)
+                .limit(limit)
+                .populate({ path: 'author', select: 'username _id'});
+
+            // Send back posts    
+            res.status(200).json({
+                nextPage: (posts.length >= limit),
+                posts
+            });
+        } catch (err) {
+            // Something went wrong while fetching posts
+            res.status(500).json(err);
+        }
+    });
+
     // GET single post
     app.get('/api/posts/:postId', async (req, res) => {
         try {
