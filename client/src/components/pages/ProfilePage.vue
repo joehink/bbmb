@@ -1,24 +1,58 @@
 <template>
   <div id="page">
     <div class="container">
-      <div class="user-info" v-if="user">
+      <div class="user-info" v-if="pageUser">
         <header>
           <nav class="user-secondary-nav">
-            <span class="brand">{{ user.username }}</span>
+            <span class="brand">{{ pageUser.username }}</span>
+            <button
+              v-if="!editBio && pageUser._id === user._id"
+              class="btn blue border sm"
+              @click="editBio = !editBio"
+            >
+              Edit Bio
+            </button>
           </nav>
         </header>
         <div class="user-content">
           <profile-photo
             class="profile-img-lg profile-img"
-            v-lazy:background-image="user.photo ? `/api/photos/${user.photo}` : null"
+            v-lazy:background-image="pageUser.photo ? `/api/photos/${user.photo}` : null"
             :style="{
-              backgroundImage: !user.photo && `url('/static/images/auth/error.png')`,
+              backgroundImage: !pageUser.photo && `url('/static/images/auth/error.png')`,
               backgroundSize: 'cover',
             }"
           />
           <div class="bio">
             <h2>Bio</h2>
-            {{ user.bio || `${user.username} has no bio.` }}
+            <p class="bio-text" v-if="!pageUser.bio && !editBio">
+              {{ `${pageUser.username} has no bio.` }}
+            </p>
+            <p class="bio-text" v-if="pageUser.bio && !editBio">{{ pageUser.bio }}</p>
+            <text-area
+              class="textarea"
+              v-if="editBio"
+              v-model="pageUser.bio"
+              placeholder="Bio goes here..."
+            />
+            <div>
+              <button
+                class="btn border blue sm"
+                v-if="editBio"
+                v-on:click="editBio = false;"
+              >
+                Cancel
+              </button>
+              <button
+                v-if="editBio"
+                class="btn border green sm"
+                :disabled="saving"
+                v-on:click="updateUser"
+              >
+                <Spinner v-if="saving" class="btn-spinner green" />
+                Save
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -47,27 +81,38 @@
 
 <script>
 import axios from 'axios';
+import { mapGetters, mapMutations } from 'vuex';
 import Vue from 'vue';
 import PostListItem from '../posts/PostListItem';
 import ProfilePhoto from '../profile/ProfilePhoto';
+import Spinner from '../Spinner';
+import TextArea from '../reusable/forms/TextArea';
 
 export default {
   name: 'ProfilePage',
   components: {
     ProfilePhoto,
     PostListItem,
+    Spinner,
+    TextArea,
   },
   data() {
     return {
-      user: null,
+      pageUser: null,
       recentPosts: null,
+      saving: false,
+      editBio: false,
     };
   },
   mounted() {
     this.getUser();
     this.getPosts();
   },
+  computed: {
+    ...mapGetters(['user', 'token']),
+  },
   methods: {
+    ...mapMutations(['setUser']),
     async getUser() {
       try {
         const res = await axios({
@@ -75,9 +120,33 @@ export default {
           url: `/api/users/${this.$route.params.userId}`,
         });
 
-        this.user = res.data;
+        this.pageUser = res.data;
       } catch (err) {
-        this.user = false;
+        this.pageUser = false;
+      }
+    },
+    async updateUser() {
+      try {
+        if (this.user._id === this.pageUser._id && !this.saving) {
+          this.saving = true;
+          const res = await axios({
+            url: '/api/users/',
+            method: 'PUT',
+            headers: {
+              authorization: this.token,
+            },
+            data: {
+              bio: this.pageUser.bio,
+            },
+          });
+
+          this.setUser(res.data);
+          this.pageUser = res.data;
+          this.saving = false;
+          this.editBio = false;
+        }
+      } catch (err) {
+        this.saving = false;
       }
     },
     async getPosts() {
@@ -131,6 +200,11 @@ export default {
   }
   .bio {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .bio-text {
+    margin: 0;
   }
   h2 {
     margin: 10px 0;
@@ -141,5 +215,9 @@ export default {
   }
   .secondary-nav {
     margin-top: 40px;
+  }
+  .textarea {
+    margin-bottom: 10px;
+    flex: 1;
   }
 </style>
