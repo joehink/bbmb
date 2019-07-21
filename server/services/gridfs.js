@@ -7,13 +7,14 @@ const path = require('path');
 module.exports = MONGODB_URI => {
     const storage = new GridFsStorage({
         url: MONGODB_URI,
+        cache: true,
         file: (req, file) => {
             return new Promise((resolve, reject) => {
                 crypto.randomBytes(16, (err, buf) => {
                 if (err) {
                     return reject(err);
                 }
-                const filename = buf.toString('hex') + path.extname(file.originalname);
+                const filename = buf.toString('hex') + '.png';
                 const fileInfo = {
                     filename: filename,
                     bucketName: 'photos'

@@ -78,7 +78,6 @@ module.exports = (app, upload, gfs) => {
         res.status(409).json({ message: "Username is already in use" })
       }
     } catch(err) {
-      console.log(err);
       res.status(500).json(err);
     }
     

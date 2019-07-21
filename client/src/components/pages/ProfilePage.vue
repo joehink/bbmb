@@ -26,6 +26,9 @@
               }"
             />
             <input type="file" v-on:change="getImage">
+            <button class="btn green border sm" v-on:click="updateImage">
+              Upload
+            </button>
           </div>
           <div class="bio">
             <h2>Bio</h2>
@@ -162,6 +165,44 @@ export default {
         }
       } catch (err) {
         this.saving = false;
+      }
+    },
+    updateImage() {
+      if (this.user && this.user._id === this.pageUser._id && !this.saving) {
+        this.saving = true;
+
+        const resizedCanvas = document.createElement('canvas');
+        const context = resizedCanvas.getContext('2d');
+
+        const img = new Image();
+        img.onload = () => {
+          const newHeight = (img.height / img.width) * 200;
+          resizedCanvas.width = 200;
+          resizedCanvas.height = newHeight;
+          context.drawImage(img, 0, 0, img.width, img.height, 0, 0, 200, newHeight);
+          resizedCanvas.toBlob(async (resizedImage) => {
+            try {
+              const formData = new FormData();
+              formData.append('file', resizedImage);
+
+              const res = await axios({
+                url: '/api/users/',
+                method: 'PUT',
+                headers: {
+                  authorization: this.token,
+                  'Content-Type': 'multipart/form-data',
+                },
+                data: formData,
+              });
+              this.setUser(res.data);
+              this.pageUser = res.data;
+              this.saving = false;
+            } catch (err) {
+              this.saving = false;
+            }
+          });
+        };
+        img.src = this.photo;
       }
     },
     async getPosts() {
