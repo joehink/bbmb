@@ -25,14 +25,14 @@
           />
           <div class="bio">
             <h2>Bio</h2>
-            <p class="bio-text" v-if="!pageUser.bio && !editBio">
+            <p class="no-bio-text" v-if="bio !== null && !pageUser.bio && !editBio ">
               {{ `${pageUser.username} has no bio.` }}
             </p>
             <p class="bio-text" v-if="pageUser.bio && !editBio">{{ pageUser.bio }}</p>
             <text-area
               class="textarea"
               v-if="editBio"
-              v-model="pageUser.bio"
+              v-model="bio"
               placeholder="Bio goes here..."
             />
             <div>
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       pageUser: null,
+      bio: null,
       recentPosts: null,
       saving: false,
       editBio: false,
@@ -107,6 +108,11 @@ export default {
   mounted() {
     this.getUser();
     this.getPosts();
+  },
+  watch: {
+    editBio() {
+      this.bio = this.pageUser.bio;
+    },
   },
   computed: {
     ...mapGetters(['user', 'token']),
@@ -120,6 +126,7 @@ export default {
           url: `/api/users/${this.$route.params.userId}`,
         });
 
+        this.bio = res.data.bio;
         this.pageUser = res.data;
       } catch (err) {
         this.pageUser = false;
@@ -136,7 +143,7 @@ export default {
               authorization: this.token,
             },
             data: {
-              bio: this.pageUser.bio,
+              bio: this.bio,
             },
           });
 
@@ -193,17 +200,25 @@ export default {
   }
   .user-content {
     display: flex;
-    padding: 30px 50px;
+    padding: 30px 48px 30px 50px;
   }
   .profile-img {
-    margin-right: 50px;
+    margin-right: 48px;
   }
   .bio {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow-x: auto;
+    padding: 0 2px;
   }
   .bio-text {
+    margin: 0;
+    white-space: pre-line;
+    line-height: 1.25;
+    flex: 1;
+  }
+  .no-bio-text {
     margin: 0;
   }
   h2 {
