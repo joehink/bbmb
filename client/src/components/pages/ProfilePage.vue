@@ -15,7 +15,7 @@
           </nav>
         </header>
         <div class="user-content">
-          <div>
+          <div class="profile-img-container">
             <profile-photo
               class="profile-img-lg profile-img"
               v-lazy:background-image="photo ? photo : null"
@@ -219,7 +219,7 @@ export default {
     display: flex;
     padding: 30px 48px 30px 50px;
   }
-  .profile-img {
+  .profile-img-container {
     margin-right: 48px;
   }
   .bio {
