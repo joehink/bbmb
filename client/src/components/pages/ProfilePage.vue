@@ -6,7 +6,7 @@
           <nav class="user-secondary-nav">
             <span class="brand">{{ pageUser.username }}</span>
             <button
-              v-if="!editBio && pageUser._id === user._id"
+              v-if="user && !editBio && pageUser._id === user._id"
               class="btn blue border sm"
               @click="editBio = !editBio"
             >
@@ -15,14 +15,18 @@
           </nav>
         </header>
         <div class="user-content">
-          <profile-photo
-            class="profile-img-lg profile-img"
-            v-lazy:background-image="pageUser.photo ? `/api/photos/${user.photo}` : null"
-            :style="{
-              backgroundImage: !pageUser.photo && `url('/static/images/auth/error.png')`,
-              backgroundSize: 'cover',
-            }"
-          />
+          <div>
+            <profile-photo
+              class="profile-img-lg profile-img"
+              v-lazy:background-image="photo ? photo : null"
+              :key="photo ? photo : null"
+              :style="{
+                backgroundImage: !pageUser.photo && `url('/static/images/auth/error.png')`,
+                backgroundSize: 'cover',
+              }"
+            />
+            <input type="file" v-on:change="getImage">
+          </div>
           <div class="bio">
             <h2>Bio</h2>
             <p class="no-bio-text" v-if="bio !== null && !pageUser.bio && !editBio ">
@@ -100,6 +104,7 @@ export default {
     return {
       pageUser: null,
       bio: null,
+      photo: null,
       recentPosts: null,
       saving: false,
       editBio: false,
@@ -128,13 +133,16 @@ export default {
 
         this.bio = res.data.bio;
         this.pageUser = res.data;
+        if (res.data.photo) {
+          this.photo = `/api/photos/${res.data.photo}`;
+        }
       } catch (err) {
         this.pageUser = false;
       }
     },
     async updateUser() {
       try {
-        if (this.user._id === this.pageUser._id && !this.saving) {
+        if (this.user && this.user._id === this.pageUser._id && !this.saving) {
           this.saving = true;
           const res = await axios({
             url: '/api/users/',
@@ -167,6 +175,15 @@ export default {
       } catch (err) {
         this.recentPosts = [];
       }
+    },
+    getImage(event) {
+      const image = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.readAsDataURL(image);
+      reader.onload = (e) => {
+        this.photo = e.target.result;
+      };
     },
     updateLikes({ index, updatedPost }) {
       // update posts array at index with updated post
