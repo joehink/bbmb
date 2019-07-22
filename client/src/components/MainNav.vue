@@ -5,6 +5,7 @@
       <ProfilePhoto
         v-if="user"
         class="nav-item profile-img-sm"
+        :key="user.photo ? user.photo : null"
         v-lazy:background-image="user.photo ? `/api/photos/${user.photo}` : null"
         :style="{
           backgroundImage: !user.photo && `url('/static/images/auth/error.png')`,

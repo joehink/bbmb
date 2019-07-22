@@ -160,6 +160,7 @@ export default {
 
           this.setUser(res.data);
           this.pageUser = res.data;
+          this.photo = `/api/photos/${res.data.photo}`;
           this.saving = false;
           this.editBio = false;
         }
@@ -196,6 +197,7 @@ export default {
               });
               this.setUser(res.data);
               this.pageUser = res.data;
+              this.photo = `/api/photos/${res.data.photo}`;
               this.saving = false;
             } catch (err) {
               this.saving = false;
