@@ -10,6 +10,7 @@
         :style="{
           backgroundImage: !user.photo && `url('/static/images/auth/error.png')`,
           backgroundSize: 'cover',
+          backgroundPosition: 'center center',
         }"
       />
       <button v-if="isLoggedIn" v-on:click="logout" class="nav-button nav-item">Log Out</button>

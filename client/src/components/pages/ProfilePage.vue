@@ -23,6 +23,7 @@
               :style="{
                 backgroundImage: !pageUser.photo && `url('/static/images/auth/error.png')`,
                 backgroundSize: 'cover',
+                backgroundPosition: 'center center',
               }"
             />
             <div class="btn-group">
@@ -292,17 +293,18 @@ export default {
   }
   .user-content {
     display: flex;
-    padding: 30px 48px 30px 50px;
-  }
-  .profile-img-container {
-    margin-right: 48px;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 23px 30px 25px;
   }
   .bio {
     flex: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
     overflow-x: auto;
     padding: 0 2px;
+    margin-top: 15px;
   }
   .bio-text {
     margin: 0;
@@ -341,5 +343,23 @@ export default {
   }
   .file-input input[type=file] {
     display: none;
+  }
+
+  @media(min-width: 768px) {
+    .user-content {
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 30px 48px 30px 50px;
+    }
+    .profile-img-container {
+      margin-right: 48px;
+    }
+    .bio {
+      margin-top: 0;
+      width: unset;
+    }
+    .textarea {
+      flex: 1;
+    }
   }
 </style>
