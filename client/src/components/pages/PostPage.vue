@@ -148,13 +148,15 @@ export default {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
-  .secondary-nav .btn:last-of-type {
-    margin-left: 5px;
-  }
   .form {
     padding: 25px;
   }
-  .select-box {
-    margin-left: 5px;
+  @media(min-width: 768px) {
+    .select-box {
+      margin-left: 5px;
+    }
+    .secondary-nav .btn:last-of-type {
+      margin-left: 5px;
+    }
   }
 </style>

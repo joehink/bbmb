@@ -28,9 +28,16 @@ export default {
     justify-content: center;
   }
 
+  .container {
+    padding: 40px 0 0;
+  }
+
   @media (min-width: 1200px) {
     .categories {
       justify-content: space-around;
+    }
+    .container {
+      padding: 40px 0 0;
     }
   }
 </style>

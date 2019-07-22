@@ -89,7 +89,7 @@ button {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding-top: 40px;
+  padding: 40px 25px 0;
 }
 
 /* Headings */
@@ -129,6 +129,7 @@ label {
   cursor: pointer;
   outline: none;
   display: inline-flex;
+  justify-content: center;
 }
 
 .btn.border.blue {
@@ -191,13 +192,20 @@ label {
   background: var(--white);
   border: 1px solid var(--primary-color);
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
-
+.secondary-nav > *:first-child {
+  margin-top: 0;
+}
+.secondary-nav > * {
+  width: 100%;
+  text-align: center;
+  margin-top: 5px;
+}
 .secondary-nav .brand {
   text-transform: capitalize;
   font-weight: bold;
-  margin-right: auto;
   font-size: 1.1em;
 }
 
@@ -209,5 +217,23 @@ label {
 @keyframes spin {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
+}
+
+@media(min-width: 768px) {
+  .secondary-nav {
+    flex-direction: row;
+  }
+  .secondary-nav .brand {
+    margin-right: auto;
+  }
+  .secondary-nav > * {
+    width: unset;
+    margin-top: 0;
+  }
+}
+@media(min-width: 1225px) {
+  .container {
+    padding: 40px 0 0;
+  }
 }
 </style>

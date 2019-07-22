@@ -97,7 +97,9 @@ export default {
 </script>
 
 <style scoped>
-.select-box {
-  margin-left: 5px;
+@media(min-width: 768px) {
+  .select-box {
+    margin-left: 5px;
+  }
 }
 </style>
