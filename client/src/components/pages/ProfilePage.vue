@@ -8,7 +8,7 @@
             <button
               v-if="user && !editBio && pageUser._id === user._id"
               class="btn blue border sm"
-              @click="editBio = !editBio"
+              @click="beginEditBio"
             >
               Edit Bio
             </button>
@@ -25,10 +25,26 @@
                 backgroundSize: 'cover',
               }"
             />
-            <input type="file" v-on:change="getImage">
-            <button class="btn green border sm" v-on:click="updateImage">
-              Upload
-            </button>
+            <div class="btn-group">
+              <label
+                v-if="user && !upload && pageUser._id === user._id"
+                class="btn green border sm file-input"
+              >
+                Change Photo
+                <input
+                  type="file"
+                  v-on:change="getImage"
+                  accept="image/*"
+                >
+              </label>
+              <button v-if="upload" class="btn blue border sm" v-on:click="cancelUpload">
+                Cancel
+              </button>
+              <button v-if="upload" class="btn green border sm upload" v-on:click="updateImage">
+                <Spinner v-if="saving" class="btn-spinner green" />
+                Upload
+              </button>
+            </div>
           </div>
           <div class="bio">
             <h2>Bio</h2>
@@ -46,7 +62,7 @@
               <button
                 class="btn border blue sm"
                 v-if="editBio"
-                v-on:click="editBio = false;"
+                v-on:click="cancelEditBio"
               >
                 Cancel
               </button>
@@ -111,6 +127,7 @@ export default {
       recentPosts: null,
       saving: false,
       editBio: false,
+      upload: false,
     };
   },
   mounted() {
@@ -199,6 +216,7 @@ export default {
               this.pageUser = res.data;
               this.photo = `/api/photos/${res.data.photo}`;
               this.saving = false;
+              this.upload = false;
             } catch (err) {
               this.saving = false;
             }
@@ -225,12 +243,26 @@ export default {
 
       reader.readAsDataURL(image);
       reader.onload = (e) => {
+        this.upload = true;
         this.photo = e.target.result;
+        this.editBio = false;
       };
     },
     updateLikes({ index, updatedPost }) {
       // update posts array at index with updated post
       Vue.set(this.recentPosts, index, updatedPost);
+    },
+    cancelUpload() {
+      this.photo = `/api/photos/${this.pageUser.photo}`;
+      this.upload = false;
+    },
+    cancelEditBio() {
+      this.editBio = false;
+      this.bio = this.pageUser.bio;
+    },
+    beginEditBio() {
+      this.editBio = true;
+      this.cancelUpload();
     },
   },
 };
@@ -294,5 +326,20 @@ export default {
   .textarea {
     margin-bottom: 10px;
     flex: 1;
+  }
+  .btn-group {
+    display: flex;
+    justify-content: center;
+  }
+  .btn-group .upload {
+    margin-left: 5px;
+  }
+  .file-input {
+    margin-bottom: 0;
+    font-style: normal;
+    font-size: 1em;
+  }
+  .file-input input[type=file] {
+    display: none;
   }
 </style>
