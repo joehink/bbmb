@@ -69,7 +69,7 @@
             v-if="isPostEditable"
             v-on:click="updatePost"
             class="btn border green sm"
-            :disabled="!isPostContentChanged"
+            :disabled="!isPostContentChanged || isSavingPost"
           >
             <Spinner class="btn-spinner green" v-if="isSavingPost" />
             Save

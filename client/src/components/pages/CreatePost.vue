@@ -24,7 +24,11 @@
               id="body"
             />
             <div class="btn-group">
-              <button class="btn border green sm" v-on:click="createPost($route.params.category)">
+              <button
+                class="btn border green sm"
+                :disabled="isSavingPost"
+                v-on:click="createPost($route.params.category)"
+              >
                 <spinner v-if="isSavingPost" class="btn-spinner green" /> Create
               </button>
             </div>

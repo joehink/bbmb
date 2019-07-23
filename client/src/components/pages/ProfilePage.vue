@@ -41,7 +41,12 @@
               <button v-if="upload" class="btn blue border sm" v-on:click="cancelUpload">
                 Cancel
               </button>
-              <button v-if="upload" class="btn green border sm upload" v-on:click="updateImage">
+              <button
+                v-if="upload"
+                :disabled="saving"
+                class="btn green border sm upload"
+                v-on:click="updateImage"
+              >
                 <Spinner v-if="saving" class="btn-spinner green" />
                 Upload
               </button>
