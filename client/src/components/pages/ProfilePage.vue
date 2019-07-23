@@ -82,12 +82,12 @@
       </div>
       <nav class="secondary-nav">
         <span class="brand">Recent Posts</span>
-        <a
+        <router-link
           class="btn blue border sm"
-          :href="`/posts/users/${ $route.params.userId }`"
+          :to="`/posts/users/${ $route.params.userId }`"
         >
           View All Posts
-        </a>
+        </router-link>
       </nav>
       <div v-if="recentPosts && !recentPosts.length">This user has not made any posts</div>
       <div v-if="recentPosts && recentPosts.length" class="recent-posts">

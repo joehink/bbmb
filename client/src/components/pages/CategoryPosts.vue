@@ -45,7 +45,7 @@ export default {
     this.getPosts({ category: this.category });
   },
   computed: {
-    ...mapGetters(['posts']),
+    ...mapGetters(['posts', 'postsFilter']),
   },
   methods: {
     ...mapActions(['resetPostsData', 'getPosts']),
@@ -75,7 +75,7 @@ export default {
   },
   activated() {
     // If selected category is different than previously selected category
-    if (this.category !== this.$route.params.category) {
+    if (this.category !== this.$route.params.category || this.postsFilter !== 'category') {
       // reset data
       this.resetPostsData();
       this.category = this.$route.params.category;

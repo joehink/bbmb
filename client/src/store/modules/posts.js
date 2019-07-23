@@ -15,6 +15,7 @@ const actions = {
             sortBy: sort || null,
           },
         });
+        commit('setFilter', 'category');
         // add posts array onto existing array of posts
         commit('pushToPosts', res.data.posts);
         commit('setNextPage', res.data.nextPage);
@@ -40,6 +41,7 @@ const actions = {
           },
         });
         // add posts array onto existing array of posts
+        commit('setFilter', 'user');
         commit('pushToPosts', res.data.posts);
         commit('setNextPage', res.data.nextPage);
         commit('incrementPage');
@@ -63,6 +65,9 @@ const mutations = {
   emptyPosts: (state) => {
     state.posts = [];
   },
+  setPosts: (state, posts) => {
+    state.posts = posts;
+  },
   setLoading: (state, isLoading) => {
     state.loading = isLoading;
   },
@@ -74,6 +79,9 @@ const mutations = {
   },
   setNextPage: (state, nextPageExists) => {
     state.nextPage = nextPageExists;
+  },
+  setFilter: (state, filter) => {
+    state.filter = filter;
   },
   updatePostAtIndex: (state, { index, updatedPost }) => {
     state.posts.splice(index, 1, updatedPost);
@@ -87,10 +95,12 @@ const mutations = {
 const getters = {
   posts: state => state.posts,
   isLoading: state => state.loading,
+  postsFilter: state => state.filter,
 };
 
 const state = {
   posts: [],
+  filter: '',
   page: 0,
   nextPage: true,
   loading: false,

@@ -41,7 +41,7 @@ export default {
     this.getUserPosts({ userId: this.$route.params.userId });
   },
   computed: {
-    ...mapGetters(['posts']),
+    ...mapGetters(['posts', 'postsFilter']),
   },
   methods: {
     ...mapActions(['resetPostsData', 'getUserPosts']),
@@ -71,7 +71,7 @@ export default {
   },
   activated() {
     // If userId is different than previously selected user
-    if (this.userId !== this.$route.params.userId) {
+    if (this.userId !== this.$route.params.userId || this.postsFilter !== 'user') {
       // reset data
       this.resetPostsData();
       this.userId = this.$route.params.userId;
