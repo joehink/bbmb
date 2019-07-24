@@ -27,6 +27,9 @@ const mutations = {
   setAction: (state, action) => {
     state.action = action;
   },
+  setDisableModal: (state, disable) => {
+    state.disableModal = disable;
+  },
 };
 
 const getters = {
@@ -35,6 +38,7 @@ const getters = {
   modalBtnText: state => state.btnText,
   modalBtnColor: state => state.btnColor,
   modalAction: state => state.action,
+  modalDisabled: state => state.disableModal,
 };
 
 const state = {
@@ -42,6 +46,7 @@ const state = {
   message: '',
   action: null,
   btnText: '',
+  disableModal: false,
 };
 
 export default {

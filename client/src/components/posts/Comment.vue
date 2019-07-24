@@ -95,6 +95,8 @@
           :belongsToUser="reply.author._id === userId"
           @updateComment="emitUpdateComment"
           :displayModal="displayModal"
+          :hideModal="hideModal"
+          :setDisableModal="setDisableModal"
           @removeReply="removeReplyAtIndex"
         />
       </div>
@@ -129,7 +131,7 @@ export default {
     Reply,
     Lottie,
   },
-  props: ['comment', 'index', 'token', 'belongsToUser', 'userId', 'displayModal'],
+  props: ['comment', 'index', 'token', 'belongsToUser', 'userId', 'displayModal', 'setDisableModal', 'hideModal'],
   data() {
     return {
       liking: false,
@@ -246,6 +248,7 @@ export default {
           router.push('/auth/required');
         } else if (this.belongsToUser && !this.deleting) {
           this.deleting = true;
+          this.setDisableModal(true);
           await axios({
             method: 'DELETE',
             url: `/api/posts/${this.$route.params.postId}/comments/${this.comment._id}`,
@@ -255,9 +258,13 @@ export default {
           });
           this.$emit('removeComment', index);
           this.deleting = false;
+          this.setDisableModal(false);
+          this.hideModal();
         }
       } catch (err) {
         this.deleting = false;
+        this.setDisableModal(false);
+        this.hideModal();
       }
     },
     emitUpdateComment({ index, updatedComment }) {

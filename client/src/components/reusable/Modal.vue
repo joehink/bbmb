@@ -1,12 +1,18 @@
 <template>
-  <div v-if="modal" @click="hideModal" class="modal-container">
+  <div v-if="modal" @click.self="handleClose" class="modal-container">
     <div class="modal">
       <p>{{ modalMessage }}</p>
       <div>
-        <button class="btn blue" @click="hideModal">
+        <button class="btn blue" @click="hideModal" :disabled="modalDisabled">
           Cancel
         </button>
-        <button class="btn" :class="{red: modalBtnColor === 'red'}" @click="modalAction">
+        <button
+          :disabled="modalDisabled"
+          class="btn"
+          :class="{red: modalBtnColor === 'red'}"
+          @click="modalAction"
+        >
+          <Spinner v-if="modalDisabled" class="btn-spinner gray" />
           {{ modalBtnText }}
         </button>
       </div>
@@ -16,20 +22,30 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import Spinner from '../Spinner';
 
 export default {
   name: 'Modal',
+  components: {
+    Spinner,
+  },
   computed: {
-    ...mapGetters(['modal', 'modalMessage', 'modalAction', 'modalBtnText', 'modalBtnColor']),
+    ...mapGetters(['modal', 'modalMessage', 'modalAction', 'modalBtnText', 'modalBtnColor', 'modalDisabled']),
   },
   methods: {
     ...mapMutations(['hideModal']),
+    handleClose() {
+      if (!this.modalDisabled) {
+        this.hideModal();
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
   .modal-container {
+    z-index: 1000;
     position: absolute;
     top: 0;
     right: 0;

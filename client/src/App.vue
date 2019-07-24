@@ -161,6 +161,13 @@ label {
   cursor: default;
 }
 
+.btn.red:disabled,
+.btn.blue:disabled,
+.btn.green:disabled {
+  color: #aaa;
+  background: #ddd;
+}
+
 .btn:hover {
   opacity: .8;
 }

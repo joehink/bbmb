@@ -66,7 +66,17 @@ export default {
     Spinner,
     DropDownMenu,
   },
-  props: ['reply', 'index', 'commentIndex', 'token', 'belongsToUser', 'commentId', 'displayModal'],
+  props: [
+    'reply',
+    'index',
+    'commentIndex',
+    'token',
+    'belongsToUser',
+    'commentId',
+    'displayModal',
+    'setDisableModal',
+    'hideModal',
+  ],
   data() {
     return {
       liking: false,
@@ -114,6 +124,7 @@ export default {
           // user is not logged in
           router.push('/auth/required');
         } else if (this.belongsToUser && !this.deleting) {
+          this.setDisableModal(true);
           this.deleting = true;
           await axios({
             method: 'DELETE',
@@ -124,9 +135,13 @@ export default {
           });
           this.$emit('removeReply', this.index);
           this.deleting = false;
+          this.setDisableModal(false);
+          this.hideModal();
         }
       } catch (err) {
         this.deleting = false;
+        this.setDisableModal(false);
+        this.hideModal();
       }
     },
     toggleEdit() {

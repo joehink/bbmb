@@ -140,6 +140,7 @@ const actions = {
       if (!rootState.auth.authenticated) {
         router.push('/auth/required');
       } else if (!state.status.deleting) {
+        commit('setDisableModal', true);
         commit('setPostDeleting', true);
         await axios({
           method: 'DELETE',
@@ -148,12 +149,16 @@ const actions = {
             authorization: rootState.auth.authenticated,
           },
         });
+        commit('setDisableModal', false);
         commit('setPostDeleting', false);
         commit('removePostAtIndex', id);
+        commit('hideModal');
         router.push(`/posts/category/${state.data.category}`);
       }
     } catch (err) {
+      commit('setDisableModal', false);
       commit('setPostDeleting', false);
+      commit('hideModal');
     }
   },
   resetPost: ({ commit }) => {

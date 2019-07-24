@@ -12,6 +12,8 @@
       :belongsToUser="user && user._id === comment.author._id"
       :userId="user && user._id"
       :displayModal="displayModal"
+      :hideModal="hideModal"
+      :setDisableModal="setDisableModal"
   />
   </div>
 </template>
@@ -31,8 +33,7 @@ export default {
   },
   methods: {
     ...mapActions(['displayModal']),
-    ...mapMutations(['updateCommentAtIndex']),
-    ...mapMutations(['removeCommentAtIndex']),
+    ...mapMutations(['updateCommentAtIndex', 'setDisableModal', 'removeCommentAtIndex', 'hideModal']),
   },
 };
 </script>
