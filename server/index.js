@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 require('./models/users');
 require('./models/posts');
 require('./models/comments');
+require('./models/conversations');
+require('./models/messages');
 
 // Services
 require('./services/passport');
@@ -33,6 +35,7 @@ mongoose.connection.on('connected', () => {
     require('./routes/api/users')(app, upload, gfs);
     require('./routes/api/sessions')(app);
     require('./routes/api/posts')(app);
+    require('./routes/api/conversations')(app);
 
     if (process.env.NODE_ENV === 'production') {
       app.use(express.static(__dirname + '/public/'));
