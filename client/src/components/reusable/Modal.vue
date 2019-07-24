@@ -55,6 +55,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 15px;
   }
   .modal {
     background: var(--white);
@@ -63,5 +64,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
   }
 </style>
