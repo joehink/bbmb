@@ -6,6 +6,7 @@ import error from './modules/error';
 import posts from './modules/posts';
 import post from './modules/post';
 import modal from './modules/modal';
+import messenger from './modules/messenger';
 
 Vue.use(Vuex);
 
@@ -16,5 +17,6 @@ export default new Vuex.Store({
     post,
     posts,
     modal,
+    messenger,
   },
 });

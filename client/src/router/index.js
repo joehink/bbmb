@@ -10,6 +10,7 @@ import PostPage from '../components/pages/PostPage';
 import ProfilePage from '../components/pages/ProfilePage';
 import CreatePost from '../components/pages/CreatePost';
 import UserPosts from '../components/pages/UserPosts';
+import Messenger from '../components/pages/Messenger';
 
 Vue.use(Router);
 
@@ -59,6 +60,10 @@ export default new Router({
     {
       path: '/users/:userId',
       component: ProfilePage,
+    },
+    {
+      path: '/conversations',
+      component: Messenger,
     },
   ],
 });

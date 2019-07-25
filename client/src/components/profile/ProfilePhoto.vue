@@ -20,6 +20,11 @@ export default {
     height: 40px;
     border: 2px solid var(--white);
   }
+  .profile-img-md {
+    width: 50px;
+    height: 50px;
+    border: 2px solid var(--white);
+  }
   .profile-img-lg {
     width: 200px;
     height: 200px;

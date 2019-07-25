@@ -73,7 +73,10 @@ module.exports = app => {
     // Get all conversations where the current user is a participant
     app.get('/api/conversations', requireAuth, async (req, res) => {
       try {
-        const conversations = await Conversation.find({ participants: req.user._id });
+        const conversations = await Conversation
+          .find({ participants: req.user._id })
+          .populate({ path: 'participants', select: 'username _id photo'});
+
 
         res.status(200).json(conversations);
       } catch (err) {
