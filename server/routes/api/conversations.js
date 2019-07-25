@@ -9,8 +9,12 @@ module.exports = app => {
     // Create Conversation
     app.post('/api/conversations', requireAuth, async (req, res) => {
       try {
-        if (!req.body.body) {
-          return res.status(400).json({ message: "Must provide a message body." });
+        if (!Array.isArray(req.body.participants) || !Array.isArray(req.body.unread)) {
+          return res.status(400).json({ message: "Participants and unread are required and must be an array." });
+        }
+
+        if (!req.body.body || req.body.participants.length < 1 || req.body.unread.length < 1) {
+          return res.status(400).json({ message: "Must provide message body, participants, and unread." });
         }
         
         const conversation = await Conversation.create({
@@ -33,6 +37,10 @@ module.exports = app => {
     // Create Message
     app.post('/api/conversations/:conversationId', requireAuth, async (req, res) => {
         try {
+          if (!Array.isArray(req.body.unread) || req.body.unread.length < 1) {
+            return res.status(400).json({ message: "Unread is required and must be an array." });
+          }
+
           if (!req.body.body) {
             return res.status(400).json({ message: "Must provide a message body." });
           }
@@ -44,7 +52,11 @@ module.exports = app => {
           const conversation = await Conversation
             .findByIdAndUpdate(req.params.conversationId, {
               unread: req.body.unread,
-            }, { new: true })
+            }, { new: true });
+        
+          if (!conversation) {
+            return res.status(404).json({ message: "Conversation not found." });
+          }
 
           const message = await Message.create({
             body: req.body.body,
@@ -59,13 +71,9 @@ module.exports = app => {
     });
 
     // Get all conversations where the current user is a participant
-    app.get('/api/conversations/user/:userId', requireAuth, async (req, res) => {
+    app.get('/api/conversations', requireAuth, async (req, res) => {
       try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
-          return res.status(404).json({ message: "User not found." });
-        }
-
-        const conversations = await Conversation.find({ participants: req.params.userId });
+        const conversations = await Conversation.find({ participants: req.user._id });
 
         res.status(200).json(conversations);
       } catch (err) {
@@ -82,10 +90,14 @@ module.exports = app => {
 
         const conversation = await Conversation
         .findOneAndUpdate(
-          { _id: req.params.conversationId, participants: req.user._id },
+          { _id: req.params.conversationId },
           { $pull: { unread: req.user._id } },
           { new: true }
         );
+
+        if (!conversation || !conversation.participants.includes(req.user._id)) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
 
         const messages = await Message.find({ conversationId: conversation._id });
 
