@@ -92,13 +92,22 @@ module.exports = app => {
         }
 
         const conversation = await Conversation
-        .findOneAndUpdate(
-          { _id: req.params.conversationId },
+        .findByIdAndUpdate(
+          req.params.conversationId,
           { $pull: { unread: req.user._id } },
           { new: true }
-        );
+        )
+        .populate({ path: 'participants', select: 'username _id photo'});
 
-        if (!conversation || !conversation.participants.includes(req.user._id)) {
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+        
+        const isUserConversation = conversation
+          .participants
+          .some(participant => participant._id === req.user._id);
+
+        if (isUserConversation) {
           return res.status(404).json({ message: "Conversation not found." });
         }
 

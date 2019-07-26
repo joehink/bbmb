@@ -1,11 +1,15 @@
 <template>
   <div id="page">
-    <side-bar :conversations="conversations" :user="user"/>
+    <side-bar
+      :conversations="conversations"
+      :user="user"
+    />
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import SideBar from '../messenger/SideBar';
 
 export default {
@@ -13,18 +17,14 @@ export default {
   components: {
     SideBar,
   },
-  mounted() {
-    this.getConversations();
-  },
   computed: {
     ...mapGetters(['conversations', 'user']),
-  },
-  methods: {
-    ...mapActions(['getConversations']),
   },
 };
 </script>
 
 <style scoped>
-
+  #page {
+    display: flex;
+  }
 </style>

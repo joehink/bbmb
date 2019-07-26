@@ -1,5 +1,8 @@
 <template>
-  <div class="conversation-list-item">
+  <router-link
+    :to="`/conversations/${conversation._id}`"
+    class="conversation-list-item"
+  >
     <ProfilePhoto
       v-if="to[0]"
       class="profile-img-md to-photo"
@@ -17,7 +20,7 @@
       </span>
       <div class="date">{{ timeSinceLastMessage }}</div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -50,6 +53,7 @@ export default {
     padding: 10px;
     cursor: pointer;
     border-bottom: 1px solid #EAEAEA;
+    color: var(--black);
   }
   .conversation-list-item:hover {
     background: #EFEFEF;

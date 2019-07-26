@@ -2,7 +2,7 @@
   <div>
     <Notification message="Post changes were successfully saved." v-if="isPostSaved" />
     <error-message />
-    <div class="post" v-if="post">
+    <div class="post" v-if="post.username">
       <div class="post-header" v-if="post">
         <div class="likes">
           <div v-on:click="likePost(anim)">

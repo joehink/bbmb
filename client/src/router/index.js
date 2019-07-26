@@ -11,6 +11,7 @@ import ProfilePage from '../components/pages/ProfilePage';
 import CreatePost from '../components/pages/CreatePost';
 import UserPosts from '../components/pages/UserPosts';
 import Messenger from '../components/pages/Messenger';
+import Conversation from '../components/messenger/Conversation';
 
 Vue.use(Router);
 
@@ -64,6 +65,10 @@ export default new Router({
     {
       path: '/conversations',
       component: Messenger,
+      children: [{
+        path: ':conversationId',
+        component: Conversation,
+      }],
     },
   ],
 });

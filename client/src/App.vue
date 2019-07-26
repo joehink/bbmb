@@ -20,9 +20,10 @@ export default {
   created() {
     // Fetch the logged in user when app is created
     this.getCurrentUser();
+    this.getConversations();
   },
   methods: {
-    ...mapActions(['getCurrentUser']),
+    ...mapActions(['getCurrentUser', 'getConversations']),
   },
 };
 </script>
