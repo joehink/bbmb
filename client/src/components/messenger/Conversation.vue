@@ -1,6 +1,9 @@
 <template>
   <div class="conversation">
-    <conversation-header :to="to" />
+    <conversation-header
+      v-on:toggle="$emit('toggle')"
+      :to="to"
+    />
   </div>
 </template>
 

@@ -3,8 +3,12 @@
     <side-bar
       :conversations="conversations"
       :user="user"
+      :class="{ show: showSidebar }"
     />
-    <router-view :key="$route.fullPath"></router-view>
+    <router-view
+      :key="$route.fullPath"
+      v-on:toggle="toggleSidebar"
+    ></router-view>
   </div>
 </template>
 
@@ -14,11 +18,21 @@ import SideBar from '../messenger/SideBar';
 
 export default {
   name: 'Messenger',
+  data() {
+    return {
+      showSidebar: false,
+    };
+  },
   components: {
     SideBar,
   },
   computed: {
     ...mapGetters(['conversations', 'user']),
+  },
+  methods: {
+    toggleSidebar() {
+      this.showSidebar = !this.showSidebar;
+    },
   },
 };
 </script>
@@ -26,5 +40,16 @@ export default {
 <style scoped>
   #page {
     display: flex;
+  }
+  .sidebar {
+    display: block;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none;
+    }
+    .sidebar.show {
+      display: block;
+    }
   }
 </style>

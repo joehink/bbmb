@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="conversation-header">
+    <font-awesome-icon
+      icon="list-ul"
+      class="toggle-sidebar"
+      @click="$emit('toggle')"
+    />
     <ProfilePhoto
       v-if="to[0]"
       class="profile-img-md to-photo"
@@ -28,3 +33,32 @@ export default {
   props: ['to'],
 };
 </script>
+
+<style scoped>
+.conversation-header {
+  background: #EAEAEA;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+}
+.to {
+  font-weight: 700;
+  font-size: 1.25em;
+  margin-left: 10px;
+}
+.toggle-sidebar {
+  font-size: 2em;
+  background: var(--white);
+  border-radius: 5px;
+  padding: 5px;
+  margin-right: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+@media (min-width: 768px) {
+  .toggle-sidebar {
+    display: none;
+  }
+}
+</style>
+
