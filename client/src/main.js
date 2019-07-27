@@ -21,6 +21,7 @@ import {
   faEllipsisV,
   faSort,
   faArrowLeft,
+  faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
@@ -51,6 +52,7 @@ library.add(
   faEllipsisV,
   faSort,
   faArrowLeft,
+  faPaperPlane,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

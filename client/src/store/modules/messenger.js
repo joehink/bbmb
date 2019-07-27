@@ -3,15 +3,16 @@ import router from '../../router';
 
 const actions = {
   getConversations: async ({ commit, rootState }) => {
-    const res = await axios({
-      method: 'GET',
-      url: '/api/conversations',
-      headers: {
-        authorization: rootState.auth.authenticated,
-      },
-    });
-
-    commit('setConversations', res.data);
+    if (rootState.auth.authenticated) {
+      const res = await axios({
+        method: 'GET',
+        url: '/api/conversations',
+        headers: {
+          authorization: rootState.auth.authenticated,
+        },
+      });
+      commit('setConversations', res.data);
+    }
   },
   getConversation: async ({ commit, rootState }, conversationId) => {
     commit('resetActiveConversation');
