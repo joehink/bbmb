@@ -4,6 +4,7 @@
       :conversations="conversations"
       :user="user"
       :show="showSidebar"
+      v-on:close="hideSidebar"
     />
     <div
       class="sidebar-screen"

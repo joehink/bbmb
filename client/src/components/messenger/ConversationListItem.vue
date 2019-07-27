@@ -2,6 +2,7 @@
   <router-link
     :to="`/conversations/${conversation._id}`"
     class="conversation-list-item"
+    @click.native="$emit('close')"
   >
     <ProfilePhoto
       v-if="to[0]"
@@ -58,6 +59,9 @@ export default {
   .conversation-list-item:hover {
     background: #EFEFEF;
   }
+  .conversation-list-item:first-of-type {
+    border-top: 1px solid #EAEAEA;
+  }
   .to-photo {
     margin-right: 10px;
   }
@@ -69,6 +73,12 @@ export default {
     color: #aaa;
     font-size: .8em;
     margin-top: 5px;
+  }
+
+  @media (min-width: 768px) {
+    .conversation-list-item:first-of-type {
+      border-top: none;
+    }
   }
 </style>
 

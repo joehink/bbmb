@@ -1,11 +1,19 @@
 <template>
   <div class="sidebar" :class="{ show: show }">
+    <header>
+      <font-awesome-icon
+        icon="arrow-left"
+        class="close-sidebar"
+        @click="$emit('close')"
+      />
+    </header>
     <div v-if="conversations && conversations.length > 1">
       <conversation-list-item
         v-for="conversation in conversations"
         :key="conversation._id"
         :conversation="conversation"
         :user="user"
+        v-on:close="$emit('close')"
       />
     </div>
   </div>
@@ -32,6 +40,9 @@ export default {
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 100;
   }
+  header {
+    display: none;
+  }
 
   @media (max-width: 768px) {
     .sidebar {
@@ -44,6 +55,17 @@ export default {
       bottom: 0;
       z-index: 1001;
       width: 80%;
+    }
+    header {
+      display: flex;
+      justify-content: flex-end;
+      color: var(--white);
+      background: var(--primary-color);
+      padding: 10px;
+      font-size: 1.25em;
+    }
+    .close-sidebar {
+      cursor: pointer;
     }
   }
 </style>
