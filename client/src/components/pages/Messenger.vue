@@ -3,8 +3,13 @@
     <side-bar
       :conversations="conversations"
       :user="user"
-      :class="{ show: showSidebar }"
+      :show="showSidebar"
     />
+    <div
+      class="sidebar-screen"
+      :class="{ show: showSidebar }"
+      @click="hideSidebar"
+    ></div>
     <router-view
       :key="$route.fullPath"
       v-on:toggle="toggleSidebar"
@@ -33,6 +38,9 @@ export default {
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
     },
+    hideSidebar() {
+      this.showSidebar = false;
+    },
   },
 };
 </script>
@@ -41,15 +49,22 @@ export default {
   #page {
     display: flex;
   }
-  .sidebar {
-    display: block;
+  .sidebar-screen {
+    display: none;
   }
   @media (max-width: 768px) {
-    .sidebar {
+    .sidebar-screen {
       display: none;
     }
-    .sidebar.show {
+    .sidebar-screen.show {
       display: block;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
     }
   }
 </style>
