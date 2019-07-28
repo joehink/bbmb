@@ -25,6 +25,9 @@ export default {
     border-radius: 25px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
   }
+  .message:first-child {
+    margin-top: auto;
+  }
   .sent {
     align-self: flex-start;
     background: var(--primary-color);

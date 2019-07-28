@@ -14,7 +14,7 @@ const actions = {
       commit('setConversations', res.data);
     }
   },
-  getConversation: async ({ commit, rootState }, conversationId) => {
+  getConversation: async ({ commit, rootState, state }, conversationId) => {
     commit('resetActiveConversation');
     const res = await axios({
       method: 'GET',
@@ -24,16 +24,23 @@ const actions = {
       },
     });
 
-    const conversation = {
-      id: res.data.conversation._id,
-      messages: res.data.messages,
-      participants: res.data.conversation.participants,
-      unread: res.data.conversation.unread,
+    const { conversation, messages } = res.data;
+
+    const unread = conversation
+      .participants
+      .filter(participant => participant._id !== rootState.auth.user._id);
+
+    const activeConversation = {
+      id: conversation._id,
+      messages,
+      participants: conversation.participants,
+      unread,
+      message: state.activeConversation.message,
     };
 
-    commit('setActiveConversation', conversation);
+    commit('setActiveConversation', activeConversation);
   },
-  findOrStartConversation({ state }, { to }) {
+  findOrStartConversation: ({ state }, { to }) => {
     if (!state.conversations) {
       return router.push('/conversations/new');
     }
@@ -51,6 +58,27 @@ const actions = {
 
     return router.push(`/conversations/${foundConversation._id}`);
   },
+  sendMessage: async ({ state, commit, rootState }) => {
+    try {
+      commit('setSendingMessage', true);
+      await axios({
+        method: 'POST',
+        url: `/api/conversations/${state.activeConversation.id}`,
+        headers: {
+          authorization: rootState.auth.authenticated,
+        },
+        data: {
+          body: state.activeConversation.message,
+          unread: state.activeConversation.unread,
+        },
+      });
+
+      commit('setMessage', '');
+      commit('setSendingMessage', false);
+    } catch (err) {
+      commit('setSendingMessage', false);
+    }
+  },
 };
 
 const mutations = {
@@ -66,7 +94,14 @@ const mutations = {
       messages: [],
       participants: [],
       unread: [],
+      message: state.activeConversation.message,
     };
+  },
+  setMessage: (state, message) => {
+    state.activeConversation.message = message;
+  },
+  setSendingMessage: (state, isSendingMessage) => {
+    state.status.sendingMessage = isSendingMessage;
   },
 };
 
@@ -82,6 +117,10 @@ const state = {
     messages: [],
     participants: [],
     unread: [],
+    message: '',
+  },
+  status: {
+    sendingMessage: false,
   },
 };
 

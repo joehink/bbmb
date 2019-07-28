@@ -49,6 +49,7 @@ export default {
 <style scoped>
   #page {
     display: flex;
+    height: 100%;
   }
   .sidebar-screen {
     display: none;

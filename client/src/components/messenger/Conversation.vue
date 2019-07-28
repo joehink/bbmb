@@ -13,7 +13,11 @@
         :user="user"
       />
     </div>
-    <message-input />
+    <message-input
+      :message="activeConversation.message"
+      :setMessage="setMessage"
+      v-on:messageSent="sendMessage"
+    />
   </div>
 </template>
 
@@ -45,8 +49,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['getConversation']),
-    ...mapMutations(['resetActiveConversation']),
+    ...mapActions(['getConversation', 'sendMessage']),
+    ...mapMutations(['resetActiveConversation', 'setMessage']),
   },
 };
 </script>
@@ -56,12 +60,14 @@ export default {
     display: flex;
     flex-direction: column;
     flex: 1;
+    height: 100%;
   }
   .messages {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     flex: 1;
+    overflow-y: auto;
+    height: 100%;
   }
 </style>
 
