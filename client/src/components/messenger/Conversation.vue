@@ -5,13 +5,15 @@
       :to="to"
       v-if="activeConversation.participants"
     />
-    <div class="messages">
-      <message
-        v-for="message in activeConversation.messages"
-        :key="message._id"
-        :message="message"
-        :user="user"
-      />
+    <div class="messages-container">
+      <div class="messages">
+        <message
+          v-for="message in activeConversation.messages"
+          :key="message._id"
+          :message="message"
+          :user="user"
+        />
+      </div>
     </div>
     <message-input
       :message="activeConversation.message"
@@ -62,12 +64,21 @@ export default {
     flex: 1;
     height: 100%;
   }
+  .messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 15px;
+  }
   .messages {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    overflow-y: auto;
     height: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .messages::after {
+    padding-bottom: 5px;
+    content: '';
   }
 </style>
 
