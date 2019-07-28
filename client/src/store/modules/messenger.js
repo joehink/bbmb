@@ -61,17 +61,19 @@ const actions = {
   sendMessage: async ({ state, commit, rootState }) => {
     try {
       commit('setSendingMessage', true);
-      await axios({
-        method: 'POST',
-        url: `/api/conversations/${state.activeConversation.id}`,
-        headers: {
-          authorization: rootState.auth.authenticated,
-        },
-        data: {
-          body: state.activeConversation.message,
-          unread: state.activeConversation.unread,
-        },
-      });
+      if (state.activeConversation.message) {
+        await axios({
+          method: 'POST',
+          url: `/api/conversations/${state.activeConversation.id}`,
+          headers: {
+            authorization: rootState.auth.authenticated,
+          },
+          data: {
+            body: state.activeConversation.message,
+            unread: state.activeConversation.unread,
+          },
+        });
+      }
 
       commit('setMessage', '');
       commit('setSendingMessage', false);
@@ -108,6 +110,7 @@ const mutations = {
 const getters = {
   conversations: state => state.conversations,
   activeConversation: state => state.activeConversation,
+  isSendingMessage: state => state.status.sendingMessage,
 };
 
 const state = {

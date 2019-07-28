@@ -19,6 +19,7 @@
       :message="activeConversation.message"
       :setMessage="setMessage"
       v-on:messageSent="sendMessage"
+      :disable="isSendingMessage"
     />
   </div>
 </template>
@@ -43,7 +44,7 @@ export default {
     this.resetActiveConversation();
   },
   computed: {
-    ...mapGetters(['activeConversation', 'user']),
+    ...mapGetters(['activeConversation', 'user', 'isSendingMessage']),
     to() {
       return this
         .activeConversation

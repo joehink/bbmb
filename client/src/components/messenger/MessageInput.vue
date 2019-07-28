@@ -1,9 +1,14 @@
 <template>
   <form @submit.prevent="$emit('messageSent')">
-    <button class="btn blue">
-      <font-awesome-icon class="paper-plane" icon="paper-plane" /> Send
+    <button class="btn blue" :disabled="disable">
+      <font-awesome-icon class="paper-plane" icon="paper-plane" />
     </button>
-    <form-input class="search-input" :value="message" @input="setMessage" />
+    <form-input
+      class="search-input"
+      :value="message"
+      @input="setMessage"
+      :disable="disable"
+    />
   </form>
 </template>
 
@@ -15,7 +20,7 @@ export default {
   components: {
     FormInput,
   },
-  props: ['message', 'setMessage'],
+  props: ['message', 'setMessage', 'disable'],
 };
 </script>
 
