@@ -73,10 +73,9 @@ const actions = {
             unread: state.activeConversation.unread,
           },
         });
+        commit('setMessage', '');
+        commit('setSendingMessage', false);
       }
-
-      commit('setMessage', '');
-      commit('setSendingMessage', false);
     } catch (err) {
       commit('setSendingMessage', false);
     }

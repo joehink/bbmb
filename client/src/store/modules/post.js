@@ -10,7 +10,6 @@ const actions = {
         method: 'GET',
         url: `/api/posts/${postId}`,
       });
-
       commit('setPostFormTitle', res.data.title);
       commit('setPostFormBody', res.data.body);
       commit('setPost', res.data);

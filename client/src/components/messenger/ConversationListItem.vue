@@ -41,7 +41,7 @@ export default {
         .participants.filter(participant => participant._id !== this.user._id);
     },
     timeSinceLastMessage() {
-      return moment(this.conversation.updatedAt).fromNow();
+      return moment(this.conversation.lastMessageCreatedAt).fromNow();
     },
   },
 };

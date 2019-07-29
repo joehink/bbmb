@@ -19,7 +19,9 @@ module.exports = app => {
         
         const conversation = await Conversation.create({
           participants: req.body.participants,
-          unread: req.body.unread
+          unread: req.body.unread,
+          lastMessage: req.body.body,
+          lastMessageCreatedAt: new Date()
         });
   
         const message = await Message.create({
@@ -52,6 +54,8 @@ module.exports = app => {
           const conversation = await Conversation
             .findByIdAndUpdate(req.params.conversationId, {
               unread: req.body.unread,
+              lastMessage: req.body.body,
+              lastMessageCreatedAt: new Date()
             }, { new: true });
         
           if (!conversation) {
@@ -84,7 +88,7 @@ module.exports = app => {
       }
     });
 
-    // Get converation and all messages belonging to the conversation
+    // Get conversation and all messages belonging to the conversation
     app.get('/api/conversations/:conversationId', requireAuth, async (req, res) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(req.params.conversationId)) {
@@ -102,12 +106,12 @@ module.exports = app => {
         if (!conversation) {
           return res.status(404).json({ message: "Conversation not found." });
         }
-        
+
         const isUserConversation = conversation
           .participants
-          .some(participant => participant._id === req.user._id);
-
-        if (isUserConversation) {
+          .some(participant => participant._id.equals(req.user._id));
+          
+        if (!isUserConversation) {
           return res.status(404).json({ message: "Conversation not found." });
         }
 
