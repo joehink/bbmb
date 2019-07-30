@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Vue from 'vue';
 import router from '../../router';
 
 const actions = {
@@ -27,6 +28,7 @@ const actions = {
         commit('setToken', res.data.token);
         // store logged in user in vuex state
         commit('setUser', res.data.user);
+        (new Vue()).$socket.emit('login', res.data.user._id);
         commit('setAuthLoading', false);
 
         dispatch('getConversations');
@@ -105,6 +107,7 @@ const actions = {
         });
         // store user in vuex state
         commit('setUser', res.data.user);
+        (new Vue()).$socket.emit('login', res.data.user._id);
       }
     } catch (err) {
       commit('setUser', null);

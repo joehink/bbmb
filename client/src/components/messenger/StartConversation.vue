@@ -3,7 +3,7 @@
     <conversation-header
       v-on:toggle="$emit('toggle')"
       :to="to"
-      v-if="activeConversation.participants"
+      v-if="activeConversation.id"
     />
 
     <message-input

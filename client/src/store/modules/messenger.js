@@ -54,7 +54,7 @@ const actions = {
 
     if (!foundConversation) {
       const activeConversation = {
-        id: null,
+        id: true,
         messages: [],
         participants: [rootState.auth.user, to],
         unread: [to._id],

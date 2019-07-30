@@ -7,7 +7,7 @@
         @click="$emit('close')"
       />
     </header>
-    <div v-if="conversations && conversations.length > 1">
+    <div v-if="conversations && conversations.length > 0">
       <conversation-list-item
         v-for="conversation in conversations"
         :key="conversation._id"
