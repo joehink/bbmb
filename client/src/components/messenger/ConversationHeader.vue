@@ -53,6 +53,7 @@ export default {
   padding: 5px;
   margin-right: 10px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  cursor: pointer;
 }
 
 @media (min-width: 768px) {

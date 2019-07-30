@@ -13,6 +13,7 @@ import UserPosts from '../components/pages/UserPosts';
 import Messenger from '../components/pages/Messenger';
 import Conversation from '../components/messenger/Conversation';
 import NoConversation from '../components/messenger/NoConversation';
+import StartConversation from '../components/messenger/StartConversation';
 
 Vue.use(Router);
 
@@ -69,6 +70,10 @@ export default new Router({
       children: [{
         path: '',
         component: NoConversation,
+      },
+      {
+        path: 'start',
+        component: StartConversation,
       },
       {
         path: ':conversationId',

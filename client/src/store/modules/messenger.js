@@ -40,7 +40,7 @@ const actions = {
 
     commit('setActiveConversation', activeConversation);
   },
-  findOrStartConversation: ({ state }, { to }) => {
+  findOrStartConversation: ({ state, rootState, commit }, { to }) => {
     if (!state.conversations) {
       return router.push('/conversations/new');
     }
@@ -53,7 +53,15 @@ const actions = {
     });
 
     if (!foundConversation) {
-      return router.push('/conversations/new');
+      const activeConversation = {
+        id: null,
+        messages: [],
+        participants: [rootState.auth.user, to],
+        unread: [to._id],
+        message: state.activeConversation.message,
+      };
+      commit('setActiveConversation', activeConversation);
+      return router.push('/conversations/start');
     }
 
     return router.push(`/conversations/${foundConversation._id}`);
@@ -73,6 +81,30 @@ const actions = {
             unread: state.activeConversation.unread,
           },
         });
+        commit('setMessage', '');
+        commit('setSendingMessage', false);
+      }
+    } catch (err) {
+      commit('setSendingMessage', false);
+    }
+  },
+  createConversation: async ({ state, commit, rootState }) => {
+    try {
+      commit('setSendingMessage', true);
+      if (state.activeConversation.message) {
+        const res = await axios({
+          method: 'POST',
+          url: '/api/conversations',
+          headers: {
+            authorization: rootState.auth.authenticated,
+          },
+          data: {
+            body: state.activeConversation.message,
+            unread: state.activeConversation.unread,
+            participants: state.activeConversation.participants,
+          },
+        });
+        router.push(`/conversations/${res.data.conversation._id}`);
         commit('setMessage', '');
         commit('setSendingMessage', false);
       }
