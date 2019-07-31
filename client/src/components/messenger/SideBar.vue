@@ -1,19 +1,11 @@
 <template>
-  <div class="sidebar" :class="{ show: show }">
-    <header>
-      <font-awesome-icon
-        icon="arrow-left"
-        class="close-sidebar"
-        @click="$emit('close')"
-      />
-    </header>
+  <div class="sidebar">
     <div v-if="conversations && conversations.length > 0">
       <conversation-list-item
         v-for="conversation in conversations"
         :key="conversation._id"
         :conversation="conversation"
         :user="user"
-        v-on:close="$emit('close')"
       />
     </div>
 
@@ -43,11 +35,8 @@ export default {
     overflow-y: auto;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 100;
-    display: flex;
-    flex-direction: column;
-  }
-  header {
     display: none;
+    flex-direction: column;
   }
 
   h5 {
@@ -55,28 +44,9 @@ export default {
     color: #AAA;
   }
 
-  @media (max-width: 768px) {
+  @media (min-width: 768px) {
     .sidebar {
-      width: 0;
-    }
-    .sidebar.show {
-      display: block;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      z-index: 1001;
-      width: 80%;
-    }
-    header {
       display: flex;
-      justify-content: flex-end;
-      color: var(--white);
-      background: var(--primary-color);
-      padding: 10px;
-      font-size: 1.25em;
-    }
-    .close-sidebar {
-      cursor: pointer;
     }
   }
 </style>

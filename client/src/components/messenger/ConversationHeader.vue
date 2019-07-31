@@ -1,12 +1,12 @@
 <template>
   <div class="conversation-header">
-    <font-awesome-icon
-      icon="list-ul"
-      class="toggle-sidebar"
-      @click="$emit('toggle')"
-    />
+    <router-link class="conversations-link" to="/conversations">
+      <font-awesome-icon
+        icon="list-ul"
+      />
+    </router-link>
     <ProfilePhoto
-      v-if="to[0]"
+      v-if="to && to[0]"
       class="profile-img-md to-photo"
       :key="to[0].photo ? to[0].photo : null"
       v-lazy:background-image="to[0].photo ? `/api/photos/${to[0].photo}` : null"
@@ -16,9 +16,11 @@
         backgroundPosition: 'center center',
       }"
     />
-    <span class="to" v-for="participant in to" :key="participant.username">
-      {{ participant.username }}
-    </span>
+    <div v-if="to && to[0]">
+      <span class="to" v-for="participant in to" :key="participant.username">
+        {{ participant.username }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -46,18 +48,22 @@ export default {
   font-size: 1.25em;
   margin-left: 10px;
 }
-.toggle-sidebar {
-  font-size: 2em;
+.conversations-link {
+  font-size: 1.25em;
   background: var(--white);
   border-radius: 5px;
   padding: 5px;
   margin-right: 10px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   cursor: pointer;
+  color: var(--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (min-width: 768px) {
-  .toggle-sidebar {
+  .conversations-link {
     display: none;
   }
 }

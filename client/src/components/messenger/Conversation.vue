@@ -1,7 +1,6 @@
 <template>
   <div class="conversation" v-if="activeConversation.participants">
     <conversation-header
-      v-on:toggle="$emit('toggle')"
       :to="to"
       v-if="activeConversation.id"
     />
