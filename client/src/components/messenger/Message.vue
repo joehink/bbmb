@@ -1,42 +1,74 @@
 <template>
   <div
-    class="message"
+    class="message-container"
     :class="{
       sent: user._id === message.from,
       received: user._id !== message.from
     }"
   >
-    {{ message.body }}
+    <div class="message">
+      <div class="message-body">
+        {{ message.body }}
+      </div>
+    </div>
+    <span class="message-date">{{ date }}</span>
   </div>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
   name: 'Message',
   props: ['message', 'user'],
+  computed: {
+    date() {
+      const messageDate = moment(this.message.createdAt);
+
+      if (messageDate.isSame(moment(), 'hour')) {
+        return messageDate.fromNow();
+      }
+
+      return messageDate.calendar();
+    },
+  },
 };
 </script>
 
 <style scoped>
+  .message-container {
+    margin: 10px 0;
+  }
   .message {
-    margin: 10px 15px;
+    margin: 10px 0;
     display: inline-block;
     padding: 10px 20px;
     border-radius: 25px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    line-height: 1.5;
     position: relative;
   }
   .message:first-child {
     margin-top: auto;
   }
+  .message-body {
+    line-height: 1.5;
+  }
+  .message-date {
+    display: block;
+    font-size: .5em;
+    color: #AAA;
+  }
   .sent {
     align-self: flex-end;
+    padding-right: 15px;
+    text-align: right;
+  }
+  .sent .message {
     background: var(--primary-color);
     color: var(--white);
     border-bottom-right-radius: 0;
   }
-  .sent:before {
+  .sent .message:before {
     content: ' ';
     position: absolute;
     width: 0;
@@ -48,10 +80,14 @@ export default {
   }
   .received {
     align-self: flex-start;
+    padding-left: 15px;
+    text-align: left;
+  }
+  .received .message {
     background: var(--white);
     border-bottom-left-radius: 0;
   }
-  .received:before {
+  .received .message:before {
     content: ' ';
     position: absolute;
     width: 0;
