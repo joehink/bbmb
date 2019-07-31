@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Vue from 'vue';
 import router from '../../router';
 
 const actions = {
@@ -70,7 +71,7 @@ const actions = {
     try {
       commit('setSendingMessage', true);
       if (state.activeConversation.message) {
-        await axios({
+        const res = await axios({
           method: 'POST',
           url: `/api/conversations/${state.activeConversation.id}`,
           headers: {
@@ -81,8 +82,10 @@ const actions = {
             unread: state.activeConversation.unread,
           },
         });
+        commit('addToMessages', res.data.message);
         commit('setMessage', '');
         commit('setSendingMessage', false);
+        (new Vue()).$socket.emit('SEND_MESSAGE', res.data);
       }
     } catch (err) {
       commit('setSendingMessage', false);
@@ -112,6 +115,11 @@ const actions = {
       commit('setSendingMessage', false);
     }
   },
+  SOCKET_DELIVER_MESSAGE: ({ state, commit }, { conversation, message }) => {
+    if (state.activeConversation.id === conversation._id) {
+      commit('addToMessages', message);
+    }
+  },
 };
 
 const mutations = {
@@ -135,6 +143,9 @@ const mutations = {
   },
   setSendingMessage: (state, isSendingMessage) => {
     state.status.sendingMessage = isSendingMessage;
+  },
+  addToMessages: (state, message) => {
+    state.activeConversation.messages = [...state.activeConversation.messages, message];
   },
 };
 

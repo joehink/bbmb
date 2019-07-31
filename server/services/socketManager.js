@@ -16,7 +16,7 @@ module.exports = io => {
 
         socket.on("SEND_MESSAGE", ({ conversation, message }) => {
           conversation.unread.forEach(recipient => {
-            socket.to(users[recipient._id]).emit("DELIVER_MESSAGE", message)
+            socket.to(users[recipient]).emit("DELIVER_MESSAGE", { conversation, message });
           });
         });
         
