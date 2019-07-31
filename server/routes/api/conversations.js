@@ -17,12 +17,17 @@ module.exports = app => {
           return res.status(400).json({ message: "Must provide message body, participants, and unread." });
         }
         
-        const conversation = await Conversation.create({
+        let conversation = await Conversation.create({
           participants: req.body.participants,
           unread: req.body.unread,
           lastMessage: req.body.body,
           lastMessageCreatedAt: new Date()
         });
+
+        conversation = await conversation.populate({
+          path: 'participants',
+          select: 'username _id photo'
+        }).execPopulate();
   
         const message = await Message.create({
           body: req.body.body,
@@ -56,7 +61,8 @@ module.exports = app => {
               unread: req.body.unread,
               lastMessage: req.body.body,
               lastMessageCreatedAt: new Date()
-            }, { new: true });
+            }, { new: true })
+            .populate({ path: 'participants', select: 'username _id photo'});
         
           if (!conversation) {
             return res.status(404).json({ message: "Conversation not found." });
@@ -96,11 +102,9 @@ module.exports = app => {
         }
 
         const conversation = await Conversation
-        .findByIdAndUpdate(
-          req.params.conversationId,
-          { $pull: { unread: req.user._id } },
-          { new: true }
-        )
+        .findByIdAndUpdate(req.params.conversationId, {
+          $pull: { unread: req.user._id }
+        }, { new: true })
         .populate({ path: 'participants', select: 'username _id photo'});
 
         if (!conversation) {

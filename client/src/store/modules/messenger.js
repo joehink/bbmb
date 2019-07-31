@@ -82,6 +82,10 @@ const actions = {
             unread: state.activeConversation.unread,
           },
         });
+        const conversationIndex = state
+          .conversations
+          .findIndex(convo => convo._id === res.data.conversation._id);
+        commit('updateConversationAtIndex', { conversationIndex, conversation: res.data.conversation });
         commit('addToMessages', res.data.message);
         commit('setMessage', '');
         commit('setSendingMessage', false);
@@ -107,6 +111,8 @@ const actions = {
             participants: state.activeConversation.participants,
           },
         });
+        (new Vue()).$socket.emit('NEW_CONVERSATION', res.data.conversation);
+        commit('addToConversations', res.data.conversation);
         router.push(`/conversations/${res.data.conversation._id}`);
         commit('setMessage', '');
         commit('setSendingMessage', false);
@@ -119,6 +125,14 @@ const actions = {
     if (state.activeConversation.id === conversation._id) {
       commit('addToMessages', message);
     }
+
+    const conversationIndex = state
+      .conversations
+      .findIndex(convo => convo._id === conversation._id);
+    commit('updateConversationAtIndex', { conversationIndex, conversation });
+  },
+  SOCKET_ADD_CONVERSATION: ({ commit }, conversation) => {
+    commit('addToConversations', conversation);
   },
 };
 
@@ -146,6 +160,12 @@ const mutations = {
   },
   addToMessages: (state, message) => {
     state.activeConversation.messages = [...state.activeConversation.messages, message];
+  },
+  addToConversations: (state, conversation) => {
+    state.conversations = [conversation, ...state.conversations];
+  },
+  updateConversationAtIndex: (state, { index, conversation }) => {
+    state.conversations.splice(index, 1, conversation);
   },
 };
 

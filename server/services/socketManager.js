@@ -22,7 +22,7 @@ module.exports = io => {
         
         socket.on("NEW_CONVERSATION", conversation => {
             conversation.unread.forEach(recipient => {
-              socket.to(users[recipient._id]).emit("ADD_CONVERSATION", conversation);
+              socket.to(users[recipient]).emit("ADD_CONVERSATION", conversation);
             });
         })
     })
