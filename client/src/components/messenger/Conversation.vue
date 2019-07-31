@@ -38,6 +38,10 @@ export default {
   },
   mounted() {
     this.getConversation(this.$route.params.conversationId);
+    this.$watch('activeConversation.messages', () => {
+      const messages = this.$el.querySelector('.messages-container');
+      messages.scrollTop = messages.scrollHeight;
+    });
   },
   beforeDestroy() {
     this.resetActiveConversation();
