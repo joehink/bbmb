@@ -1,6 +1,6 @@
 <template>
   <div class="no-conversation">
-    <h3><font-awesome-icon icon="arrow-left" /> Select a conversation</h3>
+    <h3>Select a conversation or go to a user profile and click "Send Message"</h3>
   </div>
 </template>
 
@@ -16,10 +16,12 @@ export default {
   justify-content: center;
   align-items: center;
   flex: 1;
+  padding: 50px;
 }
 h3 {
   font-weight: 400;
   color: #AAA;
+  text-align: center;
 }
 </style>
 

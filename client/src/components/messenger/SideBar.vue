@@ -16,6 +16,10 @@
         v-on:close="$emit('close')"
       />
     </div>
+
+    <h5 v-if="conversations && conversations.length === 0">
+      No conversations yet.
+    </h5>
   </div>
 </template>
 
@@ -39,9 +43,16 @@ export default {
     overflow-y: auto;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 100;
+    display: flex;
+    flex-direction: column;
   }
   header {
     display: none;
+  }
+
+  h5 {
+    margin: auto;
+    color: #AAA;
   }
 
   @media (max-width: 768px) {
