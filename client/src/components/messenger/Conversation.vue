@@ -1,5 +1,5 @@
 <template>
-  <div class="conversation" v-if="activeConversation.participants">
+  <div class="conversation" v-if="activeConversation.participants.length">
     <conversation-header
       :to="to"
       v-if="activeConversation.id"

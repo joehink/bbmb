@@ -63,6 +63,7 @@ export default {
     text-align: center;
     display: none;
     margin: auto;
+    padding: 15px;
   }
 
   @media (min-width: 768px) {
