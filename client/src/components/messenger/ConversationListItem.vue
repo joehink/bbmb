@@ -44,7 +44,13 @@ export default {
         .participants.filter(participant => participant._id !== this.user._id);
     },
     timeSinceLastMessage() {
-      return moment(this.conversation.lastMessageCreatedAt).fromNow();
+      const messageDate = moment(this.conversation.lastMessageCreatedAt);
+
+      if (messageDate.isSame(moment(), 'hour')) {
+        return messageDate.fromNow();
+      }
+
+      return messageDate.calendar();
     },
     unread() {
       return this.conversation.unread.some(recipient => recipient === this.user._id);
