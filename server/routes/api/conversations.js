@@ -125,5 +125,28 @@ module.exports = app => {
       } catch (err) {
         res.status(500).json(err);
       }
-    })
+    });
+
+    // Mark as read
+    app.patch('/api/conversations/:conversationId', requireAuth, async (req, res) => {
+      try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.conversationId)) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+
+        const conversation = await Conversation
+        .findByIdAndUpdate(req.params.conversationId, {
+          $pull: { unread: req.user._id }
+        }, { new: true })
+        .populate({ path: 'participants', select: 'username _id photo'});
+
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+
+        res.status(200).json(conversation);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    });
 }

@@ -27,6 +27,11 @@ const actions = {
 
     const { conversation, messages } = res.data;
 
+    const conversationIndex = state
+      .conversations
+      .findIndex(convo => convo._id === conversation._id);
+    commit('updateConversationAtIndex', { conversationIndex, conversation });
+
     const unread = conversation
       .participants
       .filter(participant => participant._id !== rootState.auth.user._id);
@@ -121,9 +126,24 @@ const actions = {
       commit('setSendingMessage', false);
     }
   },
-  SOCKET_DELIVER_MESSAGE: ({ state, commit }, { conversation, message }) => {
+  markAsRead: async ({ state, rootState, commit }, conversationId) => {
+    const res = await axios({
+      method: 'PATCH',
+      url: `/api/conversations/${conversationId}`,
+      headers: {
+        authorization: rootState.auth.authenticated,
+      },
+    });
+
+    const conversationIndex = state
+      .conversations
+      .findIndex(convo => convo._id === res.data._id);
+    commit('updateConversationAtIndex', { conversationIndex, conversation: res.data });
+  },
+  SOCKET_DELIVER_MESSAGE: ({ state, commit, dispatch }, { conversation, message }) => {
     if (state.activeConversation.id === conversation._id) {
       commit('addToMessages', message);
+      dispatch('markAsRead', conversation._id);
     }
 
     const conversationIndex = state
@@ -164,8 +184,8 @@ const mutations = {
   addToConversations: (state, conversation) => {
     state.conversations = [conversation, ...state.conversations];
   },
-  updateConversationAtIndex: (state, { index, conversation }) => {
-    state.conversations.splice(index, 1, conversation);
+  updateConversationAtIndex: (state, { conversationIndex, conversation }) => {
+    state.conversations.splice(conversationIndex, 1, conversation);
   },
 };
 
@@ -173,6 +193,9 @@ const getters = {
   conversations: state => state.conversations,
   activeConversation: state => state.activeConversation,
   isSendingMessage: state => state.status.sendingMessage,
+  hasUnreadMessages(state, otherGetters, rootState) {
+    return state.conversations.some(convo => convo.unread.includes(rootState.auth.user._id));
+  },
 };
 
 const state = {

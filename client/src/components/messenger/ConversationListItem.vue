@@ -4,17 +4,20 @@
     class="conversation-list-item"
     @click.native="$emit('close')"
   >
-    <ProfilePhoto
-      v-if="to[0]"
-      class="profile-img-md to-photo"
-      :key="to[0].photo ? to[0].photo : null"
-      v-lazy:background-image="to[0].photo ? `/api/photos/${to[0].photo}` : null"
-      :style="{
-        backgroundImage: !to[0].photo && `url('/static/images/auth/error.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-      }"
-    />
+    <div class="photo-container">
+      <span v-if="unread" class="dot"></span>
+      <ProfilePhoto
+        v-if="to[0]"
+        class="profile-img-md to-photo"
+        :key="to[0].photo ? to[0].photo : null"
+        v-lazy:background-image="to[0].photo ? `/api/photos/${to[0].photo}` : null"
+        :style="{
+          backgroundImage: !to[0].photo && `url('/static/images/auth/error.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+        }"
+      />
+    </div>
     <div>
       <span class="to" v-for="participant in to" :key="participant._id">
         {{ participant.username }}
@@ -42,6 +45,9 @@ export default {
     },
     timeSinceLastMessage() {
       return moment(this.conversation.lastMessageCreatedAt).fromNow();
+    },
+    unread() {
+      return this.conversation.unread.some(recipient => recipient === this.user._id);
     },
   },
 };
@@ -73,6 +79,20 @@ export default {
     color: #aaa;
     font-size: .8em;
     margin-top: 5px;
+  }
+  .photo-container {
+    position: relative;
+  }
+  .dot {
+    background: red;
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    right: 13px;
+    box-shadow: 0 3px 6px rgba(255,0,0,0.75);
   }
 
   @media (min-width: 768px) {
