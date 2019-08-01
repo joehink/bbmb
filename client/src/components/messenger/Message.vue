@@ -39,6 +39,9 @@ export default {
   .message-container {
     margin: 10px 0;
   }
+  .message-container:first-child {
+    margin-top: auto;
+  }
   .message {
     margin: 10px 0;
     display: inline-block;
@@ -46,9 +49,6 @@ export default {
     border-radius: 25px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.15);
     position: relative;
-  }
-  .message:first-child {
-    margin-top: auto;
   }
   .message-body {
     line-height: 1.5;

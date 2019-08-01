@@ -40,7 +40,7 @@ export default {
     this.getConversation(this.$route.params.conversationId);
     this.$watch('activeConversation.messages', () => {
       const messages = this.$el.querySelector('.messages-container');
-      messages.scrollTop = messages.scrollHeight;
+      messages.scrollTop = messages.scrollHeight - messages.clientHeight;
     });
   },
   beforeDestroy() {
