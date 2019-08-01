@@ -20,9 +20,13 @@ import {
   faTrashAlt,
   faEllipsisV,
   faSort,
+  faArrowLeft,
+  faPaperPlane,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueLazyload from 'vue-lazyload';
+import SocketIO from 'socket.io-client';
+import VueSocketIO from 'vue-socket.io';
 
 import Vue from 'vue';
 import App from './App';
@@ -49,8 +53,19 @@ library.add(
   faTrashAlt,
   faEllipsisV,
   faSort,
+  faArrowLeft,
+  faPaperPlane,
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+Vue.use(new VueSocketIO({
+  connection: SocketIO(process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000'),
+  vuex: {
+    store,
+    actionPrefix: 'SOCKET_',
+    mutationPrefix: 'SOCKET_',
+  },
+}));
 
 // configure lazy loader for profile picture
 Vue.use(VueLazyload, {

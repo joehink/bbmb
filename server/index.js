@@ -20,6 +20,9 @@ require('./services/passport');
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 const app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+require("./services/socketManager")(io);
 
 // Setup
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
@@ -48,6 +51,6 @@ mongoose.connection.on('connected', () => {
 app.use(express.json());
 app.use(cors());
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}`);
 });

@@ -17,10 +17,17 @@ module.exports = app => {
           return res.status(400).json({ message: "Must provide message body, participants, and unread." });
         }
         
-        const conversation = await Conversation.create({
+        let conversation = await Conversation.create({
           participants: req.body.participants,
-          unread: req.body.unread
+          unread: req.body.unread,
+          lastMessage: req.body.body,
+          lastMessageCreatedAt: new Date()
         });
+
+        conversation = await conversation.populate({
+          path: 'participants',
+          select: 'username _id photo'
+        }).execPopulate();
   
         const message = await Message.create({
           body: req.body.body,
@@ -52,7 +59,10 @@ module.exports = app => {
           const conversation = await Conversation
             .findByIdAndUpdate(req.params.conversationId, {
               unread: req.body.unread,
-            }, { new: true });
+              lastMessage: req.body.body,
+              lastMessageCreatedAt: new Date()
+            }, { new: true })
+            .populate({ path: 'participants', select: 'username _id photo'});
         
           if (!conversation) {
             return res.status(404).json({ message: "Conversation not found." });
@@ -73,7 +83,10 @@ module.exports = app => {
     // Get all conversations where the current user is a participant
     app.get('/api/conversations', requireAuth, async (req, res) => {
       try {
-        const conversations = await Conversation.find({ participants: req.user._id });
+        const conversations = await Conversation
+          .find({ participants: req.user._id })
+          .populate({ path: 'participants', select: 'username _id photo'});
+
 
         res.status(200).json(conversations);
       } catch (err) {
@@ -81,7 +94,7 @@ module.exports = app => {
       }
     });
 
-    // Get converation and all messages belonging to the conversation
+    // Get conversation and all messages belonging to the conversation
     app.get('/api/conversations/:conversationId', requireAuth, async (req, res) => {
       try {
         if (!mongoose.Types.ObjectId.isValid(req.params.conversationId)) {
@@ -89,13 +102,20 @@ module.exports = app => {
         }
 
         const conversation = await Conversation
-        .findOneAndUpdate(
-          { _id: req.params.conversationId },
-          { $pull: { unread: req.user._id } },
-          { new: true }
-        );
+        .findByIdAndUpdate(req.params.conversationId, {
+          $pull: { unread: req.user._id }
+        }, { new: true })
+        .populate({ path: 'participants', select: 'username _id photo'});
 
-        if (!conversation || !conversation.participants.includes(req.user._id)) {
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+
+        const isUserConversation = conversation
+          .participants
+          .some(participant => participant._id.equals(req.user._id));
+          
+        if (!isUserConversation) {
           return res.status(404).json({ message: "Conversation not found." });
         }
 
@@ -105,5 +125,28 @@ module.exports = app => {
       } catch (err) {
         res.status(500).json(err);
       }
-    })
+    });
+
+    // Mark as read
+    app.patch('/api/conversations/:conversationId', requireAuth, async (req, res) => {
+      try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.conversationId)) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+
+        const conversation = await Conversation
+        .findByIdAndUpdate(req.params.conversationId, {
+          $pull: { unread: req.user._id }
+        }, { new: true })
+        .populate({ path: 'participants', select: 'username _id photo'});
+
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found." });
+        }
+
+        res.status(200).json(conversation);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    });
 }

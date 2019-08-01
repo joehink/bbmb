@@ -6,6 +6,13 @@
           <nav class="user-secondary-nav">
             <span class="brand">{{ pageUser.username }}</span>
             <button
+              v-if="user && pageUser._id !== user._id"
+              class="btn green border sm"
+              @click="findOrStartConversation({ user, to: pageUser })"
+            >
+              Send Message
+            </button>
+            <button
               v-if="user && !editBio && pageUser._id === user._id"
               class="btn blue border sm"
               @click="beginEditBio"
@@ -110,7 +117,7 @@
 
 <script>
 import axios from 'axios';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 import Vue from 'vue';
 import PostListItem from '../posts/PostListItem';
 import ProfilePhoto from '../profile/ProfilePhoto';
@@ -149,6 +156,7 @@ export default {
     ...mapGetters(['user', 'token']),
   },
   methods: {
+    ...mapActions(['findOrStartConversation']),
     ...mapMutations(['setUser']),
     async getUser() {
       try {

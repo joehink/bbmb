@@ -1,8 +1,9 @@
 import axios from 'axios';
+import Vue from 'vue';
 import router from '../../router';
 
 const actions = {
-  login: async ({ commit }, { username, password }) => {
+  login: async ({ commit, dispatch }, { username, password }) => {
     try {
       if (!username || !password) {
         // if no username or password provided
@@ -27,7 +28,10 @@ const actions = {
         commit('setToken', res.data.token);
         // store logged in user in vuex state
         commit('setUser', res.data.user);
+        (new Vue()).$socket.emit('login', res.data.user._id);
         commit('setAuthLoading', false);
+
+        dispatch('getConversations');
         // navigate to home page
         router.push('/');
       }
@@ -45,6 +49,8 @@ const actions = {
   logout: ({ commit }) => {
     // remove auth token from local storage
     localStorage.removeItem('bbmb-token');
+    window.location.reload(true);
+
     // remove auth token from vuex state
     commit('setToken', null);
     // remove user object from vuex state
@@ -101,6 +107,7 @@ const actions = {
         });
         // store user in vuex state
         commit('setUser', res.data.user);
+        (new Vue()).$socket.emit('login', res.data.user._id);
       }
     } catch (err) {
       commit('setUser', null);

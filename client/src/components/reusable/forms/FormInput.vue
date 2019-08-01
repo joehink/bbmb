@@ -1,5 +1,11 @@
 <template>
-  <input :type="type" :value="value" :placeholder="placeholder" @input="handleInput">
+  <input
+    :type="type"
+    :value="value"
+    :placeholder="placeholder"
+    @input="handleInput"
+    :disabled="disable"
+  >
 </template>
 
 <script>
@@ -7,7 +13,7 @@ import { mapMutations } from 'vuex';
 
 export default {
   name: 'FormInput',
-  props: ['type', 'value', 'placeholder'],
+  props: ['type', 'value', 'placeholder', 'disable'],
   methods: {
     ...mapMutations(['setError']),
     handleInput(event) {

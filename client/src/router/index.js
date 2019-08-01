@@ -10,6 +10,10 @@ import PostPage from '../components/pages/PostPage';
 import ProfilePage from '../components/pages/ProfilePage';
 import CreatePost from '../components/pages/CreatePost';
 import UserPosts from '../components/pages/UserPosts';
+import Messenger from '../components/pages/Messenger';
+import Conversation from '../components/messenger/Conversation';
+import Conversations from '../components/messenger/Conversations';
+import StartConversation from '../components/messenger/StartConversation';
 
 Vue.use(Router);
 
@@ -59,6 +63,22 @@ export default new Router({
     {
       path: '/users/:userId',
       component: ProfilePage,
+    },
+    {
+      path: '/conversations',
+      component: Messenger,
+      children: [{
+        path: '',
+        component: Conversations,
+      },
+      {
+        path: 'start',
+        component: StartConversation,
+      },
+      {
+        path: ':conversationId',
+        component: Conversation,
+      }],
     },
   ],
 });
