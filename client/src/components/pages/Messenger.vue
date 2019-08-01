@@ -3,6 +3,7 @@
     <side-bar
       :conversations="conversations"
       :user="user"
+      :routeId="$route.params.conversationId"
     />
     <router-view :key="$route.fullPath"></router-view>
   </div>

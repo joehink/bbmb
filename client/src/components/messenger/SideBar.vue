@@ -6,6 +6,7 @@
         :key="conversation._id"
         :conversation="conversation"
         :user="user"
+        :selected="routeId === conversation._id"
       />
     </div>
 
@@ -23,7 +24,7 @@ export default {
   components: {
     ConversationListItem,
   },
-  props: ['conversations', 'user', 'show'],
+  props: ['conversations', 'user', 'show', 'routeId'],
 };
 </script>
 
