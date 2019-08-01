@@ -18,7 +18,12 @@
         </div>
         <div class="post-info">
           <h3>{{ post.title }}</h3>
-          <span class="post-data">{{ date }} by {{ post.author.username }}</span>
+          <span class="post-data">
+            {{ date }} by
+            <router-link class="user-link" :to="`/users/${post.author._id}`">
+              {{ post.author.username }}
+            </router-link>
+          </span>
         </div>
         <div class="post-controls">
           <drop-down-menu

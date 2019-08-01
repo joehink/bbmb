@@ -1,7 +1,9 @@
 <template>
   <div class="comment">
     <header>
-      <span class="username">{{ comment.author.username }}</span>
+      <router-link class="user-link username" :to="`/users/${comment.author._id}`">
+        {{ comment.author.username }}
+      </router-link>
       <span class="date">{{ date }}</span>
       <div v-on:click="likeComment">
         <lottie

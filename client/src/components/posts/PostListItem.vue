@@ -18,7 +18,7 @@
       </router-link>
       <span class="post-data">
         {{ date }} by
-        <router-link :to="`/users/${post.author._id}`">
+        <router-link class="user-link" :to="`/users/${post.author._id}`">
           {{ post.author.username }}
         </router-link>
       </span>

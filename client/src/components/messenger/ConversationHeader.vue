@@ -17,9 +17,14 @@
       }"
     />
     <div v-if="to && to[0]">
-      <span class="to" v-for="participant in to" :key="participant.username">
+      <router-link
+        v-for="participant in to"
+        :key="participant.username"
+        class="to user-link"
+        :to="`/users/${participant._id}`"
+      >
         {{ participant.username }}
-      </span>
+      </router-link>
     </div>
   </div>
 </template>
@@ -47,6 +52,7 @@ export default {
   font-weight: 700;
   font-size: 1.25em;
   margin-left: 10px;
+  color: var(--black);
 }
 .conversations-link {
   font-size: 1.25em;

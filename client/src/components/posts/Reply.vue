@@ -1,7 +1,9 @@
 <template>
   <div class="reply" :class="{first: index === 0}">
     <header>
-      <span class="username">{{ reply.author.username }}</span>
+      <router-link class="user-link username" :to="`/users/${reply.author._id}`">
+        {{ reply.author.username }}
+      </router-link>
       <span class="date">{{ date }}</span>
       <drop-down-menu
         v-if="belongsToUser"

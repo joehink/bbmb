@@ -93,6 +93,14 @@ button {
   padding: 40px 25px 0;
 }
 
+.user-link {
+  color: var(--black);
+}
+
+.user-link:hover {
+  opacity: .5;
+}
+
 /* Headings */
 h1 {
   font-weight: bold;
