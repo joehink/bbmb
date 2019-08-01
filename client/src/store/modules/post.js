@@ -46,7 +46,7 @@ const actions = {
     try {
       const { content, title } = state.form;
       if (!rootState.auth.authenticated) {
-        router.push('/auth/required');
+        router.push({ path: '/auth/required', query: { message: 'You must be logged in to create a post.' } });
       } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
       } else {
@@ -77,7 +77,7 @@ const actions = {
     try {
       const { content, title } = state.form;
       if (!rootState.auth.authenticated) {
-        router.push('/auth/required');
+        router.push({ path: '/auth/required', query: { message: 'You must be logged in to edit a post.' } });
       } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
       } else {
@@ -111,7 +111,7 @@ const actions = {
     try {
       const { liking } = state.status;
       if (!rootState.auth.authenticated) {
-        router.push('/auth/required');
+        router.push({ path: '/auth/required', query: { message: 'You must be logged in to like a post.' } });
       } else if (!liking) {
         // if like request is not being made
         commit('setPostLiking', true);
@@ -137,7 +137,7 @@ const actions = {
   async deletePost({ commit, state, rootState }, id) {
     try {
       if (!rootState.auth.authenticated) {
-        router.push('/auth/required');
+        router.push({ path: '/auth/required', query: { message: 'You must be logged in to delete a post.' } });
       } else if (!state.status.deleting) {
         commit('setDisableModal', true);
         commit('setPostDeleting', true);
@@ -182,7 +182,7 @@ const actions = {
     try {
       if (!rootState.auth.authenticated) {
         // user is not logged in
-        router.push('/auth/required');
+        router.push({ path: '/auth/required', query: { message: 'You must be logged in to create a comment.' } });
       } else if (!state.comments.form.body) {
         commit('setError', 'Must provide a body.');
       } else {

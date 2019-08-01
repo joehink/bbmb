@@ -139,6 +139,7 @@ label {
   outline: none;
   display: inline-flex;
   justify-content: center;
+  align-items: center;
 }
 
 .btn.border.blue {
@@ -197,6 +198,7 @@ label {
 
 .btn-group {
   margin-top: 15px;
+  display: flex;
 }
 
 /* Secondary Nav */

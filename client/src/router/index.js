@@ -15,9 +15,11 @@ import Conversation from '../components/messenger/Conversation';
 import Conversations from '../components/messenger/Conversations';
 import StartConversation from '../components/messenger/StartConversation';
 
+import store from '../store';
+
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -43,6 +45,7 @@ export default new Router({
     {
       path: '/auth/required',
       component: AuthRequired,
+      props: route => ({ message: route.query.message }),
     },
     {
       path: '/posts/category/:category',
@@ -51,6 +54,7 @@ export default new Router({
     {
       path: '/posts/category/:category/create',
       component: CreatePost,
+      meta: { requiresAuth: true },
     },
     {
       path: '/posts/users/:userId',
@@ -67,6 +71,7 @@ export default new Router({
     {
       path: '/conversations',
       component: Messenger,
+      meta: { requiresAuth: true },
       children: [{
         path: '',
         component: Conversations,
@@ -82,3 +87,20 @@ export default new Router({
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(route => route.meta.requiresAuth)) {
+    if (!store.state.auth.authenticated) {
+      next({
+        path: '/auth/required',
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+
+export default router;

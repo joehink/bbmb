@@ -167,7 +167,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to like a comment.' } });
         } else if (!this.liking) {
           // if like request is not being made
           this.liking = true;
@@ -194,7 +194,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to update a comment' } });
         } else if (this.body && this.belongsToUser && !this.saving) {
           this.saving = true;
           const res = await axios({
@@ -220,7 +220,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to reply to a comment.' } });
         } else if (this.replyBody && !this.saving) {
           this.saving = true;
           const res = await axios({
@@ -247,7 +247,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to delete a comment.' } });
         } else if (this.belongsToUser && !this.deleting) {
           this.deleting = true;
           this.setDisableModal(true);

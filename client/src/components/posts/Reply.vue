@@ -99,7 +99,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to edit a reply.' } });
         } else if (this.body && this.belongsToUser && !this.saving) {
           this.saving = true;
           const res = await axios({
@@ -124,7 +124,7 @@ export default {
       try {
         if (!this.token) {
           // user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to delete a reply.' } });
         } else if (this.belongsToUser && !this.deleting) {
           this.setDisableModal(true);
           this.deleting = true;

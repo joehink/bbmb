@@ -65,7 +65,7 @@ export default {
       try {
         if (!this.isLoggedIn) {
           // if user is not logged in
-          router.push('/auth/required');
+          router.push({ path: '/auth/required', query: { message: 'You must be logged in to like a post.' } });
         } else if (!this.liking) {
           // if like request is not being made
           this.liking = true;
