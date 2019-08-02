@@ -200,7 +200,11 @@ export default {
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    padding: 12.5px 25px;
+    padding: 12.5px 5px;
+  }
+  .post-info {
+    overflow-x: auto;
+    margin-right: 15px;
   }
   .post-controls {
     margin-left: auto;
@@ -218,11 +222,18 @@ export default {
     color: var(--gray-text);
     font-size: .8em;
     margin-top: 10px;
+    white-space: nowrap;
   }
   .edit-form {
     padding: 25px;
   }
   .form-row:first-of-type {
     margin-bottom: 25px;
+  }
+
+  @media(min-width: 400px) {
+    .post-header {
+      padding: 12.5px 25px;
+    }
   }
 </style>

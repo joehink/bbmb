@@ -14,9 +14,9 @@
     </div>
     <div class="post-info">
       <router-link :to="`/posts/${post._id}`" class="post-link">
-        <h3>{{ post.title }}</h3>
+        <h3 class="single-line-title">{{ post.title }}</h3>
       </router-link>
-      <span class="post-data">
+      <span class="post-data single-line-data">
         {{ date }} by
         <router-link class="user-link" :to="`/users/${post.author._id}`">
           {{ post.author.username }}
@@ -128,6 +128,24 @@ export default {
   .post-data {
     color: var(--gray-text);
     font-size: .8em;
-    margin-top: 10px;
+    margin-top: 6px;
+  }
+  .single-line-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    line-height: 1.25;        /* fallback */
+    max-height: 1.25em;       /* fallback */
+  }
+  .single-line-data {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    line-height: 1;        /* fallback */
+    max-height: 1em;       /* fallback */
   }
 </style>

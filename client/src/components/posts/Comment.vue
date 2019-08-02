@@ -1,43 +1,47 @@
 <template>
   <div class="comment">
     <header>
-      <router-link class="user-link username" :to="`/users/${comment.author._id}`">
-        {{ comment.author.username }}
-      </router-link>
-      <span class="date">{{ date }}</span>
-      <div v-on:click="likeComment">
-        <lottie
-          :options="defaultOptions"
-          :height="25"
-          :width="25"
-          v-on:animCreated="handleAnimation"
-          class="sun"
-        />
+      <div class="username-date">
+        <router-link class="user-link username" :to="`/users/${comment.author._id}`">
+          {{ comment.author.username }}
+        </router-link>
+        <span class="date">{{ date }}</span>
       </div>
-      <span class="like-count">{{ comment.likesCount }}</span>
-      <drop-down-menu
-        v-if="belongsToUser"
-        class="control-menu"
-        :controls="[{
-          text: 'Edit',
-          action: () => {this.edit = true; this.replying = false},
-          show: belongsToUser,
-        }, {
-          text: 'Delete',
-          action: () => {
-            this.displayModal({
-              message: 'Are you sure you want to delete this comment?',
-              btnText: 'Delete',
-              btnColor: 'red',
-              action: () => this.deleteComment(index),
-            });
-          },
-          show: belongsToUser,
-        }]"
-      />
-      <button class="reply-button" v-on:click="replying = true">
-        <font-awesome-icon icon="reply" />
-      </button>
+      <div class="like-count-menu-reply">
+        <div v-on:click="likeComment">
+          <lottie
+            :options="defaultOptions"
+            :height="25"
+            :width="25"
+            v-on:animCreated="handleAnimation"
+            class="sun"
+          />
+        </div>
+        <span class="like-count">{{ comment.likesCount }}</span>
+        <drop-down-menu
+          v-if="belongsToUser"
+          class="control-menu"
+          :controls="[{
+            text: 'Edit',
+            action: () => {this.edit = true; this.replying = false},
+            show: belongsToUser,
+          }, {
+            text: 'Delete',
+            action: () => {
+              this.displayModal({
+                message: 'Are you sure you want to delete this comment?',
+                btnText: 'Delete',
+                btnColor: 'red',
+                action: () => this.deleteComment(index),
+              });
+            },
+            show: belongsToUser,
+          }]"
+        />
+        <button class="reply-button" v-on:click="replying = true">
+          <font-awesome-icon icon="reply" />
+        </button>
+      </div>
     </header>
     <main>
       <text-area
@@ -292,8 +296,7 @@ export default {
 }
 .comment header {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   padding-bottom: 15px;
 }
 .comment main {
@@ -347,6 +350,25 @@ export default {
   border: none;
   background: none;
   font-size: 0.9em;
-  margin-left: auto;
+}
+.like-count-menu-reply {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-top: 10px;
+}
+
+@media(min-width: 400px) {
+  .like-count-menu-reply {
+    margin-top: 0;
+  }
+  .comment header {
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: row;
+  }
+  .reply-button {
+    margin-left: auto;
+  }
 }
 </style>

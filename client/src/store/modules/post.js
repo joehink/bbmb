@@ -49,6 +49,8 @@ const actions = {
         router.push({ path: '/auth/required', query: { message: 'You must be logged in to create a post.' } });
       } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
+      } else if (title.length > 150) {
+        commit('setError', 'Title must be shorter than 150 characters.');
       } else {
         commit('setPostSaving', true);
         const res = await axios({
@@ -80,6 +82,8 @@ const actions = {
         router.push({ path: '/auth/required', query: { message: 'You must be logged in to edit a post.' } });
       } else if (!content || !title) {
         commit('setError', 'Must provide a title and a body.');
+      } else if (title.length > 150) {
+        commit('setError', 'Title must be shorter than 150 characters.');
       } else {
         commit('setPostSaving', true);
         // update post with new title and body

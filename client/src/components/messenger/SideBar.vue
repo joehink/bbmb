@@ -32,7 +32,7 @@ export default {
   .sidebar {
     background: var(--white);
     height: 100%;
-    width: 250px;
+    width: 275px;
     overflow-y: auto;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     z-index: 100;

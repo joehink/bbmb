@@ -60,13 +60,14 @@ export default {
   }
   .sent {
     align-self: flex-end;
-    padding-right: 15px;
+    padding: 0 15px;
     text-align: right;
   }
   .sent .message {
     background: var(--primary-color);
     color: var(--white);
     border-bottom-right-radius: 0;
+    text-align: left;
   }
   .sent .message:before {
     content: ' ';
@@ -80,7 +81,7 @@ export default {
   }
   .received {
     align-self: flex-start;
-    padding-left: 15px;
+    padding: 0 15px;
     text-align: left;
   }
   .received .message {

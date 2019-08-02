@@ -151,6 +151,9 @@ export default {
   .form {
     padding: 25px;
   }
+  .btn-group *:first-child {
+    margin-right: 5px;
+  }
   @media(min-width: 768px) {
     .select-box {
       margin-left: 5px;

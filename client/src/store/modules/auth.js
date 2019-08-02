@@ -61,9 +61,9 @@ const actions = {
       if (!username || !password) {
         // if no username or password provided
         commit('setError', 'Must provide username and password.');
-      } else if (username.length > 25) {
-        // if username is longer than 25 characters
-        commit('setError', 'Username must be 25 characters or less.');
+      } else if (username.length > 15) {
+        // if username is longer than 20 characters
+        commit('setError', 'Username must be 15 characters or less.');
       } else if (password !== confirmPassword) {
         // if password does not match password confirmation
         commit('setError', 'Password does not match confirmation.');

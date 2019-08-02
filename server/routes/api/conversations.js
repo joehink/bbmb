@@ -85,6 +85,7 @@ module.exports = app => {
       try {
         const conversations = await Conversation
           .find({ participants: req.user._id })
+          .sort('-lastMessageCreatedAt')
           .populate({ path: 'participants', select: 'username _id photo'});
 
 

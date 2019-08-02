@@ -39,8 +39,9 @@ export default {
 .select-container {
   border: 2px solid var(--primary-color);
   border-radius: 25px;
-  padding: 2.5px 20px;
+  padding: 2.5px 15px;
   overflow: hidden;
+  text-align: center;
 }
 select {
   outline: none;
@@ -49,5 +50,6 @@ select {
   color: var(--primary-color);
   padding: 0;
   margin: 0;
+  text-align: center;
 }
 </style>
