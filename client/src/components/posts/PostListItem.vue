@@ -1,27 +1,28 @@
 <template>
   <div class="post-list-item">
-    <div class="likes">
-      <div v-on:click="likePost">
-        <lottie
-          :options="defaultOptions"
-          :height="40"
-          :width="40"
-          v-on:animCreated="handleAnimation"
-          class="sun"
-        />
+
+    <header>
+      <div class="likes">
+        <div v-on:click="likePost">
+          <lottie
+            :options="defaultOptions"
+            :height="25"
+            :width="25"
+            v-on:animCreated="handleAnimation"
+            class="sun"
+          />
+        </div>
+        <span class="like-count">{{ post.likesCount }}</span>
       </div>
-      <span class="like-count">{{ post.likesCount }}</span>
-    </div>
+      <router-link class="user-link username" :to="`/users/${post.author._id}`">
+        {{ post.author.username }}
+      </router-link>
+      <span class="date">{{ date }}</span>
+    </header>
     <div class="post-info">
       <router-link :to="`/posts/${post._id}`" class="post-link">
         <h3 class="single-line-title">{{ post.title }}</h3>
       </router-link>
-      <span class="post-data single-line-data">
-        {{ date }} by
-        <router-link class="user-link" :to="`/users/${post.author._id}`">
-          {{ post.author.username }}
-        </router-link>
-      </span>
     </div>
   </div>
 </template>
@@ -96,9 +97,7 @@ export default {
 
 <style scoped>
   .post-list-item {
-    display: flex;
-    align-items: center;
-    padding: 7.5px 25px 7.5px 20px;
+    padding: 7.5px 20px;
     background: var(--white);
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     margin-bottom: 10px;
@@ -110,42 +109,61 @@ export default {
     margin: 0;
     box-shadow: none;
   }
+  .post-list-item.recent .single-line-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-height: 1.25;
+    max-height: 1.25em;
+  }
   .post-list-item.recent:first-of-type {
     border-top: 1px solid #ddd;
+  }
+  .post-list-item header {
+    display: flex;
+    margin-bottom: 10px;
+    margin-left: -5px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-direction: row;
+  }
+  .post-list-item.recent .username {
+    max-width: 80px;
+  }
+  .username {
+    background: #ddd;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 2.5px 10px;
+    font-size: .8em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 7.5px;
+    max-width: 80px;
+  }
+  .date {
+    color: #aaa;
+    font-size: .9em;
+    margin: 0 0 0 7.5px;
+  }
+  .sun {
+    cursor: pointer;
+    margin: 0 2.5px 0 10px;
+  }
+  .likes {
+    display: flex;
+    align-items: center;
   }
   .post-link {
     color: var(--black);
   }
-  .likes {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 5px;
-  }
-  .sun {
-    cursor: pointer;
-  }
-  .post-data {
-    color: var(--gray-text);
-    font-size: .8em;
-    margin-top: 6px;
-  }
-  .single-line-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* number of lines to show */
-    line-height: 1.25;        /* fallback */
-    max-height: 1.25em;       /* fallback */
-  }
-  .single-line-data {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* number of lines to show */
-    line-height: 1;        /* fallback */
-    max-height: 1em;       /* fallback */
+
+  @media(min-width: 768px) {
+    .username {
+      max-width: unset;
+    }
   }
 </style>

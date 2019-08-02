@@ -363,7 +363,7 @@ export default {
     margin-top: 0;
   }
   .comment header {
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items: center;
     flex-direction: row;
   }

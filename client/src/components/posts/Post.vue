@@ -4,49 +4,45 @@
     <error-message />
     <div class="post" v-if="post">
       <div class="post-header" v-if="post">
-        <div class="likes">
+        <div class="likes-username-date">
           <div v-on:click="likePost(anim)">
             <lottie
               :options="defaultOptions"
-              :height="40"
-              :width="40"
+              :height="25"
+              :width="25"
               v-on:animCreated="handleAnimation"
               class="sun"
             />
           </div>
           <span class="like-count">{{ post.likesCount }}</span>
+          <router-link class="user-link username" :to="`/users/${post.author._id}`">
+            {{ post.author.username }}
+          </router-link>
+          <span class="date">{{ date }}</span>
+          <div class="post-controls">
+            <drop-down-menu
+              v-if="user && user._id === post.author._id"
+              class="control-menu"
+              :controls="[{
+                text: 'Edit',
+                action: toggleEdit,
+                show: user && user._id === post.author._id && !isSavingPost,
+              }, {
+                text: 'Delete',
+                action: () => {
+                  this.displayModal({
+                    message: 'Are you sure you want to delete this post?',
+                    btnText: 'Delete',
+                    btnColor: 'red',
+                    action: () => deletePost(this.post._id),
+                  });
+                },
+                show: user && user._id === post.author._id && !isPostEditable,
+              }]"
+            />
+          </div>
         </div>
-        <div class="post-info">
-          <h3>{{ post.title }}</h3>
-          <span class="post-data">
-            {{ date }} by
-            <router-link class="user-link" :to="`/users/${post.author._id}`">
-              {{ post.author.username }}
-            </router-link>
-          </span>
-        </div>
-        <div class="post-controls">
-          <drop-down-menu
-            v-if="user && user._id === post.author._id"
-            class="control-menu"
-            :controls="[{
-              text: 'Edit',
-              action: toggleEdit,
-              show: user && user._id === post.author._id && !isSavingPost,
-            }, {
-              text: 'Delete',
-              action: () => {
-                this.displayModal({
-                  message: 'Are you sure you want to delete this post?',
-                  btnText: 'Delete',
-                  btnColor: 'red',
-                  action: () => deletePost(this.post._id),
-                });
-              },
-              show: user && user._id === post.author._id && !isPostEditable,
-            }]"
-          />
-        </div>
+        <h3>{{ post.title }}</h3>
       </div>
       <div class="edit-form">
         <div class="form-row" v-if="isPostEditable">
@@ -194,35 +190,40 @@ export default {
     border: 1px solid var(--primary-color);
   }
   .post-header {
-    display: flex;
-    align-items: center;
     padding-bottom: 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    padding: 12.5px 5px;
+    padding: 12.5px 25px;
   }
-  .post-info {
-    overflow-x: auto;
-    margin-right: 15px;
+  .likes-username-date{
+    display: flex;
+    align-items: center;
+    margin-left: -5px;
+    margin-bottom: 7.5px;
+  }
+  .username {
+    background: #ddd;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 2.5px 10px;
+    font-size: .8em;
+    text-overflow: ellipsis;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 7.5px;
   }
   .post-controls {
     margin-left: auto;
   }
-  .likes {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 10px;
-  }
   .sun {
     cursor: pointer;
   }
-  .post-data {
-    color: var(--gray-text);
-    font-size: .8em;
-    margin-top: 10px;
-    white-space: nowrap;
+  .date {
+    color: #aaa;
+    font-size: .9em;
+    margin: 0 0 0 7.5px;
   }
   .edit-form {
     padding: 25px;
@@ -231,9 +232,9 @@ export default {
     margin-bottom: 25px;
   }
 
-  @media(min-width: 400px) {
-    .post-header {
-      padding: 12.5px 25px;
+  @media(min-width: 768px) {
+    .username {
+      max-width: unset;
     }
   }
 </style>
