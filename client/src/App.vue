@@ -90,7 +90,7 @@ button {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 40px 25px 0;
+  padding: 40px 25px 50px;
 }
 
 .user-link {
@@ -251,7 +251,7 @@ label {
 }
 @media(min-width: 1225px) {
   .container {
-    padding: 40px 0 0;
+    padding: 40px 0 50px;
   }
 }
 </style>

@@ -297,12 +297,14 @@ export default {
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
     background: var(--white);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    text-align: center;
   }
   .brand {
     font-weight: bold;
-    margin-right: auto;
     font-size: 1.1em;
+    display: block;
+    margin-bottom: 15px;
   }
   .user-content {
     display: flex;
@@ -373,6 +375,14 @@ export default {
     }
     .textarea {
       flex: 1;
+    }
+    .brand {
+      margin-right: auto;
+      margin-bottom: 0;
+    }
+    .user-secondary-nav {
+      flex-direction: row;
+      align-items: center;
     }
   }
 </style>
