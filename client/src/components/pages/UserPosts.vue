@@ -33,7 +33,7 @@ export default {
     return {
       userId: this.$route.params.userId,
       scrollTopPosition: 0,
-      sort: '-updatedAt',
+      sort: '-createdAt',
     };
   },
   mounted() {
@@ -77,7 +77,7 @@ export default {
       this.userId = this.$route.params.userId;
       this.scrollTopPosition = 0;
       this.getUserPosts({ userId: this.$route.params.userId });
-      this.sort = '-updatedAt';
+      this.sort = '-createdAt';
     } else {
       const page = document.getElementById('page');
       page.scrollTop = this.scrollTopPosition;

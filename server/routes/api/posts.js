@@ -40,7 +40,7 @@ module.exports = app => {
                 return res.status(400).json({ message: "Must provide valid category" });
             }
 
-            const { page = 1, sortBy = '-updatedAt' } = req.query;
+            const { page = 1, sortBy = '-lastCommentAt' } = req.query;
             const limit = 25;
 
             const posts = await Post
@@ -70,7 +70,7 @@ module.exports = app => {
             // Find 5 most recent posts
             const recentPosts = await Post
                 .find({ category: req.params.category })
-                .sort('-updatedAt')
+                .sort('-createdAt')
                 .limit(5)
                 .populate({ path: 'author', select: 'username _id'});
 
@@ -91,7 +91,7 @@ module.exports = app => {
             // Find 5 most recent posts
             const recentPosts = await Post
                 .find({ author: req.params.userId })
-                .sort('-updatedAt')
+                .sort('-createdAt')
                 .limit(5)
                 .populate({ path: 'author', select: 'username _id'});
 
@@ -110,7 +110,7 @@ module.exports = app => {
                 return res.status(404).json({ message: "User not found." });
             }
 
-            const { page = 1, sortBy = '-updatedAt' } = req.query;
+            const { page = 1, sortBy = '-createdAt' } = req.query;
             const limit = 25;
 
             const posts = await Post
@@ -276,8 +276,8 @@ module.exports = app => {
             // populate author field on new comment
             comment = await comment.populate({ path: 'author', select: 'username _id' }).execPopulate()
 
-            // Set post.updatedAt to current date and time
-            post.updatedAt = new Date();
+            // Set post.lastCommentAt to current date and time
+            post.lastCommentAt = new Date();
 
             // Save post
             post.save();

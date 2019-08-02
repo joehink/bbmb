@@ -2,16 +2,16 @@
   <div class="select-container">
     <select @change="onSelect">
       <option
-        :selected="sort === '-updatedAt'"
-        value="-updatedAt"
+        :selected="sort === '-lastCommentAt'"
+        value="-lastCommentAt"
       >
-        Date Updated (Newest - Oldest)
+        Recently Commented On
       </option>
       <option
         :selected="sort === '-createdAt'"
         value="-createdAt"
       >
-        Date Created (Newest - Oldest)
+        Most Recent
       </option>
       <option
         :selected="sort === '-likesCount'"

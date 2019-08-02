@@ -37,7 +37,7 @@ export default {
     return {
       category: this.$route.params.category,
       scrollTopPosition: 0,
-      sort: '-updatedAt',
+      sort: '-lastCommentAt',
     };
   },
   mounted() {
@@ -81,7 +81,7 @@ export default {
       this.category = this.$route.params.category;
       this.scrollTopPosition = 0;
       this.getPosts({ category: this.category });
-      this.sort = '-updatedAt';
+      this.sort = '-lastCommentAt';
     } else {
       const page = document.getElementById('page');
       page.scrollTop = this.scrollTopPosition;

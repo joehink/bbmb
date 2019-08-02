@@ -7,7 +7,8 @@ const postSchema = new Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     likesCount: { type: Number, default: 0 },
-    category: { type: String, required: true, lowercase: true }
+    category: { type: String, required: true, lowercase: true },
+    lastCommentAt: { type: Date, required: true, default: new Date() },
 }, { timestamps: true });
 
 mongoose.model('Post', postSchema);
