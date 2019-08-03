@@ -65,7 +65,7 @@
         <Spinner v-if="saving" class="btn-spinner green" />
         Save
       </button>
-      <div v-else class="body">{{ comment.body }}</div>
+      <div v-else class="body" v-html="commentWithLinks"></div>
       <text-area
         class="textarea"
         v-if="replying & !edit"
@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import Autolinker from 'autolinker';
 import axios from 'axios';
 import Lottie from 'vue-lottie';
 import moment from 'moment';
@@ -164,6 +165,9 @@ export default {
     date() {
       // format date posted using moment
       return moment(this.comment.createdAt).format('MMMM D, YYYY');
+    },
+    commentWithLinks() {
+      return Autolinker.link(this.comment.body, { newWindow: true });
     },
   },
   methods: {

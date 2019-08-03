@@ -1,3 +1,4 @@
+import Autolinker from 'autolinker';
 import axios from 'axios';
 import router from '../../router';
 
@@ -293,7 +294,7 @@ const getters = {
   post: state => state.data,
   comments: state => state.comments.list,
   postFormTitle: state => state.form.title,
-  postFormBody: state => state.form.content,
+  postFormBody: state => Autolinker.link(state.form.content, { newWindow: true }),
   isSavingPost: state => state.status.saving,
   isPostSaved: state => state.status.saved,
   isPostEditable: state => state.status.editable,

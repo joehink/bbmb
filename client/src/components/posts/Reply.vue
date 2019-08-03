@@ -48,12 +48,13 @@
         <Spinner v-if="saving" class="btn-spinner green" />
         Save
       </button>
-      <div v-else class="body">{{ reply.body }}</div>
+      <div v-else v-html="replyWithLinks" class="body"></div>
     </main>
   </div>
 </template>
 
 <script>
+import Autolinker from 'autolinker';
 import axios from 'axios';
 import moment from 'moment';
 import DropDownMenu from '../reusable/DropDownMenu';
@@ -92,6 +93,9 @@ export default {
     date() {
       // format date posted using moment
       return moment(this.reply.createdAt).format('MMMM D, YYYY');
+    },
+    replyWithLinks() {
+      return Autolinker.link(this.body, { newWindow: true });
     },
   },
   methods: {

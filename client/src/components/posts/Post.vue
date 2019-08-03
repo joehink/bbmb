@@ -231,6 +231,9 @@ export default {
   .form-row:first-of-type {
     margin-bottom: 25px;
   }
+  .btn-group > *:first-child {
+    margin-right: 5px;
+  }
 
   @media(min-width: 768px) {
     .username {
