@@ -53,6 +53,11 @@ export default {
   font-size: 1.25em;
   margin-left: 10px;
   color: var(--black);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 175px;
+  display: inline-block;
 }
 .conversations-link {
   font-size: 1.25em;
@@ -66,6 +71,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 400px) {
+  .to {
+    max-width: unset;
+  }
 }
 
 @media (min-width: 768px) {

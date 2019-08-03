@@ -106,6 +106,10 @@ export default {
     font-weight: 700;
     font-size: 1.1em;
     padding-right: 10px;
+    max-width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   .photo-container {
     position: relative;
