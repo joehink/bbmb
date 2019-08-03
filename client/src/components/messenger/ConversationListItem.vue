@@ -76,7 +76,7 @@ export default {
     color: var(--black);
     display: flex;
     align-items: center;
-    overflow-x: auto;
+    /* overflow-x: auto; */
   }
   .conversation-list-item:hover {
     background: #EFEFEF;
@@ -132,13 +132,10 @@ export default {
     color: #AAA;
     font-style: italic;
     margin-top: 5px;
-    overflow: hidden;
+    max-width: 175px;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    line-height: 1.2;
-    max-height: 1.2em;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   @media (min-width: 400px) {

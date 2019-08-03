@@ -7,9 +7,7 @@
     }"
   >
     <div class="message">
-      <div class="message-body">
-        {{ message.body }}
-      </div>
+      <div class="message-body" v-html="messageWithLinks"></div>
     </div>
     <span class="message-date">{{ date }}</span>
   </div>
@@ -17,6 +15,7 @@
 
 <script>
 import moment from 'moment';
+import Autolinker from 'autolinker';
 
 export default {
   name: 'Message',
@@ -30,6 +29,9 @@ export default {
       }
 
       return messageDate.calendar();
+    },
+    messageWithLinks() {
+      return Autolinker.link(this.message.body, { newWindow: true });
     },
   },
 };
