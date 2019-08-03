@@ -9,6 +9,7 @@ const postSchema = new Schema({
     likesCount: { type: Number, default: 0 },
     category: { type: String, required: true, lowercase: true },
     lastCommentAt: { type: Date, required: true, default: new Date() },
+    commentsCount: { type: Number, required: false, default: 0 }
 }, { timestamps: true });
 
 mongoose.model('Post', postSchema);

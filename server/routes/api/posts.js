@@ -278,6 +278,7 @@ module.exports = app => {
 
             // Set post.lastCommentAt to current date and time
             post.lastCommentAt = new Date();
+            post.commentsCount++;
 
             // Save post
             post.save();
@@ -328,6 +329,8 @@ module.exports = app => {
             }
 
             const comment = await Comment.findById(req.params.commentId);
+
+            await Post.findByIdAndUpdate(req.params.postId, { $inc: { commentsCount: -1 } });
 
             if (!comment) {
                 res.status(404).json({ message: "Comment not found." });
