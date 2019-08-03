@@ -102,6 +102,9 @@ export default {
   .to-photo {
     margin-right: 10px;
   }
+  .conversation-list-item.mobile .to {
+    max-width: 150px;
+  }
   .to {
     font-weight: 700;
     font-size: 1.1em;
@@ -136,6 +139,12 @@ export default {
     -webkit-line-clamp: 1;
     line-height: 1.2;
     max-height: 1.2em;
+  }
+
+  @media (min-width: 400px) {
+    .conversation-list-item.mobile .to {
+      max-width: unset;
+    }
   }
 
   @media (min-width: 768px) {

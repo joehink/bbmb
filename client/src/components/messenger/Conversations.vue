@@ -8,13 +8,12 @@
         :conversation="conversation"
         :user="user"
         v-on:close="$emit('close')"
+        class="mobile"
       />
     </div>
-
     <h5 class="conversations-warning" v-if="conversations && conversations.length === 0">
       No conversations yet.
     </h5>
-
     <h3>
       Select a conversation or go to a user profile and click "Send Message"
     </h3>
@@ -44,19 +43,16 @@ export default {
     display: flex;
     flex-direction: column;
   }
-
   h2 {
     margin: 15px;
     color: var(--black);
     text-align: center;
     font-size: 1.1em;
   }
-
   h5 {
     margin: auto;
     color: #AAA;
   }
-
   h3 {
     font-weight: 400;
     color: #AAA;
@@ -65,7 +61,6 @@ export default {
     margin: auto;
     padding: 15px;
   }
-
   @media (min-width: 768px) {
     h3 {
       display: block;

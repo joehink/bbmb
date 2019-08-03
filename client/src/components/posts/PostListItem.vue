@@ -97,13 +97,14 @@ export default {
 
 <style scoped>
   .post-list-item {
-    padding: 7.5px 20px;
+    padding: 15px 20px;
     background: var(--white);
     box-shadow: 0 3px 6px rgba(0,0,0,0.25);
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border-radius: 10px;
   }
   .post-list-item.recent {
+    padding: 7.5px 20px;
     border-bottom: 1px solid #ddd;
     border-radius: 0;
     margin: 0;
