@@ -14,7 +14,8 @@ module.exports = MONGODB_URI => {
                 if (err) {
                     return reject(err);
                 }
-                const filename = buf.toString('hex') + '.png';
+                const extension = file.mimetype.split('/')[1];
+                const filename = buf.toString('hex') + '.' + extension;
                 const fileInfo = {
                     filename: filename,
                     bucketName: 'photos'

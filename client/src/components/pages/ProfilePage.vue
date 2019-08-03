@@ -43,6 +43,7 @@
                   type="file"
                   v-on:change="getImage"
                   accept="image/*"
+                  id="file-input"
                 >
               </label>
               <button v-if="upload" class="btn blue border sm" v-on:click="cancelUpload">
@@ -141,6 +142,7 @@ export default {
       saving: false,
       editBio: false,
       upload: false,
+      mimeType: '',
     };
   },
   mounted() {
@@ -202,7 +204,6 @@ export default {
     updateImage() {
       if (this.user && this.user._id === this.pageUser._id && !this.saving) {
         this.saving = true;
-
         const resizedCanvas = document.createElement('canvas');
         const context = resizedCanvas.getContext('2d');
 
@@ -216,7 +217,6 @@ export default {
             try {
               const formData = new FormData();
               formData.append('file', resizedImage);
-
               const res = await axios({
                 url: '/api/users/',
                 method: 'PUT',
@@ -234,7 +234,7 @@ export default {
             } catch (err) {
               this.saving = false;
             }
-          });
+          }, this.mimeType);
         };
         img.src = this.photo;
       }
@@ -254,7 +254,7 @@ export default {
     getImage(event) {
       const image = event.target.files[0];
       const reader = new FileReader();
-
+      this.mimeType = image.type;
       reader.readAsDataURL(image);
       reader.onload = (e) => {
         this.upload = true;
