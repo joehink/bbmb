@@ -63,7 +63,6 @@ export default {
   .nav-brand {
     font-size: 2em;
     font-weight: bold;
-    margin-right: 10px;
   }
   .nav-button {
     border: none;
@@ -86,6 +85,12 @@ export default {
     top: 1px;
     right: 1px;
     box-shadow: 0 3px 6px rgba(255,0,0,0.75);
+  }
+
+  @media (min-width: 768px) {
+    .nav-brand {
+      margin-right: 10px;
+    }
   }
 </style>
 

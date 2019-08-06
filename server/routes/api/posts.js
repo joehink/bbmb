@@ -131,6 +131,30 @@ module.exports = app => {
         }
     });
 
+    // GET search posts
+    app.get('/api/posts/search/:searchTerm', async (req, res) => {
+      try {
+        const { page = 1, sortBy = '-lastCommentAt' } = req.query;
+        const limit = 25;
+
+        console.log(req.params.searchTerm);
+
+        const posts = await Post
+          .find({ $text: { $search : req.params.searchTerm } })
+          .sort(sortBy)
+          .skip((page * limit) - limit)
+          .limit(limit)
+          .populate({ path: 'author', select: 'username _id' });
+
+        res.status(200).json({
+          nextPage: (posts.length >= limit),
+          posts
+        });
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    })
+
     // GET single post
     app.get('/api/posts/:postId', async (req, res) => {
         try {

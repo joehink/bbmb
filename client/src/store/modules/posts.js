@@ -51,6 +51,31 @@ const actions = {
       commit('setLoading', false);
     }
   },
+  searchPosts: async ({ commit, state }, { searchTerm, sort }) => {
+    try {
+      // If request is not currently being made and if there is a next page
+      if (!state.loading && state.nextPage) {
+        commit('setLoading', true);
+        // fetch next page of posts
+        const res = await axios({
+          method: 'GET',
+          url: `/api/posts/search/${searchTerm}`,
+          params: {
+            page: state.page + 1,
+            sortBy: sort || null,
+          },
+        });
+        // add posts array onto existing array of posts
+        commit('setFilter', 'search');
+        commit('pushToPosts', res.data.posts);
+        commit('setNextPage', res.data.nextPage);
+        commit('incrementPage');
+        commit('setLoading', false);
+      }
+    } catch (err) {
+      commit('setLoading', false);
+    }
+  },
   resetPostsData: ({ commit }) => {
     commit('emptyPosts');
     commit('setPage', 0);

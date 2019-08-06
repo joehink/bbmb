@@ -1,11 +1,13 @@
 <template>
-  <form>
-    <input v-model="term" type="text" placeholder="Seach posts...">
+  <form @submit.prevent="search">
+    <input ref="searchInput" v-model="term" type="text" placeholder="Seach posts...">
     <button class="search-icon"><font-awesome-icon icon="search" /></button>
   </form>
 </template>
 
 <script>
+import router from '../router';
+
 export default {
   name: 'SearchInput',
   data() {
@@ -13,12 +15,19 @@ export default {
       term: '',
     };
   },
+  methods: {
+    search() {
+      this.$refs.searchInput.blur();
+      router.push(`/posts/search/${this.term}`);
+    },
+  },
 };
 </script>
 
 <style scoped>
   form {
     position: relative;
+    margin-right: 10px;
   }
   input {
     box-sizing: border-box;
@@ -26,7 +35,7 @@ export default {
     border-radius: 50px;
     margin: 10px 0;
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 40px 10px 20px;
     outline: none;
     background: #34578f;
     border: none;

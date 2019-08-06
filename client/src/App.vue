@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <MainNav />
-    <keep-alive :include="['CategoryPosts', 'UserPosts']">
+    <keep-alive :include="['CategoryPosts', 'UserPosts', 'SearchPosts']">
       <router-view></router-view>
     </keep-alive>
   </div>

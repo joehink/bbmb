@@ -14,6 +14,7 @@ import Messenger from '../components/pages/Messenger';
 import Conversation from '../components/messenger/Conversation';
 import Conversations from '../components/messenger/Conversations';
 import StartConversation from '../components/messenger/StartConversation';
+import SearchPosts from '../components/pages/SearchPosts';
 
 import store from '../store';
 
@@ -59,6 +60,10 @@ const router = new Router({
     {
       path: '/posts/users/:userId',
       component: UserPosts,
+    },
+    {
+      path: '/posts/search/:searchTerm',
+      component: SearchPosts,
     },
     {
       path: '/posts/:postId',

@@ -12,4 +12,6 @@ const postSchema = new Schema({
     commentsCount: { type: Number, required: false, default: 0 }
 }, { timestamps: true });
 
+postSchema.index({title: 'text', body: 'text'});
+
 mongoose.model('Post', postSchema);

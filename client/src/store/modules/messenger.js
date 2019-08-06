@@ -194,7 +194,10 @@ const getters = {
   activeConversation: state => state.activeConversation,
   isSendingMessage: state => state.status.sendingMessage,
   hasUnreadMessages(state, otherGetters, rootState) {
-    return state.conversations.some(convo => convo.unread.includes(rootState.auth.user._id));
+    if (state.conversations) {
+      return state.conversations.some(convo => convo.unread.includes(rootState.auth.user._id));
+    }
+    return false;
   },
 };
 
