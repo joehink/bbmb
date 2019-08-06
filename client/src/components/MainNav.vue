@@ -2,6 +2,7 @@
   <nav class="nav">
     <div class="nav-container">
       <span class="nav-brand nav-item"><router-link to="/">BBMB</router-link></span>
+      <search-input />
       <div class="photo-container">
         <span v-if="conversations && hasUnreadMessages" class="dot"></span>
         <ProfilePhoto
@@ -26,11 +27,13 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ProfilePhoto from './profile/ProfilePhoto';
+import SearchInput from './SearchInput';
 
 export default {
   name: 'MainNav',
   components: {
     ProfilePhoto,
+    SearchInput,
   },
   computed: {
     ...mapGetters(['isLoggedIn', 'user', 'hasUnreadMessages', 'conversations']),
@@ -58,9 +61,9 @@ export default {
     color: var(--white);
   }
   .nav-brand {
-    margin-right: auto;
     font-size: 2em;
     font-weight: bold;
+    margin-right: 10px;
   }
   .nav-button {
     border: none;
@@ -71,6 +74,7 @@ export default {
   }
   .photo-container {
     position: relative;
+    margin-left: auto;
   }
   .dot {
     background: red;
