@@ -3,21 +3,12 @@
     <div class="nav-container">
       <span class="nav-brand nav-item"><router-link to="/">BBMB</router-link></span>
       <search-input />
-      <div class="photo-container">
-        <span v-if="conversations && hasUnreadMessages" class="dot"></span>
-        <ProfilePhoto
-          v-if="user"
-          class="nav-item profile-img-sm"
-          :key="user.photo ? user.photo : null"
-          v-lazy:background-image="user.photo ? `/api/photos/${user.photo}` : null"
-          :style="{
-            backgroundImage: !user.photo && `url('/static/images/auth/error.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-          }"
-        />
-      </div>
-      <button v-if="isLoggedIn" v-on:click="logout" class="nav-button nav-item">Log Out</button>
+      <account-menu
+        :user="user"
+        :hasUnreadMessages="hasUnreadMessages"
+        :logout="logout"
+        v-if="user"
+      />
       <router-link v-if="!isLoggedIn" to="/login" class="nav-item">Log In</router-link>
       <router-link v-if="!isLoggedIn" to="/signup" class="nav-item">Sign Up</router-link>
     </div>
@@ -28,15 +19,17 @@
 import { mapActions, mapGetters } from 'vuex';
 import ProfilePhoto from './profile/ProfilePhoto';
 import SearchInput from './SearchInput';
+import AccountMenu from './AccountMenu';
 
 export default {
   name: 'MainNav',
   components: {
     ProfilePhoto,
     SearchInput,
+    AccountMenu,
   },
   computed: {
-    ...mapGetters(['isLoggedIn', 'user', 'hasUnreadMessages', 'conversations']),
+    ...mapGetters(['isLoggedIn', 'user', 'hasUnreadMessages']),
   },
   methods: {
     ...mapActions(['logout']),
@@ -57,12 +50,12 @@ export default {
     margin: auto;
     align-items: center;
   }
-  .nav-container * {
-    color: var(--white);
-  }
   .nav-brand {
     font-size: 2em;
     font-weight: bold;
+  }
+  .nav-brand a {
+    color: var(--white);
   }
   .nav-button {
     border: none;
@@ -70,6 +63,7 @@ export default {
   }
   .nav-item {
     padding: 10px 10px;
+    color: var(--white);
   }
   .photo-container {
     position: relative;

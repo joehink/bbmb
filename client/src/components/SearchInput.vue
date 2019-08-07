@@ -27,7 +27,7 @@ export default {
 <style scoped>
   form {
     position: relative;
-    margin-right: 10px;
+    margin-right: auto;
   }
   input {
     box-sizing: border-box;
@@ -40,6 +40,7 @@ export default {
     background: #34578f;
     border: none;
     box-shadow: inset 0 3px 6px rgba(0,0,0,0.25);
+    color: var(--white);
   }
   input::placeholder {
     color: rgba(255, 255, 255, 0.6);
@@ -55,5 +56,6 @@ export default {
     outline: none;
     display: flex;
     align-items: center;
+    color: var(--white);
   }
 </style>
