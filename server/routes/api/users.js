@@ -105,21 +105,22 @@ module.exports = (app, upload, gfs) => {
     } catch(err) {
       res.status(500).json(err)
     }
-  })
-}
+  });
 
-app.delete('/api/users/:userId', requireAuth, async (req, res) => {
-  try {
-    if (req.user._id.equals(req.params.userId)) {
-      
-
-      // delete the user photo
-      await gfs.remove({ filename: req.user.photo, root: "photos" });
-
-      // delete user
-      await User.findByIdAndRemove(req.user._id);
+  // delete user
+  app.delete('/api/users/:userId', requireAuth, async (req, res) => {
+    try {
+      if (req.user._id.equals(req.params.userId)) {
+        
+  
+        // delete the user photo
+        await gfs.remove({ filename: req.user.photo, root: "photos" });
+  
+        // delete user
+        await User.findByIdAndRemove(req.user._id);
+      }
+    } catch (err) {
+      res.status(500).json(err);
     }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+  });
+}

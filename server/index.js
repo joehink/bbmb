@@ -7,8 +7,9 @@ const mongoose = require('mongoose');
 
 // Mongoose Models
 require('./models/users');
-require('./models/posts');
+require('./models/replies');
 require('./models/comments');
+require('./models/posts');
 require('./models/conversations');
 require('./models/messages');
 

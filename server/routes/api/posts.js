@@ -3,6 +3,7 @@ const passport = require('passport');
 
 const Post = mongoose.model('Post');
 const Comment = mongoose.model('Comment');
+const Reply = mongoose.model('Reply');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 const categories = ['discussion', 'media', 'events', 'tour'];
@@ -213,19 +214,11 @@ module.exports = app => {
                 return res.status(404).json({ message: "Post not found." });
             }
 
-            let post = await Post.findById(req.params.postId);
+            await Reply.deleteMany({ postId: req.params.postId });
+            await Comment.deleteMany({ postId: req.params.postId });
+            await Post.deleteOne({ _id: req.params.postId, author: req.user._id });
             
-            if (!post) {
-                return res.status(404).json({ message: "Post not found." });
-            } else if (!req.user._id.equals(post.author)) {
-                return res.status(401).json({ message: "Post does not belong to you." });
-            } else {
-                post.remove();
-
-                await Comment.deleteMany({ postId: req.params.postId });
-                
-                res.status(200).json({ deleted: true });
-            }
+            res.status(200).json({ deleted: true });
         } catch (err) {
             res.status(500).json(err);
         }
@@ -322,7 +315,13 @@ module.exports = app => {
                 .findById(req.params.commentId)
                 .populate([
                     { path: 'author', select: 'username _id' }, 
-                    { path: 'replies.author', select: 'username _id' }
+                    { 
+                      path: 'replies',
+                      populate: {
+                        path: 'author',
+                        select: 'username _id',
+                      }
+                    }
                 ]);
 
             if (!comment) {
@@ -350,18 +349,12 @@ module.exports = app => {
                 return res.status(404).json({ message: "Comment not found." });
             }
 
-            const comment = await Comment.findById(req.params.commentId);
+            await Reply.deleteMany({ commentId: req.params.commentId });
+            await Comment.deleteOne({ _id: req.params.commentId, author: req.user._id });
 
             await Post.findByIdAndUpdate(req.params.postId, { $inc: { commentsCount: -1 } });
 
-            if (!comment) {
-                res.status(404).json({ message: "Comment not found." });
-            } else if (!req.user._id.equals(comment.author)) {
-                res.status(401).json({ message: "Comment does not belong to you." });
-            } else {
-                comment.remove()
-                res.status(200).json({ deleted: true });
-            }
+            res.status(200).json({ deleted: true });
         } catch (err) {
             res.status(400).json(err)
         }
@@ -384,7 +377,13 @@ module.exports = app => {
                 .limit(limit)
                 .populate([
                     { path: 'author', select: 'username _id' }, 
-                    { path: 'replies.author', select: 'username _id' }
+                    { 
+                      path: 'replies',
+                      populate: {
+                        path: 'author',
+                        select: 'username _id',
+                      }
+                    }
                 ]);
 
             res.status(200).json({
@@ -405,14 +404,24 @@ module.exports = app => {
 
             // append logged in user's id to req.body
             req.body.author = req.user._id;
+            req.body.postId = req.params.postId;
+            req.body.commentId = req.params.commentId;
+
+            const reply = await Reply.create(req.body);
 
             const comment = await Comment
                 .findByIdAndUpdate(req.params.commentId, { 
-                    $push: { replies: req.body } 
+                    $push: { replies: reply._id } 
                 }, { new: true })
                 .populate([
-                    { path: 'author', select: 'username _id' }, 
-                    { path: 'replies.author', select: 'username _id' }
+                    { path: 'author', select: 'username _id' },
+                    { 
+                      path: 'replies',
+                      populate: {
+                        path: 'author',
+                        select: 'username _id',
+                      }
+                    }
                 ]);
 
             res.status(200).json(comment);
@@ -432,30 +441,27 @@ module.exports = app => {
                 return res.status(404).json({ message: "Reply not found." });
             }
 
+            await Reply.updateOne({
+              _id: req.params.replyId,
+              author: req.user._id,
+            },
+            { body: req.body.body });
+
             // Find comment with reply
             const comment = await Comment
                 .findById(req.params.commentId)
                 .populate([
                     { path: 'author', select: 'username _id' }, 
-                    { path: 'replies.author', select: 'username _id' }
+                    { 
+                      path: 'replies',
+                      populate: {
+                        path: 'author',
+                        select: 'username _id',
+                      }
+                    }
                 ]);
-            // Select reply
-            const reply = comment.replies.id(req.params.replyId);
             
-            if (!reply) {
-                res.status(404).json({ message: "Reply not found." });
-            } else if (!req.user._id.equals(reply.author._id)) {
-                res.status(401).json({ message: "Reply does not belong to you." });
-            } else if (!req.body.body) {
-                res.status(400).json({ message: "Must provide body of reply." })
-            } else {
-                // assign new value to reply body
-                reply.body = req.body.body;
-                // save comment
-                comment.save();
-                // send back updated comment
                 res.status(200).json(comment);
-            }
         } catch (err) {
             res.status(400).json(err)
         }
@@ -472,25 +478,13 @@ module.exports = app => {
                 return res.status(404).json({ message: "Reply not found." });
             }
 
-            // Find comment with reply
-            const comment = await Comment.findById(req.params.commentId);
-            // Select reply
-            const reply = comment.replies.id(req.params.replyId)
+            await Reply.deleteOne({ _id: req.params.replyId, author: req.user._id });
 
-            if (!comment) {
-                res.status(404).json({ message: "Comment not found." });
-            } else if (!reply) {
-                res.status(404).json({ message: "Reply not found." });
-            } else if (!req.user._id.equals(reply.author)) {
-                res.status(401).json({ message: "Reply does not belong to you." });
-            } else {
-                // delete reply
-                comment.replies.pull(req.params.replyId)
-                // save comment
-                comment.save();
+            await Comment.findByIdAndUpdate(req.params.commentId, {
+              $pull: { replies: req.params.replyId }
+            });
 
-                res.status(200).json({ deleted: true });
-            }
+            res.status(200).json({ deleted: true });
         } catch (err) {
             res.status(500).json(err)
         }
@@ -508,7 +502,13 @@ module.exports = app => {
               .findById(req.params.commentId)
               .populate([
                   { path: 'author', select: 'username _id' }, 
-                  { path: 'replies.author', select: 'username _id' }
+                  { 
+                    path: 'replies',
+                    populate: {
+                      path: 'author',
+                      select: 'username _id',
+                    }
+                  }
               ]);
 
             if (!comment) {
