@@ -137,8 +137,6 @@ module.exports = app => {
         const { page = 1, sortBy = '-lastCommentAt' } = req.query;
         const limit = 25;
 
-        console.log(req.params.searchTerm);
-
         const posts = await Post
           .find({ $text: { $search : req.params.searchTerm } })
           .sort(sortBy)
