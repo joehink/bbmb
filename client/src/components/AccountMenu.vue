@@ -17,9 +17,9 @@
     <div class="account-menu">
       <h5>{{ user.username }}</h5>
       <nav>
-        <router-link :to="`/users/${user._id}`">Profile</router-link>
-        <router-link to="/conversations">Conversations</router-link>
-        <button @click="logout">Log Out</button>
+        <router-link :to="`/users/${user._id}`" class="menu-item">Profile</router-link>
+        <router-link to="/conversations" class="menu-item">Conversations</router-link>
+        <button @click="logout" class="menu-item">Log Out</button>
       </nav>
     </div>
   </div>
@@ -40,8 +40,7 @@ export default {
 <style scoped>
 .account-menu-container {
   position: relative;
-  cursor: pointer;
-  margin-right: 10px;
+  margin: 0 10px;
 }
 .account-menu-container:hover .account-menu {
   display: block;
@@ -58,6 +57,21 @@ export default {
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.25);
 }
+.account-menu nav {
+  margin-top: 25px;
+}
+.menu-item {
+  color: var(--primary-color);
+  margin-bottom: 7.5px;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  display: block;
+}
+.menu-item:hover {
+  opacity: 0.5;
+}
 .photo-container {
   z-index: 1000;
 }
@@ -65,6 +79,8 @@ h5 {
   color: var(--black);
   text-align: left;
   margin: 0;
+  font-size: 1em;
+  padding: 0;
 }
 </style>
 

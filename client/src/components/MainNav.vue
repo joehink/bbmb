@@ -2,14 +2,14 @@
   <nav class="nav">
     <div class="nav-container">
       <span class="nav-brand nav-item"><router-link to="/">BBMB</router-link></span>
-      <search-input />
+      <search-input v-if="isLoggedIn" />
       <account-menu
         :user="user"
         :hasUnreadMessages="hasUnreadMessages"
         :logout="logout"
         v-if="user"
       />
-      <router-link v-if="!isLoggedIn" to="/login" class="nav-item">Log In</router-link>
+      <router-link v-if="!isLoggedIn" to="/login" class="nav-item login">Log In</router-link>
       <router-link v-if="!isLoggedIn" to="/signup" class="nav-item">Sign Up</router-link>
     </div>
   </nav>
@@ -79,6 +79,10 @@ export default {
     top: 1px;
     right: 1px;
     box-shadow: 0 3px 6px rgba(255,0,0,0.75);
+  }
+
+  .login {
+    margin-left: auto;
   }
 
   @media (min-width: 768px) {
