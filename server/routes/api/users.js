@@ -4,6 +4,12 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const User = mongoose.model('User');
+const Reply = mongoose.model('Reply');
+const Post = mongoose.model('Post');
+const Comment = mongoose.model('Comment');
+const Message = mongoose.model('Message');
+const Conversation = mongoose.model('Conversation');
+
 
 const requireAuth = passport.authenticate('jwt', { session: false });
 
@@ -112,6 +118,11 @@ module.exports = (app, upload, gfs) => {
     try {
       if (req.user._id.equals(req.params.userId)) {
         
+        await Reply.deleteMany({ author: req.user._id });
+        await Comment.deleteMany({ author: req.user._id });
+        await Post.deleteMany({ author: req.user._id });
+        await Message.deleteMany({ participants: req.user._id });
+        await Conversation.deleteMany({ participants: req.user._id });
   
         // delete the user photo
         await gfs.remove({ filename: req.user.photo, root: "photos" });

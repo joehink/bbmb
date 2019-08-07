@@ -48,7 +48,7 @@ const actions = {
   },
   findOrStartConversation: ({ state, rootState, commit }, { to }) => {
     if (!state.conversations) {
-      return router.push('/conversations/new');
+      return router.push('/conversations/start');
     }
 
     const foundConversation = state.conversations.find((conversation) => {
