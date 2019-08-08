@@ -1,6 +1,7 @@
 <template>
   <div id="page">
     <div class="container">
+      <modal />
       <div class="user-info" v-if="pageUser">
         <header>
           <nav class="user-secondary-nav">
@@ -112,6 +113,19 @@
           v-on:like="updateLikes"
         />
       </div>
+      <nav v-if="user && pageUser && pageUser._id === user._id" class="secondary-nav">
+        <button
+          class="btn red border sm"
+          @click="displayModal({
+            message: 'Are you sure you want to delete your account?',
+            btnText: 'Delete',
+            btnColor: 'red',
+            action: () => deleteAccount($route.params.userId),
+          });"
+        >
+          Delete Account
+        </button>
+      </nav>
     </div>
   </div>
 </template>
@@ -124,6 +138,7 @@ import PostListItem from '../posts/PostListItem';
 import ProfilePhoto from '../profile/ProfilePhoto';
 import Spinner from '../Spinner';
 import TextArea from '../reusable/forms/TextArea';
+import Modal from '../reusable/Modal';
 
 export default {
   name: 'ProfilePage',
@@ -132,6 +147,7 @@ export default {
     PostListItem,
     Spinner,
     TextArea,
+    Modal,
   },
   data() {
     return {
@@ -158,7 +174,7 @@ export default {
     ...mapGetters(['user', 'token']),
   },
   methods: {
-    ...mapActions(['findOrStartConversation']),
+    ...mapActions(['findOrStartConversation', 'deleteAccount', 'displayModal']),
     ...mapMutations(['setUser']),
     async getUser() {
       try {
@@ -358,6 +374,12 @@ export default {
   }
   .file-input input[type=file] {
     display: none;
+  }
+  .secondary-nav {
+    border: none;
+  }
+  .secondary-nav button {
+    margin-left: auto;
   }
 
   @media(min-width: 768px) {

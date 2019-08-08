@@ -32,7 +32,8 @@ module.exports = app => {
         const message = await Message.create({
           body: req.body.body,
           from: req.user._id,
-          conversationId: conversation._id
+          conversationId: conversation._id,
+          participants: req.body.participants,
         });
   
         res.status(200).json({ conversation, message });

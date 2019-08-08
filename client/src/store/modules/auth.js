@@ -113,6 +113,28 @@ const actions = {
       commit('setUser', null);
     }
   },
+  deleteAccount: async ({ commit, state, dispatch }, userId) => {
+    try {
+      if (!state.isDeletingAccount) {
+        commit('setDeletingAccount', true);
+        commit('setDisableModal', true);
+        await axios({
+          method: 'DELETE',
+          url: `/api/users/${userId}`,
+          headers: {
+            authorization: state.authenticated,
+          },
+        });
+        router.push('/');
+        commit('setDeletingAccount', false);
+        commit('setDisableModal', false);
+        dispatch('logout');
+      }
+    } catch (err) {
+      commit('setDeletingAccount', false);
+      commit('setDisableModal', false);
+    }
+  },
 };
 
 const mutations = {
@@ -125,6 +147,9 @@ const mutations = {
   setAuthLoading: (state, isLoading) => {
     state.isLoading = isLoading;
   },
+  setDeletingAccount: (state, isDeleting) => {
+    state.isDeleting = isDeleting;
+  },
 };
 
 const getters = {
@@ -132,12 +157,14 @@ const getters = {
   user: state => state.user,
   isAuthLoading: state => state.isLoading,
   token: state => state.authenticated,
+  isDeletingAccount: state => state.isDeleting,
 };
 
 const state = {
   authenticated: localStorage.getItem('bbmb-token'),
   user: null,
   isLoading: false,
+  isDeleting: false,
 };
 
 export default {

@@ -125,11 +125,16 @@ module.exports = (app, upload, gfs) => {
         await Conversation.deleteMany({ participants: req.user._id });
   
         // delete the user photo
-        await gfs.remove({ filename: req.user.photo, root: "photos" });
+        if (req.user.photo) {
+          await gfs.remove({ filename: req.user.photo, root: "photos" });
+        }
   
         // delete user
         await User.findByIdAndRemove(req.user._id);
+
+        res.status(200).json({ deleted: true });
       }
+      res.status(401).json({ message: 'Account does not belong to you.' });
     } catch (err) {
       res.status(500).json(err);
     }
