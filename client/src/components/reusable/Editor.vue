@@ -88,21 +88,6 @@
 
         <button
           class="menubar-button"
-          :class="{ 'is-active': isActive.blockquote() }"
-          @click="commands.blockquote"
-        >
-          <font-awesome-icon icon="quote-right" />
-        </button>
-
-        <button
-          class="menubar-button"
-          @click="commands.horizontal_rule"
-        >
-          <font-awesome-icon icon="grip-horizontal" />
-        </button>
-
-        <button
-          class="menubar-button"
           @click="commands.undo"
         >
           <font-awesome-icon icon="undo" />

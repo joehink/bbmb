@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
+const sanitizeHtml = require('sanitize-html');
 
 const Message = mongoose.model('Message');
 const Conversation = mongoose.model('Conversation');
@@ -12,6 +13,9 @@ module.exports = app => {
         if (!Array.isArray(req.body.participants) || !Array.isArray(req.body.unread)) {
           return res.status(400).json({ message: "Participants and unread are required and must be an array." });
         }
+
+        // Sanitize message body
+        req.body.body = sanitizeHtml(req.body.body, { allowedTags: [] });
 
         if (!req.body.body || req.body.participants.length < 1 || req.body.unread.length < 1) {
           return res.status(400).json({ message: "Must provide message body, participants, and unread." });
@@ -48,6 +52,9 @@ module.exports = app => {
           if (!Array.isArray(req.body.unread) || req.body.unread.length < 1) {
             return res.status(400).json({ message: "Unread is required and must be an array." });
           }
+
+          // Sanitize message body
+          req.body.body = sanitizeHtml(req.body.body, { allowedTags: [] });
 
           if (!req.body.body) {
             return res.status(400).json({ message: "Must provide a message body." });

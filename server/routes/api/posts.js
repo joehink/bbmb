@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
+const sanitizeHtml = require('sanitize-html');
 
 const Post = mongoose.model('Post');
 const Comment = mongoose.model('Comment');
@@ -22,6 +23,10 @@ module.exports = app => {
 
             // append logged in user's id to req.body
             req.body.author = req.user._id;
+
+            //sanitize body and title
+            req.body.body = sanitizeHtml(req.body.body, { allowedTags: ['h1', 'h2', 'h3', 'blockquote', 'p', 'ul', 'ol', 'li', 'b', 'i', 'strong', 'em', 's', 'code', 'hr', 'br', 'div', 'pre'] });
+            req.body.title = sanitizeHtml(req.body.title, { allowedTags: [] })
 
             // Create new post
             const newPost = await Post.create(req.body);
@@ -192,8 +197,8 @@ module.exports = app => {
             } else if (!req.body.title || !req.body.body) {
                 res.status(400).json({ message: "Must provide title and body of post." });
             } else {
-                post.title = req.body.title;
-                post.body = req.body.body;
+                post.title = sanitizeHtml(req.body.title, { allowedTags: [] })
+                post.body = sanitizeHtml(req.body.body, { allowedTags: ['h1', 'h2', 'h3', 'blockquote', 'p', 'ul', 'ol', 'li', 'b', 'i', 'strong', 'em', 's', 'code', 'hr', 'br', 'div', 'pre'] });
 
                 post.save()
 
@@ -286,6 +291,9 @@ module.exports = app => {
             // append postId to req.body
             req.body.postId = req.params.postId;
 
+            // Sanitize comment body
+            req.body.body = sanitizeHtml(req.body.body, { allowedTags: [] })
+
             // create new comment
             let comment = await Comment.create(req.body)
             // populate author field on new comment
@@ -331,7 +339,7 @@ module.exports = app => {
             } else if (!req.body.body) {
                 res.status(400).json({ message: "Must provide body of comment." });
             } else {
-                comment.body = req.body.body;
+                comment.body = sanitizeHtml(req.body.body, { allowedTags: [] })
 
                 comment.save();
 
@@ -407,6 +415,9 @@ module.exports = app => {
             req.body.postId = req.params.postId;
             req.body.commentId = req.params.commentId;
 
+            // Sanitize reply body
+            req.body.body = sanitizeHtml(req.body.body, { allowedTags: [] })
+
             const reply = await Reply.create(req.body);
 
             const comment = await Comment
@@ -445,7 +456,7 @@ module.exports = app => {
               _id: req.params.replyId,
               author: req.user._id,
             },
-            { body: req.body.body });
+            { body: sanitizeHtml(req.body.body, { allowedTags: [] }) });
 
             // Find comment with reply
             const comment = await Comment
